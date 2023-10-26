@@ -1,31 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import './Header.css';
 import textLogo from '../imgs/AnimalWarLogo.png';
+import { api } from '../../network/api';
 
 function Header() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [profile, setProfile] = useState({});
+
+    const getProfileData = async () => {
+        try {
+            const { data: tokenInfo } = await api(`api/v1/auth/me`, 'GET');
+            const userId = tokenInfo.userId;
+            const { data: userProfile } = await api(`api/v1/user/findByID/${userId}`, 'GET');
+            setProfile(userProfile);
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+        }
+    };
+
+    useEffect(() => {
+        getProfileData();
+    }, []);
 
     return (
         <div className="header-container">
             <img className="logo" src={textLogo} alt="Logo" />
 
             <div className="menu-buttons">
-                <button>전투</button>
-                <button>뽑기</button>
-                <button>합성</button>
-                <button>강화</button>
-                <button>배치</button>
-                <button>이사</button>
-                <button>교환소</button>
-                <button>거래소</button>
-                <button>랭킹</button>
+                <NavLink to="/battle">전투</NavLink>
+                <NavLink to="/draw">뽑기</NavLink>
+                <NavLink to="/battle">합성</NavLink>
+                <NavLink to="/draw">강화</NavLink>
+                <NavLink to="/battle">배치</NavLink>
+                <NavLink to="/draw">이사</NavLink>
+                <NavLink to="/battle">교환소</NavLink>
+                <NavLink to="/draw">거래소</NavLink>
+                <NavLink to="/battle">랭킹</NavLink>
             </div>
+
             <div className="search-box">
                 <input type="text" placeholder="Search" />
             </div>
+
             <div className="profile-section">
-                <img src="path_to_profile_image" alt="Profile" />
-                <span>닉네임</span>
+                <img src={profile.profileImage || 'default-image-path'} alt="Profile" />
+                <span>{profile.nickName || 'Unknown'}</span>
                 <button onClick={() => setDropdownVisible(!dropdownVisible)}>↓</button>
                 {dropdownVisible && (
                     <div className="dropdown-content">
