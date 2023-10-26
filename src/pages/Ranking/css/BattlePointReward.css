@@ -1,0 +1,44 @@
+.rewardContainer {
+    width: 372px;
+    height: 394px;
+    flex-shrink: 0;
+    border: 1px solid #000;
+    background: #FFF;
+}
+
+.title {
+
+    color: #000;
+    text-align: center;
+    font-variant-numeric: stacked-fractions;
+    font-feature-settings: 'hlig' on, 'dlig' on;
+    font-family: Walter Turncoat;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+
+    margin-left: 50px;
+    margin-top: -40px;
+    /* 25px */
+}
+
+.title__container {
+    flex-direction: column;
+    margin-left: 12px;
+}
+
+.content {
+    color: #000;
+
+    /* 위 오 아 왼 */
+    margin: 40px 0px 0px 20px;
+    font-variant-numeric: stacked-fractions;
+    font-feature-settings: 'hlig' on, 'dlig' on;
+    font-family: Noto Sans Arabic;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    /* 25px */
+}
