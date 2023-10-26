@@ -1,22 +1,12 @@
-import { Route, Routes } from 'react-router';
-// import Template from '../templates/Template';
-// import MainPage from '../Main';
-// import SignUp from '../pages/signup';
-// import Login from '../pages/login';
-import Background from '../common/components/Background';
+import { Routes, Route } from 'react-router-dom';
+import Rank from '../pages/Ranking/components/Rank';
 
 const MyRoutes = () => {
     return (
         <Routes>
-            {/* <Route path="/login" element={<Login />}></Route>
-            <Route path="/signup" element={<SignUp />}></Route> */}
-
-            {/* 테스트용루트 */}
-            <Route path="/test" element={<Background />}></Route>
-            {/* 
-            <Route element={<Template />}>
-                <Route path="/" element={<MainPage />} />
-            </Route> */}
+            <Route path="/rank" element={<Rank />}></Route>
+            {/* <Route path="/redirect" element={<KakaoLoginRedirect />}></Route>
+              <Route path="/logout" element={<Logout />}></Route> */}
         </Routes>
     );
 };

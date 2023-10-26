@@ -1,0 +1,29 @@
+.notice_container {
+
+    width: 372px;
+    height: 436px;
+    flex-shrink: 0;
+    border: 1px solid #000;
+    background: #FFF;
+}
+
+.clock {
+    margin-top: -30px;
+}
+
+.notice_content {
+    color: #000;
+
+    text-align: center;
+    font-variant-numeric: stacked-fractions;
+    font-feature-settings: 'hlig' on, 'dlig' on;
+    font-family: Walter Turncoat;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+
+    margin-top: -30px;
+    margin-left: -5px;
+    /* 25px */
+}

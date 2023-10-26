@@ -1,0 +1,11 @@
+.rankContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.horizonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
