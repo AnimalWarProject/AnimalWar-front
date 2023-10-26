@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './Header.css';
+import textLogo from '../imgs/AnimalWarLogo.png';
 
 function Header() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
     return (
         <div className="header-container">
-            <img src="path_to_logo_image" alt="Logo" className="logo" />
+            <img className="logo" src={textLogo} alt="Logo" />
 
             <div className="menu-buttons">
                 <button>전투</button>
@@ -19,11 +20,9 @@ function Header() {
                 <button>거래소</button>
                 <button>랭킹</button>
             </div>
-
             <div className="search-box">
                 <input type="text" placeholder="Search" />
             </div>
-
             <div className="profile-section">
                 <img src="path_to_profile_image" alt="Profile" />
                 <span>닉네임</span>

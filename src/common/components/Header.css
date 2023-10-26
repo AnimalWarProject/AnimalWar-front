@@ -1,0 +1,34 @@
+.header-container {
+    display: flex;
+    width: 90rem;
+    padding: 0.75rem 0.6875rem 0.75rem 2.4375rem;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid #000;
+    background: #fff6b4;
+}
+
+.logo {
+}
+
+.menu-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-box {
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dropdown-content {
+    display: none;
+}
+
+.profile-section:hover .dropdown-content {
+    display: block;
+}

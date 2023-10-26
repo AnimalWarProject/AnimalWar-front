@@ -19,13 +19,13 @@ export const apiNoToken = async (url, method, data) => {
 };
 
 export const api = async (url, method, data) => {
-    const token = localStorage.getItem('token');
+    const accessToken = localStorage.getItem('accessToken');
     try {
         const body = await axios({
             url,
             method,
             data,
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${accessToken}` },
         });
         return body;
     } catch (error) {
@@ -44,14 +44,14 @@ async function refreshAccessToken() {
             return response.data;
         }
     } catch (error) {
-        console.error('Failed to refresh access token:', error);
+        console.error('Failed to refresh accessToken:', error);
         throw error;
     }
     return null;
 }
 
-function storeAccessToken(token) {
-    localStorage.setItem('token', token);
+function storeAccessToken(accessToken) {
+    localStorage.setItem('accessToken', accessToken);
 }
 
 async function storeNewAccessToken() {
