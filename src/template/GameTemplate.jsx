@@ -7,7 +7,6 @@ import Chatting from '../common/components/Chatting';
 import './GameTemplate.css';
 import ProfileBox from '../common/components/ProfileBox';
 
-
 const GameTemplate = () => {
     return (
         <>
