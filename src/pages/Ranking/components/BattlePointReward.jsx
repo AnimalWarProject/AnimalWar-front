@@ -1,10 +1,7 @@
-import "../css/BattlePointReward.css"
-import giftbox from "../imgs/GIFTBOX 1.png"
+import '../css/BattlePointReward.css';
+import giftbox from '../imgs/GIFTBOX 1.png';
 
 const BattlePointReward = () => {
-
-
-
     return (
         <>
             <div className="rewardContainer">
@@ -13,11 +10,9 @@ const BattlePointReward = () => {
                     <div className="title">배틀포인트순 랭킹보상</div>
                 </div>
                 <p className="content">1위 : 무료뽑기 15회</p>
-
             </div>
         </>
-    )
-}
-
+    );
+};
 
 export default BattlePointReward;
