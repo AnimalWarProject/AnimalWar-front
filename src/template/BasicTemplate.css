@@ -1,0 +1,3 @@
+.background > * {
+    display: inline-block; /* or flex if you prefer */
+}

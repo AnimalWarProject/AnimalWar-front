@@ -1,0 +1,25 @@
+.resource-box {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 200px;
+    background-color: #000;
+    border: 1px solid #000;
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
+}
+
+.resource-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.resource-item img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}

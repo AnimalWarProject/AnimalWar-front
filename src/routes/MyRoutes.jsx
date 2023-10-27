@@ -1,14 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
 import Rank from '../pages/Ranking/components/Rank';
-import Header from '../common/components/Header';
+import BasicTemplate from '../template/BasicTemplate';
+import BattlePage from '../pages/battle/Battlepage';
 
 const MyRoutes = () => {
     return (
         <Routes>
             <Route path="/rank" element={<Rank />}></Route>
-            <Route path="/test" element={<Header />}></Route>
-            {/* <Route path="/redirect" element={<KakaoLoginRedirect />}></Route>
-              <Route path="/logout" element={<Logout />}></Route> */}
+
+            <Route element={<BasicTemplate />}>
+                <Route path="/test" element={<BattlePage />}></Route>
+            </Route>
         </Routes>
     );
 };

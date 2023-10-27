@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
-import textLogo from '../imgs/AnimalWarLogo.png';
+import textLogo from './imgs/AnimalWarLogo.png';
+import Search from './imgs/Search.png';
 import { api } from '../../network/api';
 
 function Header() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [profile, setProfile] = useState({});
+    const [searchedUser, setSearchedUser] = useState(null);
+    const [searchInput, setSearchInput] = useState('');
 
     const getProfileData = async () => {
         try {
@@ -19,6 +22,15 @@ function Header() {
         }
     };
 
+    const handleSearch = async () => {
+        try {
+            const { data: foundUser } = await api(`api/v1/user/findByNickName/${searchInput}`, 'GET');
+            setSearchedUser(foundUser);
+        } catch (error) {
+            console.error('Failed to search user:', error);
+        }
+    };
+
     useEffect(() => {
         getProfileData();
     }, []);
@@ -28,6 +40,7 @@ function Header() {
             <img className="logo" src={textLogo} alt="Logo" />
 
             <div className="menu-buttons">
+                <NavLink to="/main">홈</NavLink>
                 <NavLink to="/battle">전투</NavLink>
                 <NavLink to="/draw">뽑기</NavLink>
                 <NavLink to="/battle">합성</NavLink>
@@ -40,8 +53,23 @@ function Header() {
             </div>
 
             <div className="search-box">
-                <input type="text" placeholder="Search" />
+                <input
+                    type="text"
+                    placeholder=" 유저 검색"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                />
+                <button onClick={handleSearch}>
+                    <img className="search-icon" src={Search} alt="Search" />
+                </button>
             </div>
+
+            {searchedUser && (
+                <div className="searched-user-info">
+                    <img src={searchedUser.profileImage || 'default-image-path'} alt="Searched User" />
+                    <span>{searchedUser.nickName || 'Unknown'}</span>
+                </div>
+            )}
 
             <div className="profile-section">
                 <img src={profile.profileImage || 'default-image-path'} alt="Profile" />

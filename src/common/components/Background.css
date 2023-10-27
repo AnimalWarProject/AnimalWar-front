@@ -7,17 +7,15 @@ body {
 }
 
 .outer-box {
-    width: 75rem;
+    width: 108rem;
     height: 56rem;
     background-color: #fadbff;
     border: 2px solid #000;
     display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .second-box {
-    width: 73rem;
+    width: 105rem;
     height: 53rem;
     background-color: #ffffff;
     border: 2px solid #ffeaea;
@@ -28,7 +26,7 @@ body {
 }
 
 .third-box {
-    width: 70rem;
+    width: 100rem;
     height: 50rem;
     background-color: #ccf4ff;
     border: 2px solid #000;
@@ -38,7 +36,7 @@ body {
 }
 
 .inner-box {
-    width: 68rem;
+    width: 98rem;
     height: 47rem;
     background-color: #ffffff;
     border: 2px solid #000;
