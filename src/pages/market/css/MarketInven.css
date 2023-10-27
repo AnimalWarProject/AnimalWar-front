@@ -1,0 +1,25 @@
+
+
+.marketinven-container{
+    background-color: #969DE3;
+    display: flex;
+    width: 18rem;
+    height: 37.1rem;
+    border: solid black 0.1rem;
+    align-items: center;
+    justify-content: center;
+}
+.marketinven-section{
+    display: flex;
+    flex-direction: column;
+}
+.marketinven-wrap{
+    display: flex;
+}
+.marketinven-content{
+    background-color: #93F1DA;
+    border: solid black 1px;
+    width: 4.2rem;
+    height: 4rem;
+    margin: 0.5rem;
+}

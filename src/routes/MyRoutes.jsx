@@ -9,14 +9,15 @@ import MarketPage from "../pages/market/components/MarketPage";
 const MyRoutes = () => {
     return (
         <Routes>
+
             <Route path="/rank" element={<RankingPage />}></Route>
 
             <Route element={<GameTemplate />}>
                 <Route path="/test" element={<BattlePage />}></Route>
-                <Route path="/market" element={<MarketPage />}></Route>
             </Route>
-
-            <Route element={<BasicTemplate />}>{/* <Route path="/market" element={<MarketPage />}></Route> */}</Route>
+            <Route element={<BasicTemplate />}>
+                 <Route path="/market" element={<MarketPage />}></Route>
+            </Route>
         </Routes>
     );
 };

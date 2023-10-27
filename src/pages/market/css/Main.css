@@ -1,0 +1,16 @@
+
+.main-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.main-list-wrap{
+    display: flex;
+
+}
+.main-list-content{
+    width: 183px;
+    height: 154.5px;
+    border: solid black 1px;
+    margin: 0 2.8rem 2.2rem 0;
+}
