@@ -9,12 +9,12 @@ const GameTemplate = () => {
     return (
         <>
             <Background className="background">
-                <Outlet />
                 <Header />
                 <div className="content-container">
                     <GameScreenTest />
                     <ResourceBox />
                 </div>
+                <Outlet />
             </Background>
         </>
     );

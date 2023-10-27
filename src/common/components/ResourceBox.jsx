@@ -26,21 +26,25 @@ const ResourceBox = () => {
 
     return (
         <div className="resource-box">
-            <div className="resource-item">
-                <img src={goldIcon} alt="Gold" />
-                <span>{profile.gold}</span>
+            <div className="resource-line">
+                <div className="resource-item">
+                    <img src={goldIcon} alt="Gold" />
+                    <span>{profile.gold}</span>
+                </div>
+                <div className="resource-item">
+                    <img src={foodIcon} alt="Food" />
+                    <span>{profile.food}</span>
+                </div>
             </div>
-            <div className="resource-item">
-                <img src={foodIcon} alt="Food" />
-                <span>{profile.food}</span>
-            </div>
-            <div className="resource-item">
-                <img src={woodIcon} alt="Wood" />
-                <span>{profile.wood}</span>
-            </div>
-            <div className="resource-item">
-                <img src={ironIcon} alt="Iron" />
-                <span>{profile.iron}</span>
+            <div className="resource-line">
+                <div className="resource-item">
+                    <img src={woodIcon} alt="Wood" />
+                    <span>{profile.wood}</span>
+                </div>
+                <div className="resource-item">
+                    <img src={ironIcon} alt="Iron" />
+                    <span>{profile.iron}</span>
+                </div>
             </div>
         </div>
     );
