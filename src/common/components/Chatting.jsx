@@ -5,9 +5,6 @@ const Chatting = () => {
 
 
 
-
-
-
     return (
         <section className={classes.Wrap}>
             <div className={classes.box}>
