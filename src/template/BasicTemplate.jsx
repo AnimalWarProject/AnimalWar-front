@@ -6,8 +6,8 @@ const BasicTemplate = () => {
     return (
         <>
             <Background className="background">
-                <Outlet />
                 <Header />
+                <Outlet />
             </Background>
         </>
     );

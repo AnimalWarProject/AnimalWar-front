@@ -1,0 +1,44 @@
+.profile-box {
+    display: flex;
+    flex-direction: column;
+    width: 34rem;
+    height: 12.5rem;
+    background-color: #000;
+    border: 0.0625rem solid #000;
+    padding: 1.25rem;
+    margin: 1.3rem 1.25rem 0 0;
+    box-sizing: border-box;
+    color: black;
+    align-items: center;
+}
+
+.profile-item {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.9375rem;
+    justify-content: space-between;
+}
+
+.profile-item img {
+    width: 3.125rem;
+    height: 3.125rem;
+    margin-right: 0.625rem;
+}
+
+.rate-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: #fff;
+    padding: 0.625rem;
+    border-radius: 0.3125rem;
+}
+
+.production-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+}
