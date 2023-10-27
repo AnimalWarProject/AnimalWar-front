@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
-import textLogo from './imgs/AnimalWarLogo.png';
-import Search from './imgs/Search.png';
+import textLogo from '../imgs/AnimalWarLogo.png';
+import Search from '../imgs/Search.png';
 import { api } from '../../network/api';
 
 function Header() {
