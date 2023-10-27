@@ -1,0 +1,9 @@
+
+
+.register-container{
+    background-color: #969DE3;
+    display: flex;
+    width: 18rem;
+    height: 37.1rem;
+    border: solid black 0.1rem;
+}

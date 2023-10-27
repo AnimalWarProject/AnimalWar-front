@@ -10,13 +10,13 @@ const MyRoutes = () => {
     return (
         <Routes>
             <Route path="/rank" element={<Rank />}></Route>
-
+s
             <Route element={<GameTemplate />}>
                 <Route path="/test" element={<BattlePage />}></Route>
-                <Route path="/market" element={<MarketPage />}></Route>
             </Route>
-
-            <Route element={<BasicTemplate />}>{/* <Route path="/market" element={<MarketPage />}></Route> */}</Route>
+            <Route element={<BasicTemplate />}>
+                 <Route path="/market" element={<MarketPage />}></Route>
+            </Route>
         </Routes>
     );
 };
