@@ -10,17 +10,17 @@ body {
     width: 108rem;
     height: 56rem;
     background-color: #fadbff;
-    border: 2px solid #000;
+    border: 0.125rem solid #000;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 .second-box {
-    width: 105rem;
+    width: 104.5rem;
     height: 53rem;
     background-color: #ffffff;
-    border: 2px solid #ffeaea;
+    border: 0.125rem solid #ffeaea;
     border-radius: 0.75rem;
     display: flex;
     justify-content: center;
@@ -28,10 +28,10 @@ body {
 }
 
 .third-box {
-    width: 100rem;
+    width: 101rem;
     height: 50rem;
     background-color: #ccf4ff;
-    border: 2px solid #000;
+    border: 0.125rem solid #000;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,6 +41,6 @@ body {
     width: 98rem;
     height: 47rem;
     background-color: #ffffff;
-    border: 2px solid #000;
+    border: 0.125rem solid #000;
     border-radius: 0.5rem;
 }
