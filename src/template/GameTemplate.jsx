@@ -15,11 +15,12 @@ const GameTemplate = () => {
                 <Header />
                 <div className="content-container">
                     <GameScreenTest />
-                    <div className="right-container">
+
+                    <div className="box-container">
                         <ResourceBox />
+                        <ProfileBox />
                         <Chatting />
                     </div>
-
                 </div>
                 <Outlet />
             </Background>

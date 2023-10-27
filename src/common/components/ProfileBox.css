@@ -2,43 +2,46 @@
     display: flex;
     flex-direction: column;
     width: 34rem;
-    height: 12.5rem;
+    height: 11.2rem;
     background-color: #000;
     border: 0.0625rem solid #000;
-    padding: 1.25rem;
-    margin: 1.3rem 1.25rem 0 0;
+    padding: 0.3rem;
+    margin: 0.3rem 1.25rem 0 0;
     box-sizing: border-box;
-    color: black;
+    color: #fff;
     align-items: center;
+    border-radius: 0.5rem;
 }
 
-.profile-item {
+.profile-item,
+.stats-item,
+.rate-item {
     width: 100%;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.9375rem;
-    justify-content: space-between;
+    margin: 0 0 0.5rem 0;
 }
 
-.profile-item img {
+.profile-item div,
+.stats-item div,
+.rate-item div {
+    display: flex;
+    align-items: center;
+    flex-basis: calc(100% / 3);
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.profile-item span,
+.stats-item span,
+.rate-item span {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.profile-item img,
+.stats-item img,
+.rate-item img {
     width: 3.125rem;
     height: 3.125rem;
-    margin-right: 0.625rem;
-}
-
-.rate-box {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    background-color: #fff;
-    padding: 0.625rem;
-    border-radius: 0.3125rem;
-}
-
-.production-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3125rem;
 }
