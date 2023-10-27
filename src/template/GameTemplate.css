@@ -11,3 +11,8 @@
 .content-container > *:last-child {
     margin-right: 0;
 }
+
+.right-container {
+    display: flex;
+    flex-direction: column;
+}
