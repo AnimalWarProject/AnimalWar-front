@@ -1,7 +1,7 @@
 import React from 'react';
 
 const BattlePage = () => {
-    return <div></div>;
+    return <div>check</div>;
 };
 
 export default BattlePage;
