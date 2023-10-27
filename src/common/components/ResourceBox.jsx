@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../network/api';
 import './ResourceBox.css';
-import goldIcon from './imgs/Gold.png';
-import foodIcon from './imgs/Food.png';
-import woodIcon from './imgs/Wood.png';
-import ironIcon from './imgs/Iron.png';
+import goldIcon from '../imgs/Gold.png';
+import foodIcon from '../imgs/Food.png';
+import woodIcon from '../imgs/Wood.png';
+import ironIcon from '../imgs/Iron.png';
 
 const ResourceBox = () => {
     const [profile, setProfile] = useState({});
