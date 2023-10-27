@@ -1,7 +1,13 @@
 .content-container {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
     width: 100%;
+}
+
+.content-container > * {
+    margin-right: 1.25rem;
+}
+
+.content-container > *:last-child {
+    margin-right: 0;
 }
