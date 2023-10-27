@@ -68,31 +68,26 @@ const ProfileBox = () => {
             <div className="profile-item">
                 <img src={getSpeciesIcon(profile.species).icon} alt="species" />
                 <span>{getSpeciesIcon(profile.species).text}</span>
-            </div>
-            <div>
+
                 <img src={getLandFormIcon(profile.landForm).icon} alt="landForm" />
                 <span>{getLandFormIcon(profile.landForm).text}</span>
             </div>
-            <div className="profile-item">
+            <div className="stats-item">
                 <img src={attackIcon} alt="attackPower" />
                 <span>{profile.attackPower}</span>
-            </div>
-            <div className="profile-item">
+
                 <img src={defenseIcon} alt="defensePower" />
                 <span>{profile.defensePower}</span>
-            </div>
-            <div className="profile-item">
+
                 <img src={lifeIcon} alt="Life" />
                 <span>{profile.life}</span>
             </div>
-            <div className="rate-box">
+            <div className="rate-item">
                 <img src={rateIcon} alt="ratePerHour" />
-                <div className="production-details">
-                    <span>시간당 자원생산량</span>
-                    <span>식량: {profile.food}</span>
-                    <span>철: {profile.iron}</span>
-                    <span>나무: {profile.wood}</span>
-                </div>
+                <span>시간당 자원생산량</span>
+                <span>식량: {profile.food}</span>
+                <span>철: {profile.iron}</span>
+                <span>나무: {profile.wood}</span>
             </div>
         </div>
     );

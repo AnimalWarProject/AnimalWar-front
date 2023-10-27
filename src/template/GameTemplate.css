@@ -4,10 +4,7 @@
     width: 100%;
 }
 
-.content-container > * {
-    margin-right: 1.25rem;
-}
-
-.content-container > *:last-child {
-    margin-right: 0;
+.box-container {
+    display: flex;
+    flex-direction: column;
 }
