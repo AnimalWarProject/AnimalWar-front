@@ -1,0 +1,10 @@
+.content-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.box-container {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,17 +1,22 @@
-import { Routes, Route } from "react-router-dom";
-import Rank from "../pages/Ranking/components/Rank";
+import { Routes, Route } from 'react-router-dom';
+import BattlePage from '../pages/battle/BattlePage';
+import GameTemplate from '../template/GameTemplate';
+import BasicTemplate from '../template/BasicTemplate';
+import RankingPage from '../pages/ranking/RankingPage';
+import MarketPage from '../pages/market/components/MarketPage';
 
 const MyRoutes = () => {
-
     return (
-
         <Routes>
-            <Route path="/rank" element={<Rank />}></Route>
-            {/* <Route path="/redirect" element={<KakaoLoginRedirect />}></Route>
-              <Route path="/logout" element={<Logout />}></Route> */}
+            <Route path="/rank" element={<RankingPage />}></Route>
+
+            <Route element={<GameTemplate />}>
+                <Route path="/test" element={<BattlePage />}></Route>
+            </Route>
+            <Route element={<BasicTemplate />}>
+                <Route path="/market" element={<MarketPage />}></Route>
+            </Route>
         </Routes>
-
-
     );
 };
 
