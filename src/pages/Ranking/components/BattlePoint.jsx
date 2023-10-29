@@ -1,7 +1,13 @@
+import { useState } from "react"
 import "../css/BattlePoint.css"
 import crown from "../imgs/CROWN.png"
+import axios from "axios";
 
 const BattlePoint = () => {
+
+    const [battleRank,setBattleRank] = useState();
+
+    const getData = ()=>axios.get
 
 
     return (<>
@@ -18,6 +24,8 @@ const BattlePoint = () => {
                     <div>
 
                         <p className="battlePoint__user">
+
+
                             <img className="clown" src={crown} />
                             위장터진 정수
                         </p>
