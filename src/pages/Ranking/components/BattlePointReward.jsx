@@ -1,5 +1,8 @@
+import axios from 'axios';
 import '../css/BattlePointReward.css';
 import giftbox from '../imgs/GIFTBOX 1.png';
+
+
 
 const BattlePointReward = () => {
     return (
@@ -13,6 +16,7 @@ const BattlePointReward = () => {
                 <p className="content">2위 : 무료뽑기 10회</p>
                 <p className="content">3위 : 무료뽑기 5회</p>
             </div>
+
         </>
     );
 };

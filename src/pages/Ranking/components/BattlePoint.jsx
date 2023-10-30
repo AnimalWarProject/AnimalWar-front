@@ -1,13 +1,25 @@
-import { useState } from "react"
+
 import "../css/BattlePoint.css"
 import crown from "../imgs/CROWN.png"
 import axios from "axios";
 
+import { useState, useEffect } from "react";
+
 const BattlePoint = () => {
 
-    const [battleRank, setBattleRank] = useState();
 
-    const getData = () => axios.get
+
+    const [data, setData] = useState([]);
+    const getData = () =>
+
+        axios.get("http://localhost:8000/api/v1/rank/byBattlePoint").then((response) => {
+            console.log(response.data);
+            setData(response.data);
+        });
+
+    useEffect(() => {
+        getData();
+    }, []);
 
 
     return (<>
@@ -19,32 +31,9 @@ const BattlePoint = () => {
             {/* 내용 */}
 
             <div className="userList">
-                <div>
-
-                    <div>
-
-                        <p className="battlePoint__user">
-
-
-                            <img className="clown" src={crown} />
-                            위장터진 정수
-                        </p>
-                    </div>
-
-                </div>
-
-                <p className="battlePoint__user">2. 붉닭정수</p>
-                <p className="battlePoint__user">3. 붉닭정수</p>
-                <p className="battlePoint__user">4. 붉닭정수</p>
-                <p className="battlePoint__user">5. 붉닭정수</p>
-                <p className="battlePoint__user">6. 붉닭정수</p>
-                <p className="battlePoint__user">7. 붉닭정수</p>
-                <p className="battlePoint__user">8. 붉닭정수</p>
-                <p className="battlePoint__user">9. 붉닭정수</p>
-                <p className="battlePoint__user">10. 붉닭정수</p>
-  
-
-
+                {data.map((el, index) => (
+                    <p className="power__title">{index + 1}. {el.nickName}</p>
+                ))}
             </div>
 
         </div>

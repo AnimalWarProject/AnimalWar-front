@@ -15,7 +15,6 @@ const MyRoutes = () => {
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />}></Route>
                 <Route path="/rank" element={<RankingPage />}></Route>
-
             </Route>
         </Routes>
     );
