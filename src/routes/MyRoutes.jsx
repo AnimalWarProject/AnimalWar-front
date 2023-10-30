@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
+import DrawPage from "../pages/draw/components/DrawPage";
 import RankingPage from '../pages/Ranking/RankingPage';
 import MarketPage from '../pages/market/components/MarketPage';
 import LoginPage from '../pages/login/LoginPage';
@@ -18,7 +19,8 @@ const MyRoutes = () => {
                 <Route path="/test" element={<BattlePage />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
-                <Route path="/market" element={<MarketPage />}></Route>
+                 <Route path="/market" element={<MarketPage />}></Route>
+                 <Route path="/draw" element={<DrawPage />}></Route>
             </Route>
         </Routes>
     );
