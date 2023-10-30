@@ -1,6 +1,7 @@
 
 .searchbox-container{
     border: solid black 1px;
+    border-radius: 1rem;
     background-color: #f2f2f2;
     width: 13.85rem;
     height: 37.1rem;
