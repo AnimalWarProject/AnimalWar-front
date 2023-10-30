@@ -5,19 +5,19 @@ import plusIcon from "../imgs/plusIcon.png"
 import {useState} from "react";
 
 const Chatting = () => {
-    // const [inputText, setInputText] = useState('');
-    // const maxLength = 100; // 최대 글자 수
-    //
-    // const handleInputChange = (event) => {
-    //     const text = event.target.value;
-    //
-    //     // 입력된 텍스트 길이가 최대 길이를 초과하지 않도록 확인
-    //     if (text.length <= maxLength) {
-    //         setInputText(text);
-    //     } else {
-    //         alert('100자를 초과하였습니다.'); // 100자를 초과한 경우 알림
-    //     }
-    // };
+    const [inputText, setInputText] = useState('');
+    const maxLength = 100; // 최대 글자 수
+
+    const handleInputChange = (event) => {
+        const text = event.target.value;
+
+        // 입력된 텍스트 길이가 최대 길이를 초과하지 않도록 확인
+        if (text.length <= maxLength) {
+            setInputText(text);
+        } else {
+            alert('100자를 초과하였습니다.'); // 100자를 초과한 경우 알림
+        }
+    };
 
 
     return (
@@ -33,19 +33,19 @@ const Chatting = () => {
                 </div>
 
 
-                <div className={classes.sendBox}>
-                    {/*<dutton lassName={classes.sendPlusButton}>*/}
-                    {/*    <img src={plusIcon}/>*/}
-                    {/*</dutton>*/}
+                <div className={classes.send_box}>
+                    <dutton lassName={classes.send_plus_button}>
+                        <img src={plusIcon}/>
+                    </dutton>
 
-                    {/*<input className={classes.sendInput} value={inputText}*/}
-                    {/*       onChange={handleInputChange}*/}
-                    {/*       maxLength={maxLength}>*/}
-                    {/*</input>*/}
+                    <input className={classes.send_input} value={inputText}
+                           onChange={handleInputChange}
+                           maxLength={maxLength}>
+                    </input>
 
-                    {/*<button className={classes.sendButton}>*/}
-                    {/*    <img src={sendIcon}/>*/}
-                    {/*</button>*/}
+                    <button className={classes.send_button}>
+                        <img src={sendIcon}/>
+                    </button>
                 </div>
 
 

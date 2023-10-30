@@ -34,8 +34,8 @@
 
 .message {
     width: 100%;
-    height: 66%;
-    background: blue;
+    height: 79%;
+    background: none;
     justify-content: center;
     overflow-y: scroll; /* 세로 스크롤을 표시합니다. */
 }
@@ -66,26 +66,26 @@
 }
 
 
-.send-box {
+.send_box {
     display: flex;
     flex-direction: row;
     width: 100%;
-    /*height: calc(100% / 8);*/
-    height: 100%;
+    height: calc(100% / 8);
+    align-items: center;
     background: #F4EBA7;
 }
 
-.send-plus-button {
-
+.send_plus_button {
+    align-items: center;
 }
 
-.send-input {
+.send_input {
     width: 80%;
     height: 75%;
     align-items: center;
 }
 
-.send-button {
+.send_button {
     background: none;
     border: none;
     align-items: center;
