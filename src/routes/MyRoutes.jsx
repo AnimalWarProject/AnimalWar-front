@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
-import RankingPage from '../pages/ranking/RankingPage';
+import RankingPage from '../pages/Ranking/RankingPage';
 import MarketPage from '../pages/market/components/MarketPage';
 
 const MyRoutes = () => {
