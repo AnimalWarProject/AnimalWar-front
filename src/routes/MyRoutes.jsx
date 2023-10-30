@@ -4,6 +4,7 @@ import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
 import RankingPage from '../pages/Ranking/RankingPage';
 import MarketPage from '../pages/market/components/MarketPage';
+import Match from '../pixi/Match/Match';
 
 const MyRoutes = () => {
     return (
@@ -16,6 +17,8 @@ const MyRoutes = () => {
                 <Route path="/market" element={<MarketPage />}></Route>
                 <Route path="/rank" element={<RankingPage />}></Route>
             </Route>
+
+
         </Routes>
     );
 };
