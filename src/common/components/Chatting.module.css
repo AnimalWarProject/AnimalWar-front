@@ -38,6 +38,14 @@
     background: none;
     justify-content: center;
     overflow-y: scroll; /* 세로 스크롤을 표시합니다. */
+
+}
+
+.message_title {
+    font-size: 1.3em;
+    font-weight: bolder;
+    border-top: 1px solid white;
+    margin: 0 0.5em;
 }
 
 .message_container {
@@ -58,6 +66,7 @@
     align-items: center;
 }
 
+
 .message-record {
     width: 80%;
     height: 3rem;
@@ -69,10 +78,12 @@
 .send_box {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
     width: 100%;
     height: calc(100% / 8);
-    align-items: center;
     background: #F4EBA7;
+    border-top: white;
 }
 
 .send_plus_button {
@@ -89,4 +100,13 @@
     background: none;
     border: none;
     align-items: center;
+}
+
+.message::-webkit-scrollbar {
+    width: 10px;
+}
+
+.message::-webkit-scrollbar-thumb {
+    background: black; /* 검정 색상으로 변경 */
+    border-radius: 10px; /* 원형 모양의 스크롤바를 만듭니다. */
 }
