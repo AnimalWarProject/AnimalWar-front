@@ -30,7 +30,7 @@ const Chatting = () => {
     }
 
 
-// 커서를 올려두었을 때 채팅창 커지게 하기
+
     const handleInputChange = (event) => {
         const text = event.target.value;
 
@@ -42,9 +42,11 @@ const Chatting = () => {
         }
     };
 
+
+// 커서를 올려두었을 때 채팅창 커지게 하기
     const handleFocus = () => {
         // setIsFocused(true);
-        wrapRef.current.style.position = 'absolute';
+        wrapRef.current.style.position = 'absolute'; //GameTemplate.css의 box-container에 position: relative; 이렇게 주면 위치를 변동하곘다는거임..
         wrapRef.current.style.height = '97%';
         wrapRef.current.style.top = '2%';
     }
