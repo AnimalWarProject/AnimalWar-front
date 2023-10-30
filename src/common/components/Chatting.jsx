@@ -6,23 +6,14 @@ import Rectangle6 from "../imgs/Rectangle 6.png"
 import Rectangle7 from "../imgs/Rectangle 7.png"
 import sendIcon from "../imgs/send.png"
 import plusIcon from "../imgs/plusIcon.png"
-import {useState} from "react";
+import {useRef, useState} from "react";
+import {calculateNewValue} from "@testing-library/user-event/dist/utils";
 
 const Chatting = () => {
     const [inputText, setInputText] = useState('');
     const maxLength = 100; // 최대 글자 수
-    const randomColorClass = 'random-color'; // 랜덤 색상 클래스 이름
-
-    const handleInputChange = (event) => {
-        const text = event.target.value;
-
-        // 입력된 텍스트 길이가 최대 길이를 초과하지 않도록 확인
-        if (text.length <= maxLength) {
-            setInputText(text);
-        } else {
-            alert('100자를 초과하였습니다.'); // 100자를 초과한 경우 알림
-        }
-    };
+    const [isFocused, setIsFocused] = useState(false);
+    const wrapRef = useRef();
 
 
 
@@ -39,14 +30,42 @@ const Chatting = () => {
     }
 
 
+// 커서를 올려두었을 때 채팅창 커지게 하기
+    const handleInputChange = (event) => {
+        const text = event.target.value;
 
+        // 입력된 텍스트 길이가 최대 길이를 초과하지 않도록 확인
+        if (text.length <= maxLength) {
+            setInputText(text);
+        } else {
+            alert('100자를 초과하였습니다.'); // 100자를 초과한 경우 알림
+        }
+    };
+
+    const handleFocus = () => {
+        // setIsFocused(true);
+        wrapRef.current.style.position = 'absolute';
+        wrapRef.current.style.height = '97%';
+        wrapRef.current.style.top = '2%';
+    }
+
+    const handleBlur = () => {
+        // setIsFocused(false);
+        wrapRef.current.style.position = 'absolute';
+        wrapRef.current.style.height = ' 21rem';
+        wrapRef.current.style.top = '49%';
+    }
+
+    const messageStyle = {
+        height: isFocused ? '80%' : '100%', // 커서가 입력 필드에 있을 때와 없을 때의 너비 조절
+    };
 
 
     return (
-        <section className={classes.Wrap}>
+        <section className={classes.Wrap} ref={wrapRef}>
             <div className={classes.box}>
                 <div className={classes.title}>CHATTING</div>
-                <div className={classes.message}>
+                <div className={classes.message} style={messageStyle}>
                     <div className={classes.message_title}>GOOD CHATTING PLZ!</div>
                     <div className={classes.message_container}>
                         <img className={classes.profileImg} src={Rectangle4}/>
@@ -81,8 +100,11 @@ const Chatting = () => {
                         <img src={plusIcon}/>
                     </dutton>
 
-                    <input className={classes.send_input} value={inputText}
+                    <input className={classes.send_input}
+                           value={inputText}
                            onChange={handleInputChange}
+                           onFocus={handleFocus}
+                           onBlur={handleBlur}
                            maxLength={maxLength}>
                     </input>
 
