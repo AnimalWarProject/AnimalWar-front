@@ -4,6 +4,7 @@ import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
 import MarketPage from "../pages/market/components/MarketPage";
+import DrawPage from "../pages/draw/components/DrawPage";
 
 
 const MyRoutes = () => {
@@ -16,6 +17,7 @@ s
             </Route>
             <Route element={<BasicTemplate />}>
                  <Route path="/market" element={<MarketPage />}></Route>
+                 <Route path="/draw" element={<DrawPage />}></Route>
             </Route>
         </Routes>
     );
