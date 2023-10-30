@@ -5,9 +5,9 @@ import axios from "axios";
 
 const BattlePoint = () => {
 
-    const [battleRank,setBattleRank] = useState();
+    const [battleRank, setBattleRank] = useState();
 
-    const getData = ()=>axios.get
+    const getData = () => axios.get
 
 
     return (<>
@@ -34,6 +34,16 @@ const BattlePoint = () => {
                 </div>
 
                 <p className="battlePoint__user">2. 붉닭정수</p>
+                <p className="battlePoint__user">3. 붉닭정수</p>
+                <p className="battlePoint__user">4. 붉닭정수</p>
+                <p className="battlePoint__user">5. 붉닭정수</p>
+                <p className="battlePoint__user">6. 붉닭정수</p>
+                <p className="battlePoint__user">7. 붉닭정수</p>
+                <p className="battlePoint__user">8. 붉닭정수</p>
+                <p className="battlePoint__user">9. 붉닭정수</p>
+                <p className="battlePoint__user">10. 붉닭정수</p>
+  
+
 
             </div>
 
