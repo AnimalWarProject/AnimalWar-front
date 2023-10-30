@@ -1,7 +1,25 @@
+
 import "../css/BattlePoint.css"
 import crown from "../imgs/CROWN.png"
+import axios from "axios";
+
+import { useState, useEffect } from "react";
 
 const BattlePoint = () => {
+
+
+
+    const [data, setData] = useState([]);
+    const getData = () =>
+
+        axios.get("http://localhost:8000/api/v1/rank/byBattlePoint").then((response) => {
+            console.log(response.data);
+            setData(response.data);
+        });
+
+    useEffect(() => {
+        getData();
+    }, []);
 
 
     return (<>
@@ -13,20 +31,9 @@ const BattlePoint = () => {
             {/* 내용 */}
 
             <div className="userList">
-                <div>
-
-                    <div>
-
-                        <p className="battlePoint__user">
-                            <img className="clown" src={crown} />
-                            위장터진 정수
-                        </p>
-                    </div>
-
-                </div>
-
-                <p className="battlePoint__user">2. 붉닭정수</p>
-
+                {data.map((el, index) => (
+                    <p className="power__title">{index + 1}. {el.nickName}</p>
+                ))}
             </div>
 
         </div>

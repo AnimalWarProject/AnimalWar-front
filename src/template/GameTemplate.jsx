@@ -14,7 +14,6 @@ const GameTemplate = () => {
                 <Header />
                 <div className="content-container">
                     <GameScreenTest />
-
                     <div className="box-container">
                         <ResourceBox />
                         <ProfileBox />
