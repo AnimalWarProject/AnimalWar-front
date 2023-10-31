@@ -8,6 +8,7 @@ import Match from '../pixi/Match/Match';
 import DrawPage from '../pixi/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
+import DrawLoading from "../pixi/draw/components/DrawLoading";
 import DrawResult from "../pixi/draw/components/DrawResult";
 
 const MyRoutes = () => {
@@ -20,6 +21,7 @@ const MyRoutes = () => {
                 <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
                 <Route path="/draw" element={<DrawPage />}></Route>
+                <Route path="/drawLoading" element={<DrawLoading />}></Route>
                 <Route path="/drawResult" element={<DrawResult />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
