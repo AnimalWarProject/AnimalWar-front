@@ -16,7 +16,6 @@ const Match = () => {
             height: canvasHeight,
         });
 
-        // Use ref to append the PIXI application view to the DOM.
         if (canvasRef.current) {
             canvasRef.current.appendChild(app.view);
         }
@@ -75,7 +74,7 @@ const Match = () => {
         };
     }, []);
 
-    return <div ref={canvasRef}></div>;
+    return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
 export default Match;
