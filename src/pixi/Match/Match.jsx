@@ -52,10 +52,10 @@ const Match = () => {
                 height: canvasHeight,
             });
 
-            // Use ref to append the PIXI application view to the DOM.
-            if (canvasRef.current) {
-                canvasRef.current.appendChild(app.view);
-            }
+        // Use ref to append the PIXI application view to the DOM.
+        if (canvasRef.current) {
+            canvasRef.current.appendChild(app.view);
+        }
 
             const background = PIXI.Sprite.from(back);
             background.width = app.screen.width;
@@ -187,14 +187,7 @@ const Match = () => {
         // };
     }, [isDataLoaded, userData]);
 
-    return (
-        <div>
-            {/* {!isDataLoaded && <div><img src={back}></img></div>} */}
-            <div ref={canvasRef}></div>
-
-        </div>
-
-    )
+    return <div ref={canvasRef}></div>;
 };
 
 export default Match;

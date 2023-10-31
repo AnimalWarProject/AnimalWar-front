@@ -13,7 +13,9 @@ const GameTemplate = () => {
             <Background className="background">
                 <Header />
                 <div className="content-container">
-                    <Outlet />
+                    <div className="outlet-container">
+                        <Outlet />
+                    </div>
                     <div className="box-container">
                         <ResourceBox />
                         <ProfileBox />
