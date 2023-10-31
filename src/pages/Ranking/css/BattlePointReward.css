@@ -1,9 +1,11 @@
 .rewardContainer {
     width: 372px;
-    height: 394px;
+    height: 200px;
+
     flex-shrink: 0;
     border: 1px solid #000;
     background: #FFF;
+    overflow-y: scroll;
 }
 
 .title {
@@ -32,7 +34,7 @@
     color: #000;
 
     /* 위 오 아 왼 */
-    margin: 40px 0px 0px 20px;
+    margin: 20px 0px 0px 20px;
     font-variant-numeric: stacked-fractions;
     font-feature-settings: 'hlig' on, 'dlig' on;
     font-family: Noto Sans Arabic;

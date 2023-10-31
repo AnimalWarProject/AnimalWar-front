@@ -1,8 +1,16 @@
 .main {
-    width: 313px;
-    height: 854px;
+    width: 22%;
     border: 1px solid #000;
     background: #FFF;
+}
+
+.userList {
+    /* 높이를 지정하여 스크롤 가능한 컨테이너로 만듭니다. */
+    max-height: 550px;
+    /* 원하는 높이로 조절하세요 */
+    overflow-y: scroll;
+
+    /* 세로 스크롤만 표시 */
 }
 
 .battlePoint {

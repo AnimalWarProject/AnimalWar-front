@@ -2,8 +2,6 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'http://192.168.0.222:8000';
 
-// 초기설정 안됨. 수정해야함. 변수도 accessToken으로 바꿔야함
-
 export const apiNoToken = async (url, method, data) => {
     try {
         const body = await axios({
@@ -34,36 +32,16 @@ export const api = async (url, method, data) => {
     }
 };
 
-async function refreshAccessToken() {
-    const refreshToken = localStorage.getItem('refreshToken');
-    try {
-        const response = await apiNoToken('/api/v1/auth/refresh', 'POST', {
-            refreshToken,
-        });
-        if (response.status === 200) {
-            return response.data;
-        }
-    } catch (error) {
-        console.error('Failed to refresh accessToken:', error);
-        throw error;
-    }
-    return null;
-}
-
 function storeAccessToken(accessToken) {
     localStorage.setItem('accessToken', accessToken);
 }
 
-async function storeNewAccessToken() {
-    try {
-        const newAccessToken = await refreshAccessToken();
-        if (newAccessToken) {
-            storeAccessToken(newAccessToken);
-        } else {
-            console.error('refresh token fail');
-        }
-    } catch (error) {
-        console.error('Error', error);
+async function storeNewAccessToken(refreshFunc) {
+    const newAccessToken = await refreshFunc();
+    if (newAccessToken && newAccessToken.accessToken) {
+        storeAccessToken(newAccessToken.accessToken);
+    } else {
+        console.error('Failed to refresh the access token');
     }
 }
 
@@ -74,11 +52,32 @@ export async function requestWithAutoRefresh(endpoint, method, data) {
     } catch (error) {
         if (error.response && error.response.status === 403) {
             console.log('Access token expired');
-            await storeNewAccessToken();
-            console.log('Retrying');
+            await storeNewAccessToken(refreshAccessToken);
             const newResponse = await api(endpoint, method, data);
             return newResponse;
         }
+        console.error('Error in requestWithAutoRefresh:', error);
         throw error;
     }
+}
+
+export async function getRefreshTokenFromDB() {
+    const response = await api('/api/v1/auth/getRefreshToken', 'GET');
+    return response.data.refreshToken;
+}
+
+export async function refreshAccessToken() {
+    const refreshToken = await getRefreshTokenFromDB();
+    try {
+        const response = await apiNoToken('/api/v1/auth/newAccessToken', 'POST', {
+            refreshToken,
+        });
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.error('Failed to refresh accessToken:', error);
+        throw error;
+    }
+    return null;
 }
