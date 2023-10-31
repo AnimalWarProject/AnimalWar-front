@@ -6,11 +6,10 @@
     height: 21rem;
     background-color: #000;
     border: 0.0625rem solid #000;
-    margin: 0.3rem 1.25rem 0 0;
+    margin: 0 1.25rem 0 0;
     box-sizing: border-box;
     color: white;
     border-radius: 0.5rem;
-
 
     transition: 0.5s ease;
     position: absolute;
@@ -20,14 +19,14 @@
 .box {
     display: flex;
     flex-direction: column;
-    border-top : white;
+    border-top: white;
     width: 100%;
     height: 100%;
     /*flex-shrink: 0;*/
 }
 
 .title {
-    color: #FFFBFB;
+    color: #fffbfb;
     text-align: center;
     font-size: 22px;
     font-style: normal;
@@ -43,7 +42,6 @@
     background: none;
     justify-content: center;
     overflow-y: scroll; /* 세로 스크롤을 표시합니다. */
-
 }
 
 .message_title {
@@ -70,14 +68,12 @@
     align-items: center;
 }
 
-
 .message-record {
     width: 80%;
     height: 3rem;
     align-items: center;
     white-space: pre-wrap; /* 공백 및 줄 바꿈 유지 */
 }
-
 
 .send_box {
     display: flex;
@@ -86,7 +82,7 @@
     justify-content: space-around;
     width: 100%;
     height: calc(100% / 8);
-    background: #F4EBA7;
+    background: #f4eba7;
     border-top: white;
 }
 
