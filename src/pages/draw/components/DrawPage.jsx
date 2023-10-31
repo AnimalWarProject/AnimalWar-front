@@ -1,6 +1,8 @@
+import AnimalDraw from "./AnimalDraw";
+
 const DrawPage = () => {
     return<>
-        q
+        <AnimalDraw/>
     </>
 }
 export default DrawPage;
