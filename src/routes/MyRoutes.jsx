@@ -15,10 +15,9 @@ import SignupPage from '../pages/signup/SignupPage';
 const MyRoutes = () => {
     return (
         <Routes>
-
-            <Route path="/rank" element={<RankingPage />}></Route>
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/signup" element={<SignupPage />}></Route>
+            <Route path="/match" element={<Match />}></Route>
 
 
             <Route element={<GameTemplate />}>
@@ -28,7 +27,7 @@ const MyRoutes = () => {
 
                 <Route path="/market" element={<MarketPage />}></Route>
                 <Route path="/rank" element={<RankingPage />}></Route>
-                 <Route path="/draw" element={<DrawPage />}></Route>
+                <Route path="/draw" element={<DrawPage />}></Route>
 
             </Route>
 

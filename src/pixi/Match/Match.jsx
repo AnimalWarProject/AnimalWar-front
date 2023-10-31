@@ -73,7 +73,7 @@ const Match = () => {
 
         // 텍스트 스프라이트를 생성합니다.
         const textStyle = new PIXI.TextStyle({
-            fill: 0x0F1828, // 텍스트 색상 (여기서는 흰색)
+            fill: 0x0F1828,
             fontSize: 24, // 폰트 크기
             fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
         });
@@ -88,9 +88,8 @@ const Match = () => {
 
 
         //한줄끝
+        app.stage.addChild(profileBox);
     }
-
-    app.stage.addChild(profileBox);
 
 
 
