@@ -1,0 +1,32 @@
+
+.drawBtn-wrap{
+    display: flex;
+    gap: 0.7rem;
+    position: absolute;
+    z-index: 1;
+    margin: 0.6rem 0 0 4.7rem;
+}
+.AnimalDraw{
+    width: 7.5rem;
+    height: 2.1rem;
+    border: solid #B6E4EA 0.6rem;
+    border-radius: 0.4rem;
+    background-color: #B6E4EA;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.BuildingDraw{
+    width: 7.5rem;
+    height: 2.1rem;
+    border: solid #B6C1EA 0.6rem;
+    border-radius: 0.4rem;
+    background-color: #B6C1EA;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+

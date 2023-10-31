@@ -61,42 +61,51 @@ const AnimalDraw = () => {
         imageSprite1.y = 100;
         profileBox.addChild(imageSprite1);
 
-        const drawBtn = new PIXI.Graphics(); // 1회 뽑기 버튼
-        drawBtn.beginFill(0xA3FFF9, 0.7);
-        const drawBtnWidth = 170;
-        const drawBtnHeight = 40;
-        drawBtn.drawRoundedRect(190, 480, drawBtnWidth, drawBtnHeight, 40);
-        app.stage.addChild(drawBtn);
+        const drawOneBtn = new PIXI.Graphics(); // 1회 뽑기 버튼
+        drawOneBtn.beginFill(0x6AFFF6, 0.7);
+        const drawOneBtnWidth = 170;
+        const drawOneBtnHeight = 40;
+        drawOneBtn.drawRoundedRect(190, 480, drawOneBtnWidth, drawOneBtnHeight, 40);
 
+        const oneButtonContainer = new PIXI.Container();
+        oneButtonContainer.interactive = true; // 클릭 가능하도록 설정
+        oneButtonContainer.buttonMode = true; // 마우스 오버 시 커서가 손가락 아이콘으로 변경
+        oneButtonContainer.addChild(drawOneBtn);
+        oneButtonContainer.on('pointertap', () => {
+            alert("1 클릭")
+        });
+        const textStyle = new PIXI.TextStyle({
+            fill: 0x0f1828,
+            fontSize: 18,
+            fontFamily: 'Arial',
+            fontWeight: "bold"
+        });
+        const oneDrawTtext = new PIXI.Text('1회 뽑기', textStyle);
+        drawOneBtn.addChild(oneDrawTtext);
+        oneDrawTtext.x = 240;
+        oneDrawTtext.y = 490;
 
-        // for (let i = 0; i < 6; i++) {
-        //     const box1 = new PIXI.Graphics();
-        //     box1.beginFill(0xffffff, 0.5);
-        //     const boxWidth = canvasWidth * 0.5;
-        //     const boxHeight = canvasHeight * 0.1;
-        //     box1.drawRoundedRect(300, 80 + i * 80, boxWidth, boxHeight, 20);
-        //     profileBox.addChild(box1);
-        //
-        //     const column = new PIXI.Graphics();
-        //     column.beginFill(0xffc000);
-        //     const columnWidth = canvasWidth * 0.13;
-        //     const columnHeight = canvasHeight * 0.09;
-        //     column.drawRoundedRect(320, 82 + i * 80, columnWidth, columnHeight, 10);
-        //     profileBox.addChild(column);
-        //
-        //     const textStyle = new PIXI.TextStyle({
-        //         fill: 0x0f1828,
-        //         fontSize: 24,
-        //         fontFamily: 'Arial',
-        //     });
-        //
-        //     const text = new PIXI.Text('닉네임', textStyle);
-        //     column.addChild(text);
-        //     text.x = 340;
-        //     text.y = 100 + i * 80;
-        // }
+        const drawManyBtn = new PIXI.Graphics(); // 10회 뽑기 버튼
+        drawManyBtn.beginFill(0x6AFFF6, 0.7);
+        const drawManyBtnWidth = 170;
+        const drawManyBtnHeight = 40;
+        drawManyBtn.drawRoundedRect(580, 480, drawManyBtnWidth, drawManyBtnHeight, 40);
+
+        const manyButtonContainer = new PIXI.Container();
+        manyButtonContainer.interactive = true; // 클릭 가능하도록 설정
+        manyButtonContainer.buttonMode = true; // 마우스 오버 시 커서가 손가락 아이콘으로 변경
+        manyButtonContainer.addChild(drawManyBtn);
+        manyButtonContainer.on('pointertap', () => {
+            alert("10 클릭")
+        });
+        const manyDrawTtext = new PIXI.Text('10회 뽑기', textStyle);
+        drawManyBtn.addChild(manyDrawTtext);
+        manyDrawTtext.x = 630;
+        manyDrawTtext.y = 490;
 
         app.stage.addChild(profileBox);
+        app.stage.addChild(oneButtonContainer);
+        app.stage.addChild(manyButtonContainer);
 
         // Cleanup on component unmount
         return () => {
@@ -104,7 +113,7 @@ const AnimalDraw = () => {
         };
     }, []);
 
-    return <div ref={canvasRef}></div>;
+    return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
 export default AnimalDraw;
