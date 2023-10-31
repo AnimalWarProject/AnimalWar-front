@@ -5,10 +5,10 @@ import BasicTemplate from '../template/BasicTemplate';
 import RankingPage from '../pages/Ranking/RankingPage';
 import MarketPage from '../pages/market/components/MarketPage';
 import Match from '../pixi/Match/Match';
-
 import DrawPage from '../pixi/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
+import DrawResult from "../pixi/draw/components/DrawResult";
 
 const MyRoutes = () => {
     return (
@@ -20,6 +20,7 @@ const MyRoutes = () => {
                 <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
                 <Route path="/draw" element={<DrawPage />}></Route>
+                <Route path="/drawResult" element={<DrawResult />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />}></Route>

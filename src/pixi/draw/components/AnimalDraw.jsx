@@ -3,9 +3,12 @@ import * as PIXI from "pixi.js";
 import back from "../imgs/Rectangle 12299.png";
 import oneEgg from "../imgs/ONEEGG 1.png";
 import manyEgg from "../imgs/MANYEGG 1.png";
+import {useNavigate} from "react-router-dom";
+import AnimalDrawResult from "./DrawResult";
 
 const AnimalDraw = () => {
     const canvasRef = useRef(null);
+    const nav = useNavigate();
 
     useEffect(() => {
         const canvasWidth = 960;
@@ -72,7 +75,8 @@ const AnimalDraw = () => {
         oneButtonContainer.buttonMode = true; // 마우스 오버 시 커서가 손가락 아이콘으로 변경
         oneButtonContainer.addChild(drawOneBtn);
         oneButtonContainer.on('pointertap', () => {
-            alert("1 클릭")
+            nav('/drawResult')
+            // axios.post
         });
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
@@ -80,10 +84,10 @@ const AnimalDraw = () => {
             fontFamily: 'Arial',
             fontWeight: "bold"
         });
-        const oneDrawTtext = new PIXI.Text('1회 뽑기', textStyle);
-        drawOneBtn.addChild(oneDrawTtext);
-        oneDrawTtext.x = 240;
-        oneDrawTtext.y = 490;
+        const oneDrawText = new PIXI.Text('1회 뽑기', textStyle);
+        drawOneBtn.addChild(oneDrawText);
+        oneDrawText.x = 240;
+        oneDrawText.y = 490;
 
         const drawManyBtn = new PIXI.Graphics(); // 10회 뽑기 버튼
         drawManyBtn.beginFill(0x6AFFF6, 0.7);
@@ -97,6 +101,7 @@ const AnimalDraw = () => {
         manyButtonContainer.addChild(drawManyBtn);
         manyButtonContainer.on('pointertap', () => {
             alert("10 클릭")
+            // axios.post
         });
         const manyDrawTtext = new PIXI.Text('10회 뽑기', textStyle);
         drawManyBtn.addChild(manyDrawTtext);
