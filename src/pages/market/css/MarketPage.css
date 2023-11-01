@@ -1,7 +1,7 @@
 
 .marketPage-container{
     display: flex;
-    gap: 75px;
+    gap: 4.7rem;
     margin: 2.8rem;
     justify-content: center;
 }
