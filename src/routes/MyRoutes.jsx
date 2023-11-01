@@ -8,10 +8,12 @@ import Match from '../pixi/Match/Match';
 import DrawPage from '../pixi/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
+import Mix from "../pixi/Mix/Mix";
 import DrawResult from "../pixi/draw/components/DrawResult";
 import React from "react";
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
+
 
 
 const MyRoutes = () => {
@@ -31,8 +33,10 @@ const MyRoutes = () => {
                 <Route path="/rank" element={<RankingPage />} />
                 <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
+                <Route path="/mix" element={<Mix />}></Route>
                 <Route path="/match2" element={<MatchProcess />}></Route>
                 <Route path="/match3" element={<MatchComplete />}></Route>
+
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />}></Route>
