@@ -9,6 +9,7 @@ import Match from '../pixi/Match/Match';
 import DrawPage from '../pages/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
+import Mix from "../pixi/Mix/Mix";
 
 const MyRoutes = () => {
     return (
@@ -19,6 +20,7 @@ const MyRoutes = () => {
             <Route element={<GameTemplate />}>
                 <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
+                <Route path="/mix" element={<Mix />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />}></Route>
