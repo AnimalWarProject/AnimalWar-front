@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
 import back from "../imgs/Rectangle 12299.png";
 import oneEgg from "../imgs/ONEEGG 1.png";

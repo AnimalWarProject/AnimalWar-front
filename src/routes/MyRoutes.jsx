@@ -13,6 +13,7 @@ import DrawResult from "../pixi/draw/components/DrawResult";
 import React from "react";
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
+import DrawLoading from "../pixi/draw/components/DrawResult";
 
 
 
@@ -25,7 +26,7 @@ const MyRoutes = () => {
                 <Route path="/test" element={<BattlePage />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
-                <Route path="/draw/loading" element={<DrawOneLoading />} />
+                <Route path="/draw/loading" element={<DrawLoading />} />
                 <Route path="/draw/result" element={<DrawResult />} />
             </Route>
             <Route element={<BasicTemplate />}>
