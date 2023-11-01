@@ -23,13 +23,13 @@ const MyRoutes = () => {
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/result" element={<DrawResult />} />
+                <Route path="/mix" element={<Mix />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
                 <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
-                <Route path="/mix" element={<Mix />}></Route>
                 <Route path="/match2" element={<MatchProcess />}></Route>
                 <Route path="/match3" element={<MatchComplete />}></Route>
             </Route>
