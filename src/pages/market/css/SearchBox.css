@@ -1,6 +1,6 @@
 
 .searchbox-container{
-    border: solid black 1px;
+    border: solid black 0.06rem;
     border-radius: 1rem;
     background-color: #f2f2f2;
     width: 13.85rem;
@@ -17,17 +17,17 @@
     margin-top: 0.5rem;
     border: solid black 0.1rem;
     border-radius: 1rem;
-    width: 196.5px;
-    height: 45px;
+    width: 12.3rem;
+    height: 2.8rem;
     text-align: center;
 }
 .searchbox-animal{
     font-weight: bold;
     display: flex;
-    width: 150px;
-    height: 32.25px;
+    width: 9.4rem;
+    height: 2rem;
     background-color: #A3FFF9;
-    border: solid #000000 1px;
+    border: solid #000000 0.06rem;
     border-radius: 1rem;
     align-items: center;
     justify-content: left;
@@ -39,10 +39,10 @@
 .searchbox-building{
     font-weight: bold;
     display: flex;
-    width: 150px;
-    height: 32.25px;
+    width: 9.4rem;
+    height: 2rem;
     background-color: #FFD1FA;
-    border: solid #000000 1px;
+    border: solid #000000 0.06rem;
     border-radius: 1rem;
     align-items: center;
     justify-content: left;
@@ -55,9 +55,9 @@
 }
 .searchbox-type-line{
     margin-left: 1.2rem;
-    width: 31.5px;
-    height: 24px;
-    border: solid black 1px;
+    width: 2rem;
+    height: 1.5rem;
+    border: solid black 0.06rem;
     border-right: none;
     border-top: none;
 }
