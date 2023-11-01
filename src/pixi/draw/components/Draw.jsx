@@ -11,11 +11,13 @@ const Draw = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
 
-
-
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
+        const drawData = { // 건물 or 동물 , 1 or 10
+            type: "animal",
+            qty: 1
+        };
 
         const app = new PIXI.Application({
             backgroundColor: 0x1099bb,
@@ -57,11 +59,13 @@ const Draw = () => {
         const changeToAnimal = () => {
             imageSprite.texture = PIXI.Texture.from(oneEgg); // 1개 뽑기 이미지로 변경
             imageSprite1.texture = PIXI.Texture.from(manyEgg); // 10개 뽑기 이미지로 변경
+            drawData.type = "animal";
         };
 
         const changeToBuilding = () => {
             imageSprite.texture = PIXI.Texture.from(oneBuilding); // 건물 이미지로 변경
             imageSprite1.texture = PIXI.Texture.from(manyBuilding); // 10개 뽑기 이미지로 변경
+            drawData.type = "building";
         };
 
 
@@ -76,7 +80,8 @@ const Draw = () => {
         oneButtonContainer.buttonMode = true;
         oneButtonContainer.addChild(drawOneBtn);
         oneButtonContainer.on('pointertap', () => {
-            nav('/drawLoading');
+            drawData.qty = 1;
+            nav('/draw/loading', {state : drawData});
         });
 
         const textStyle = new PIXI.TextStyle({
@@ -101,7 +106,8 @@ const Draw = () => {
         manyButtonContainer.buttonMode = true;
         manyButtonContainer.addChild(drawManyBtn);
         manyButtonContainer.on('pointertap', () => {
-            alert("10 클릭");
+            drawData.qty = 10;
+            nav('/draw/loading', {state : drawData});
         });
 
         const manyDrawText = new PIXI.Text('10회 뽑기', textStyle);
@@ -151,7 +157,7 @@ const Draw = () => {
         app.stage.addChild(buildingButtonContainer);
     }, []);
 
-    return <div ref={canvasRef} className="outlet-container"></div>;
+        return <div ref={canvasRef} className="outlet-container"></div>
 };
 
 export default Draw;

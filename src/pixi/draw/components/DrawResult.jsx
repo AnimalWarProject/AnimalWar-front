@@ -47,7 +47,7 @@ const DrawLoading = () => {
             fontWeight: "bold"
         });
 
-        const oneDrawText = new PIXI.Text('클릭하면 결과를 확인할 수 있습니다.', textStyle);
+        const oneDrawText = new PIXI.Text('결과 화면.', textStyle);
         profileBox.addChild(oneDrawText);
         oneDrawText.x = 330;
         oneDrawText.y = 450;

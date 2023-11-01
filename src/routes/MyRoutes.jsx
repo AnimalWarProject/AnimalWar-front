@@ -8,25 +8,26 @@ import Match from '../pixi/Match/Match';
 import DrawPage from '../pixi/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
-import DrawLoading from "../pixi/draw/components/DrawLoading";
 import DrawResult from "../pixi/draw/components/DrawResult";
+import React from "react";
+import DrawOneLoading from "../pixi/draw/components/DrawLoading";
 
 const MyRoutes = () => {
     return (
         <Routes>
-            <Route path="/login" element={<LoginPage />}></Route>
-            <Route path="/signup" element={<SignupPage />}></Route>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
 
             <Route element={<GameTemplate />}>
-                <Route path="/test" element={<BattlePage />}></Route>
-                <Route path="/match" element={<Match />}></Route>
-                <Route path="/draw" element={<DrawPage />}></Route>
-                <Route path="/drawLoading" element={<DrawLoading />}></Route>
-                <Route path="/drawResult" element={<DrawResult />}></Route>
+                <Route path="/test" element={<BattlePage />} />
+                <Route path="/match" element={<Match />} />
+                <Route path="/draw" element={<DrawPage />} />
+                <Route path="/draw/loading" element={<DrawOneLoading />} />
+                <Route path="/draw/result" element={<DrawResult />} />
             </Route>
             <Route element={<BasicTemplate />}>
-                <Route path="/market" element={<MarketPage />}></Route>
-                <Route path="/rank" element={<RankingPage />}></Route>
+                <Route path="/market" element={<MarketPage />} />
+                <Route path="/rank" element={<RankingPage />} />
             </Route>
         </Routes>
     );

@@ -2,23 +2,22 @@ import {useEffect, useRef} from "react";
 import * as PIXI from "pixi.js";
 import back from "../imgs/Rectangle 12299.png";
 import randomEgg from "../imgs/RANDOMEGG 2.png";
-import randomEgg1 from "../imgs/egg-1.png";
-import randomEgg2 from "../imgs/egg-1-2.png";
-import randomEgg3 from "../imgs/egg-2.png";
-import randomEgg4 from "../imgs/egg-3.png";
+import randomBuilding from "../imgs/RandomBuilding.png";
 import smokeImage from "../action/smoke.png";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const DrawLoading = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
-
-
+    const location = useLocation();
+    const drawData = location.state; // 전달된 데이터에 접근
+    const type = drawData.type;
 
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
         const smokeTexture = PIXI.Texture.from(smokeImage);
+        console.log(drawData)
 
         const app = new PIXI.Application({
             background: '#1099bb',
@@ -30,6 +29,8 @@ const DrawLoading = () => {
         if (canvasRef.current) {
             canvasRef.current.appendChild(app.view);
         }
+
+
 
         const background = PIXI.Sprite.from(back);
         background.width = app.screen.width;
@@ -73,34 +74,17 @@ const DrawLoading = () => {
         randomEggSprite.interactive = true;
         randomEggSprite.buttonMode = true;
         randomEggSprite.on('pointertap', () => {
-            const imageNames = [randomEgg, randomEgg1, randomEgg2, randomEgg3, randomEgg4];
-            const imageTextures = imageNames.map((imageName) =>
-                PIXI.Texture.from(imageName)
-            );
-
-            const imageSprite = new PIXI.Sprite(imageTextures[0]);
-            imageSprite.anchor.set(0.5);
-            imageSprite.x = 475; // 이미지의 초기 x 위치
-            imageSprite.y = 300; // 이미지의 초기 y 위치
-            profileBox.addChild(imageSprite);
-
-            let currentIndex = 0;
-
-            const showNextImage = () => {
-                if (currentIndex < imageTextures.length) {
-                    imageSprite.texture = imageTextures[currentIndex];
-                    currentIndex++;
-
-                    setTimeout(showNextImage, 1000); // 이미지 변경 간격 (1초)
-                } else {
-                    // 모든 이미지를 보여준 후에 마지막 이미지를 제거
-                    profileBox.removeChild(imageSprite);
-                }
-            };
-
-            showNextImage();
+            nav('/draw/result')
         });
+
+        if (type === "animal"){
+            randomEggSprite.texture = PIXI.Texture.from(randomEgg)
+        }else {
+            randomEggSprite.texture = PIXI.Texture.from(randomBuilding)
+        }
+
         profileBox.addChild(randomEggSprite);
+
 
         // Create variables for animation
         let rotationSpeed = 0.01; // 회전 속도
@@ -133,7 +117,7 @@ const DrawLoading = () => {
         };
     }, []);
 
-    return <div ref={canvasRef} className="outlet-container"></div>;
+        return <div ref={canvasRef} className="outlet-container"></div>
 };
 
 export default DrawLoading;
