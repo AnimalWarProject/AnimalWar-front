@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
-import textLogo from '../imgs/AnimalWarLogo.png';
 import Search from '../imgs/Search.png';
 import { api } from '../../network/api';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 function Header() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [profile, setProfile] = useState({});
     const [searchedUser, setSearchedUser] = useState(null);
     const [searchInput, setSearchInput] = useState('');
+    const [searchImageUrl, setSearchImageUrl] = useState(null);
+    const [logoUrl, setLogoUrl] = useState(null);
 
     const getProfileData = async () => {
         try {
@@ -33,11 +35,37 @@ function Header() {
 
     useEffect(() => {
         getProfileData();
+        fetchLogoUrl();
+        fetchSearchImageUrl();
     }, []);
+
+    const fetchLogoUrl = async () => {
+        const storage = getStorage();
+        const logoRef = ref(storage, 'Logo.png');
+
+        try {
+            const url = await getDownloadURL(logoRef);
+            setLogoUrl(url);
+        } catch (error) {
+            console.error('Failed to fetch logo URL:', error);
+        }
+    };
+
+    const fetchSearchImageUrl = async () => {
+        const storage = getStorage();
+        const searchImageRef = ref(storage, 'Search.png');
+
+        try {
+            const url = await getDownloadURL(searchImageRef);
+            setSearchImageUrl(url);
+        } catch (error) {
+            console.error('Failed to fetch search image URL:', error);
+        }
+    };
 
     return (
         <div className="header-container">
-            <img className="logo" src={textLogo} alt="Logo" />
+            <img className="logo" src={logoUrl || 'default-image-path'} alt="Logo" />
 
             <div className="menu-buttons">
                 <NavLink to="/main">홈</NavLink>
@@ -60,7 +88,7 @@ function Header() {
                     onChange={(e) => setSearchInput(e.target.value)}
                 />
                 <button onClick={handleSearch}>
-                    <img className="search-icon" src={Search} alt="Search" />
+                    <img className="search-icon" src={searchImageUrl || 'default-image-path'} alt="Search" />
                 </button>
             </div>
 

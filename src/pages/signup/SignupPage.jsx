@@ -1,19 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Signup.css';
 import uploadImageToFirebase from '../../network/firebaseUtils';
-import dogIcon from '../../common/imgs/Dog.png';
-import catIcon from '../../common/imgs/Cat.png';
-import gliresIcon from '../../common/imgs/Glires.png';
-import birdIcon from '../../common/imgs/Bird.png';
-import fishIcon from '../../common/imgs/Fish.png';
-
-const speciesImages = {
-    DOG: dogIcon,
-    CAT: catIcon,
-    GLIRES: gliresIcon,
-    BIRD: birdIcon,
-    FISH: fishIcon,
-};
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
@@ -23,6 +11,25 @@ const SignupPage = () => {
         profileImage: '',
         species: null,
     });
+
+    const [speciesImages, setSpeciesImages] = useState({});
+
+    useEffect(() => {
+        const fetchImageUrls = async () => {
+            const storage = getStorage();
+            const tempImages = {};
+            const speciesList = ['Dog', 'Cat', 'Glires', 'Bird', 'Fish'];
+
+            for (const species of speciesList) {
+                const imageRef = ref(storage, `${species}.png`);
+                tempImages[species] = await getDownloadURL(imageRef);
+                console.log('Fetched URL for', species, ':', tempImages[species]);
+            }
+            setSpeciesImages(tempImages);
+        };
+
+        fetchImageUrls();
+    }, []);
 
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];

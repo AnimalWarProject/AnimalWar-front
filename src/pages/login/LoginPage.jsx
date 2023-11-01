@@ -1,12 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { apiNoToken } from '../../network/api';
 import { useNavigate } from 'react-router-dom';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import './Login.css';
 
 const LoginPage = () => {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
+    const [imgUrl, setImgUrl] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchImageFromFirebase = async () => {
+            const storage = getStorage();
+            const imageRef = ref(storage, 'AnimalCrowd.png');
+
+            try {
+                const url = await getDownloadURL(imageRef);
+                setImgUrl(url);
+            } catch (error) {
+                console.error('Failed to fetch image URL:', error);
+            }
+        };
+
+        fetchImageFromFirebase();
+    }, []);
 
     const handleLogin = async () => {
         try {
@@ -26,16 +44,19 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="login-container">
-            <h2>로그인</h2>
-            <input type="id" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)} />
-            <input
-                type="password"
-                placeholder="비밀번호"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleLogin}>로그인</button>
+        <div className="login-page-container">
+            <div className="login-container">
+                <h2>로그인</h2>
+                <input type="id" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)} />
+                <input
+                    type="password"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button onClick={handleLogin}>로그인</button>
+            </div>
+            {imgUrl && <img src={imgUrl} alt="Animal Crowd" className="login-image" />}
         </div>
     );
 };
