@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Signup.css';
-import uploadImageToFirebase from '../../network/firebaseUtils';
+import uploadImageToFirebase from '../../network/FirebaseUtils';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 const SignupPage = () => {
