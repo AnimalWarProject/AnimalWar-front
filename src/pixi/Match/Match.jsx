@@ -3,9 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import back from './imgs/Rectangle12273.png';
 import test from './imgs/Rectangle 3.png';
 import axios from 'axios';
+import { ButtonContainer } from '@pixi/ui';
+import { Link, NavLink } from 'react-router-dom';
+import MatchProcess from './MatchProcess';
+import { useHistory } from 'react-router-use-history';
 
 const Match = () => {
     const canvasRef = useRef(null);
+    const history = useHistory();
 
     //데이터 받아오기 
     const [userData, setUserData] = useState([]);
@@ -16,7 +21,7 @@ const Match = () => {
 
     useEffect(() => {
 
-        const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6IuygleykgOq4sCIsInVzZXJVVUlEIjoiZDMzM2JmNmQtZGEzNS00ZGFhLWIxZTYtMTg2OTllYzQxOWVlIiwiaWQiOiJ0aGtpbTIiLCJzdWIiOiJ0aGtpbTIiLCJleHAiOjE2OTg3ODcxMzR9.VFNDBmnD9iGQIYrotUM-r5ePjwmbfI5XXrHhOCq924M'
+        const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6IuygleykgOq4sCIsInVzZXJVVUlEIjoiZDMzM2JmNmQtZGEzNS00ZGFhLWIxZTYtMTg2OTllYzQxOWVlIiwiaWQiOiJ0aGtpbTIiLCJzdWIiOiJ0aGtpbTIiLCJleHAiOjE3MDYwMDg3MjV9.nK449IpFyRtKlnRGgBS6b6i02P2DUvPjjPc5qw2xzng'
         const getTokenData = () =>
             axios
                 .get(`http://localhost:8000/api/v1/user`, {
@@ -47,19 +52,20 @@ const Match = () => {
             const canvasHeight = 640;
 
             const app = new PIXI.Application({
-                background: '#1099bb',
                 width: canvasWidth,
                 height: canvasHeight,
             });
 
-        // Use ref to append the PIXI application view to the DOM.
-        if (canvasRef.current) {
-            canvasRef.current.appendChild(app.view);
-        }
+            // Use ref to append the PIXI application view to the DOM.
+            if (canvasRef.current) {
+                canvasRef.current.appendChild(app.view);
+            }
 
             const background = PIXI.Sprite.from(back);
             background.width = app.screen.width;
             background.height = app.screen.height;
+
+
             app.stage.addChild(background);
 
             const profileBox = new PIXI.Graphics();
@@ -122,21 +128,14 @@ const Match = () => {
             }
 
             //매칭 시작 버튼 
-
-
-
             const box1 = new PIXI.Graphics();
             box1.beginFill(0xFFC000);
             const boxWidth = canvasWidth * 0.16;
             const boxHeight = canvasHeight * 0.1;
 
-
             box1.drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.78, boxWidth, boxHeight, 50);
-            profileBox.addChild(box1);
-
 
             // 매칭 시작 텍스트 스프라이트
-
             const textStyle2 = new PIXI.TextStyle({
                 fill: 0x0F1828,
                 fontSize: 24, // 폰트 크기
@@ -149,42 +148,33 @@ const Match = () => {
             profileBox.addChild(text2);
 
 
-
-            // const buttonContainer = new PIXI.Container();
-
-            // buttonContainer.addChild(box1);
-            // buttonContainer.interative = true;
-            // buttonContainer.buttonMode = true;
-
-            // buttonContainer.x = 500;
-            // buttonContainer.y = 500;
+            const button = new ButtonContainer(
+                new PIXI.Graphics()
+                    .beginFill(0xFFC000)
+                    .drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.78, boxWidth, boxHeight, 50)
+            )
 
 
-            // const button = new Button(
-            //     new PIXI.Graphics()
-            //         .beginFill(0xFFC000)
-            //         .drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.78, boxWidth, boxHeight, 50)
-            // );
+            button.onPress.connect(() => {
 
-            // button.onPress.connect(() => console.log('onPress'));
+                //다음스테이지
+                history.push("/match2");
 
-            // profileBox.addChild(button.view);
+            }
 
+            );
 
-
+            button.addChild(text2);
 
 
-
+            profileBox.addChild(button);
 
             app.stage.addChild(profileBox);
 
+
+
         }
 
-
-        // // Cleanup on component unmount
-        // return () => {
-        //     app.destroy();
-        // };
     }, [isDataLoaded, userData]);
 
     return <div ref={canvasRef}></div>;
