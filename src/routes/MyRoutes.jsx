@@ -9,6 +9,8 @@ import Match from '../pixi/Match/Match';
 import DrawPage from '../pages/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
+import MatchProcess from '../pixi/Match/MatchProcess';
+import MatchComplete from '../pixi/Match/MatchComplete';
 
 const MyRoutes = () => {
     return (
@@ -19,11 +21,14 @@ const MyRoutes = () => {
             <Route element={<GameTemplate />}>
                 <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
+                <Route path="/match2" element={<MatchProcess />}></Route>
+                <Route path="/match3" element={<MatchComplete />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />}></Route>
                 <Route path="/rank" element={<RankingPage />}></Route>
                 <Route path="/draw" element={<DrawPage />}></Route>
+
             </Route>
         </Routes>
     );
