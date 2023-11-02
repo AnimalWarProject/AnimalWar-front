@@ -16,6 +16,8 @@ import BorderTemplate from '../template/BorderTemplate';
 import DrawLoading from "../pixi/draw/components/DrawLoading";
 import DrawResult from "../pixi/draw/components/DrawResult";
 import UpGradePage from "../pixi/upGrade/components/UpGradePage";
+import UpGradeLoading from "../pixi/upGrade/components/UpGradeLoading";
+import UpGradeResult from "../pixi/upGrade/components/UpGradeResult";
 
 const MyRoutes = () => {
     return (
@@ -27,6 +29,8 @@ const MyRoutes = () => {
                 <Route path="/draw/loading" element={<DrawLoading />} />
                 <Route path="/draw/result" element={<DrawResult />} />
                 <Route path="/upgrade" element={<UpGradePage />} />
+                <Route path="/upgrade/loading" element={<UpGradeLoading />} />
+                <Route path="/upgrade/result" element={<UpGradeResult />} />
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
