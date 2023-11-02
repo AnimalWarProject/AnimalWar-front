@@ -9,12 +9,14 @@ import DrawPage from '../pixi/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
 import Mix from '../pixi/Mix/Mix';
-import DrawResult from '../pixi/draw/components/DrawResult';
 import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
 import MixStart from "../pixi/Mix/MixStart";
+import DrawLoading from "../pixi/draw/components/DrawLoading";
+import DrawResult from "../pixi/draw/components/DrawResult";
+import UpGradePage from "../pixi/upGrade/components/UpGradePage";
 
 const MyRoutes = () => {
     return (
@@ -23,9 +25,11 @@ const MyRoutes = () => {
                 <Route path="/test" element={<BattlePage />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
+                <Route path="/draw/loading" element={<DrawLoading />} />
                 <Route path="/draw/result" element={<DrawResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
                 <Route path="/mix2" element={<MixStart />}></Route>
+                <Route path="/upgrade" element={<UpGradePage />} />
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
