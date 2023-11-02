@@ -104,52 +104,6 @@ const Mix = () => {
 
         profileBox.addChild(mixBuildingBtn);
 
-
-
-
-        // // ## 위에 등급 선택 메뉴
-        // const textData = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
-        //
-        // for (let i = 0; i < 5; i++) {
-        //     const gradeBox = new PIXI.Graphics();
-        //     gradeBox.beginFill(0xffffff, 0.5); // (채우기, 투명도)
-        //     const boxWidth = canvasWidth * 0.15;
-        //     const boxHeight = canvasHeight * 0.08;
-        //     // x좌표 계산
-        //     const xPosition = 80 + i * (boxWidth + 15)
-        //     // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-        //     gradeBox.drawRoundedRect(xPosition, 50, boxWidth, boxHeight, 40)
-        //     profileBox.addChild(gradeBox);
-        //
-        //     // 텍스트 생성 및 스타일 설정
-        //     const labelText = new PIXI.Text(textData[i], {
-        //         fontFamily: "Arial",
-        //         fontSize: 20,
-        //         fill: 0x000000,
-        //     });
-        //
-        //     // 텍스트 위치 설정 (가운데 정렬)
-        //     labelText.x = xPosition + boxWidth / 2 - labelText.width / 2; // (네모의 가운데 - 텍스트 가운데) = 가운데 정렬
-        //     labelText.y = 50 + boxHeight / 2 - labelText.height / 2;
-        //
-        //     // 텍스트를 상자에 추가
-        //     gradeBox.addChild(labelText);
-        // }
-
-
-
-
-
-        //
-        // //  ## 인벤토리
-        // const animalGroupBox = new PIXI.Graphics();
-        // animalGroupBox.beginFill(0xffffff, 0.5); // (채우기, 투명도)
-        // const boxWidth = canvasWidth * 0.4;
-        // const boxHeight = canvasHeight * 0.7;
-        // animalGroupBox.drawRoundedRect(80, 120, boxWidth, boxHeight, 35);
-        // profileBox.addChild(animalGroupBox);
-
-
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
 
@@ -158,19 +112,6 @@ const Mix = () => {
                 const InventoryWidth = 105;
                 const InventoryHeight = 122;
                 profileBox.drawRoundedRect(95 + (i * 120), 150 + (j * 135), InventoryWidth, InventoryHeight, 40);
-
-                // const animalBox = new PIXI.Graphics();
-                // animalBox.beginFill(0xffffff, 0.5);
-                // const boxWidth = canvasWidth * 0.12;
-                // const boxHeight = canvasHeight * 0.21;
-                // // x좌표 계산
-                // const xPosition = 83 + i * (boxWidth + 15)
-                // // y좌표 계산
-                // const yPosition = 130 + j * (boxHeight + 15)
-                // // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-                // animalBox.drawRoundedRect(xPosition, yPosition, boxWidth, boxHeight, 40)
-                // profileBox.addChild(animalBox);
-
 
                 // ## 인벤토리 안에 있는 동물
                 setAnimal()
@@ -267,15 +208,14 @@ const Mix = () => {
         const mixStartBtn = new ButtonContainer(
             new PIXI.Graphics()
             .beginFill(0x00ffff, 0.8)
-            .drawRoundedRect(730, 590, mixStartBtnWidth, mixStartBtnHeight, 40))
+            .drawRoundedRect(720, 590, mixStartBtnWidth, mixStartBtnHeight, 40))
 
         const mixStartText = new PIXI.Text('합성하기', textStyle);
         mixStartBtn.addChild(mixStartText);
 
         // 가운데 정렬을 위해 텍스트의 x, y 좌표를 조정
-        mixStartText.x = 730 + (mixStartBtnWidth - mixStartText.width) / 2;
-        mixStartText.y = 590 + (mixStartBtnHeight - mixStartText.height) / 2;
-        // mixStartText.x = 730 + (mixStartBtnWidth - mixStartText.width) / 2;
+        mixStartText.x = 760
+        mixStartText.y = 600
 
         mixStartBtn.onPress.connect(() => {
             history.push("/mix2");
