@@ -7,13 +7,15 @@ import dog from './imgs/Dog.png'
 import fish from './imgs/Fish.png'
 import mixPot from './imgs/MIXPOT 1.png'
 import mixBackground from './imgs/Rectangle 12348.png'
-
+import { useHistory } from 'react-router-use-history';
+import {ButtonContainer} from "@pixi/ui";
 
 const Mix = () => {
-
     const canvasRef = useRef(null);
     const [animal, setAnimal] = useState([pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish]);
     const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
+    const history = useHistory();
+
 
     useEffect(() => {
         const canvasWidth = 960;
@@ -191,10 +193,6 @@ const Mix = () => {
         profileBox.addChild(mixPotSprite);
 
 
-        // 1. animal을 4개 선택하고
-        // 2. 합성하기 버튼을 누르면
-        // 3. 항아리가 움직이고
-        // 4. 3초 뒤에 새로운 동물(성공) or 실패가 떠야 함..
         // 항아리 움직이기
         // const container = new PIXI.Container();
         // container.x = 670;
@@ -232,14 +230,13 @@ const Mix = () => {
 
 
 
-
-
         // 합성하기 버튼
-        const mixStartBtn = new PIXI.Graphics();
-        mixStartBtn.beginFill(0x00ffff, 0.8);
         const mixStartBtnWidth = 150;
         const mixStartBtnHeight = 40;
-        mixStartBtn.drawRoundedRect(730, 590, mixStartBtnWidth, mixStartBtnHeight, 40);
+        const mixStartBtn = new ButtonContainer(
+            new PIXI.Graphics()
+            .beginFill(0x00ffff, 0.8)
+            .drawRoundedRect(730, 590, mixStartBtnWidth, mixStartBtnHeight, 40))
 
         const mixStartText = new PIXI.Text('합성하기', textStyle);
         mixStartBtn.addChild(mixStartText);
@@ -247,10 +244,17 @@ const Mix = () => {
         // 가운데 정렬을 위해 텍스트의 x, y 좌표를 조정
         mixStartText.x = 730 + (mixStartBtnWidth - mixStartText.width) / 2;
         mixStartText.y = 590 + (mixStartBtnHeight - mixStartText.height) / 2;
+        // mixStartText.x = 730 + (mixStartBtnWidth - mixStartText.width) / 2;
+
+        mixStartBtn.onPress.connect(() => {
+            history.push("/mix2");
+        });
+
+
+
+
 
         profileBox.addChild(mixStartBtn);
-
-
 
         // Cleanup on component unmount
         return () => {

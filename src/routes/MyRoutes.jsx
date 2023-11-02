@@ -14,6 +14,7 @@ import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
+import MixStart from "../pixi/Mix/MixStart";
 
 const MyRoutes = () => {
     return (
@@ -24,6 +25,7 @@ const MyRoutes = () => {
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/result" element={<DrawResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
+                <Route path="/mix2" element={<MixStart />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
