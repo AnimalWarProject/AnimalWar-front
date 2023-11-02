@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { api } from '../../network/api';
 import './ResourceBox.css';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
