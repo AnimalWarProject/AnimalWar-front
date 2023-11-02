@@ -104,6 +104,9 @@ const Mix = () => {
 
         profileBox.addChild(mixBuildingBtn);
 
+
+
+        // 인벤토리
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
 
@@ -163,42 +166,6 @@ const Mix = () => {
         mixPotSprite.x = 475;
         mixPotSprite.y = 130;
         profileBox.addChild(mixPotSprite);
-
-
-        // 항아리 움직이기
-        // const container = new PIXI.Container();
-        // container.x = 670;
-        // container.y = 350;
-        // // add a bunch of sprites
-        // const pot = PIXI.Sprite.from(mixPot);
-        // pot.anchor.set(0.5);
-        // container.addChild(pot);
-        // app.stage.addChild(container);
-        //
-        // // let's create a moving shape
-        // const thing = new PIXI.Graphics();
-        // app.stage.addChild(thing);
-        // thing.x = app.screen.width / 2;
-        // thing.y = app.screen.height / 2;
-        // thing.lineStyle(0);
-        //
-        // container.mask = null; // 'container'를 'thing'으로 마스킹
-        //
-        // let movingCount = 0;
-        //
-        // app.ticker.add(()=>{
-        //     pot.scale.x = 1 + Math.sin(movingCount) * 0.04;
-        //     pot.scale.y = 1 + Math.cos(movingCount) * 0.04;
-        //     movingCount += 0.1;
-        //     thing.clear();
-        //     thing.moveTo(-120 + Math.sin(movingCount) * 20, -100 + Math.cos(movingCount) * 20);
-        //     thing.lineTo(120 + Math.cos(movingCount) * 20, -100 + Math.sin(movingCount) * 20);
-        //     thing.lineTo(120 + Math.sin(movingCount) * 20, 100 + Math.cos(movingCount) * 20);
-        //     thing.lineTo(-120 + Math.cos(movingCount) * 20, 100 + Math.sin(movingCount) * 20);
-        //     thing.rotation = movingCount * 0.1;
-        // });
-
-
 
 
 

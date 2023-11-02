@@ -55,8 +55,8 @@ const MixSuccess = () => {
         // add a bunch of sprites
         const pop = PIXI.Sprite.from(popMixSuccess);
         pop.anchor.set(0.5);
-        pop.x = canvasWidth / 2; // 스프라이트를 수평 중앙에 배치
-        pop.y = canvasHeight / 2; // 스프라이트를 수직 중앙에 배치
+        pop.x = canvasWidth / 2 -20; // 스프라이트를 수평 중앙에 배치
+        pop.y = canvasHeight / 2 + 10; // 스프라이트를 수직 중앙에 배치
         container.addChild(pop);
 
 

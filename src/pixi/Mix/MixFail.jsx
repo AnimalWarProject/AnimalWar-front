@@ -54,63 +54,22 @@ const MixFail = () => {
         // add a bunch of sprites
         const ash = PIXI.Sprite.from(failMix);
         ash.anchor.set(0.5);
-        ash.x = canvasWidth / 2; // 스프라이트를 수평 중앙에 배치
-        ash.y = canvasHeight / 2; // 스프라이트를 수직 중앙에 배치
+        ash.x = canvasWidth / 2 - container.width; // 스프라이트를 수평 중앙에 배치
+        ash.y = canvasHeight / 2 - 100; // 스프라이트를 수직 중앙에 배치
         container.addChild(ash);
-
-
-        // ash 스프라이트를 아래서부터 나타나게 하는 애니메이션
-        const animationDuration = 2000; // 애니메이션 지속 시간 (2초)
-        const targetY = canvasHeight / 2; // 최종 위치 (중앙)
-        const initialY = container.y; // 초기 위치 (상단)
-
-        app.ticker.add((delta) => {
-            const progress = (container.y - initialY) / (targetY - initialY);
-            if (progress < 1) {
-                container.y = initialY + progress * (targetY - initialY);
-            }
-        });
-
-        const animateAsh = () => {
-            const startTime = Date.now();
-            const animate = () => {
-                const currentTime = Date.now();
-                const elapsed = currentTime - startTime;
-                if (elapsed < animationDuration) {
-                    const progress = elapsed / animationDuration;
-                    container.y = initialY + progress * (targetY - initialY);
-                    requestAnimationFrame(animate);
-                }
-            };
-
-            requestAnimationFrame(animate);
-        };
-
-        // 애니메이션 시작
-        animateAsh();
-
-
-
-
-
-
-
-
-
-
-
-
-
         profileBox.addChild(ash)
 
 
-    })
-
-
-
+        //
+        const failText =  new PIXI.Text('합성에 성공하지 못했습니다. \n\n       재만 남아버렸네요.', textStyle);
+        failText.anchor.set(0.5);
+        failText.x = ash.x - 20;
+        failText.y = ash.y + 240;
+        profileBox.addChild(failText);
+    });
 
 
     return <div ref={canvasRef}></div>;
-}
+};
 
 export default MixFail;
