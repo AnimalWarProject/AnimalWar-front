@@ -98,9 +98,9 @@ const Chatting = () => {
 
 
                 <div className={classes.send_box}>
-                    <dutton lassName={classes.send_plus_button}>
+                    <button lassName={classes.send_plus_button}>
                         <img src={plusIcon}/>
-                    </dutton>
+                    </button>
 
                     <input className={classes.send_input}
                            value={inputText}
