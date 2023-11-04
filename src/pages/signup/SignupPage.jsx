@@ -53,18 +53,21 @@ const SignupPage = () => {
         <div className="signup-container">
             <h2>회원가입</h2>
             <input
+                className="signup-input"
                 type="text"
                 placeholder="아이디"
                 value={formData.id}
                 onChange={(e) => setFormData((prevData) => ({ ...prevData, id: e.target.value }))}
             />
             <input
+                className="signup-input"
                 type="password"
                 placeholder="비밀번호"
                 value={formData.password}
                 onChange={(e) => setFormData((prevData) => ({ ...prevData, password: e.target.value }))}
             />
             <input
+                className="signup-input"
                 type="text"
                 placeholder="닉네임"
                 value={formData.nickName}
@@ -84,7 +87,9 @@ const SignupPage = () => {
                     </div>
                 ))}
             </div>
-            <button onClick={handleSubmit}>회원가입</button>
+            <button className="signup-button" onClick={handleSubmit}>
+                회원가입
+            </button>
         </div>
     );
 };

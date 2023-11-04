@@ -21,14 +21,19 @@
     margin-bottom: 0.5rem;
 }
 
-input[type='text'],
-input[type='password'] {
+.signup-input {
     margin: 0.5rem 0;
     padding: 0.5rem;
     width: 100%;
 }
 
-button {
+.signup-button {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
+    background-color: #f9d371;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
 }
