@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { api } from '../../network/api';
 import './ProfileBox.css';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
@@ -85,10 +85,8 @@ const ProfileBox = () => {
         }
     };
 
-    useEffect(() => {
-        getProfileData();
-        loadIcons();
-    }, []);
+    getProfileData();
+    loadIcons();
 
     return (
         <div className="profile-box">

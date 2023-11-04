@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
-import Search from '../imgs/Search.png';
 import { api } from '../../network/api';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 

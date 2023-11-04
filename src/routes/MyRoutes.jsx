@@ -35,7 +35,7 @@ const MyRoutes = () => {
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/login" element={<LoginPage />}></Route>
-                <Route path="/singup" element={<SignupPage />}></Route>
+                <Route path="/signup" element={<SignupPage />}></Route>
             </Route>
         </Routes>
     );
