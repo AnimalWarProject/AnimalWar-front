@@ -33,6 +33,7 @@ const LoginPage = () => {
         fetchImage('SmallEgg.png', setIdIconUrl);
         fetchImage('Lock.png', setPasswordIconUrl);
     }, []);
+    //didmount, willmount로 수정 고려
 
     const handleLogin = async () => {
         try {
@@ -42,6 +43,7 @@ const LoginPage = () => {
             });
             if (response.data && response.data.accessToken && response.data.refreshToken) {
                 localStorage.setItem('accessToken', response.data.accessToken);
+                //리프레시 데이터로 보내는 것 추가해야함
                 navigate('/');
             } else {
                 toast.error('아이디 또는 비밀번호를 다시 확인해주세요');

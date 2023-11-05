@@ -1,18 +1,32 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from 'react';
 import * as PIXI from 'pixi.js';
-import pig from './imgs/PIG 5.png'
-import bird from './imgs/Bird.png'
-import cat from './imgs/Cat.png'
-import dog from './imgs/Dog.png'
-import fish from './imgs/Fish.png'
-import mixPot from './imgs/MIXPOT 1.png'
-import mixBackground from './imgs/Rectangle 12348.png'
-
+import pig from './imgs/PIG 5.png';
+import bird from './imgs/Bird.png';
+import cat from './imgs/Cat.png';
+import dog from './imgs/Dog.png';
+import fish from './imgs/Fish.png';
+import mixPot from './imgs/MIXPOT 1.png';
+import mixBackground from './imgs/Rectangle 12348.png';
 
 const Mix = () => {
-
     const canvasRef = useRef(null);
-    const [animal, setAnimal] = useState([pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish]);
+    const [animal, setAnimal] = useState([
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+    ]);
     const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
 
     useEffect(() => {
@@ -41,22 +55,17 @@ const Mix = () => {
         profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
         app.stage.addChild(profileBox);
 
-
-
-
-
-
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
             fontSize: 18,
             fontFamily: 'Arial',
-            fontWeight: "bold",
+            fontWeight: 'bold',
         });
 
         // 건물/동물 인벤토리
         // 동물
         const mixAnimalBtn = new PIXI.Graphics();
-        mixAnimalBtn.beginFill(0x6AFFF6, 0.7);
+        mixAnimalBtn.beginFill(0x6afff6, 0.7);
         const mixAnimalBtnWidth = 100;
         const mixAnimalBtnHeight = 40;
         mixAnimalBtn.drawRoundedRect(100, 0, mixAnimalBtnWidth, mixAnimalBtnHeight, 40);
@@ -70,7 +79,7 @@ const Mix = () => {
 
         // 건물
         const mixBuildingBtn = new PIXI.Graphics();
-        mixBuildingBtn.beginFill(0xB6C1EA, 0.7);
+        mixBuildingBtn.beginFill(0xb6c1ea, 0.7);
         const mixBuildingBtnWidth = 100;
         const mixBuildingBtnHeight = 40;
         mixBuildingBtn.drawRoundedRect(210, 0, mixBuildingBtnWidth, mixBuildingBtnHeight, 40);
@@ -82,11 +91,8 @@ const Mix = () => {
 
         profileBox.addChild(mixBuildingBtn);
 
-
-
-
         // ## 위에 등급 선택 메뉴
-        const textData = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+        const textData = ['노말', '레어', '슈퍼레어', '유니크', '레전드'];
 
         for (let i = 0; i < 5; i++) {
             const gradeBox = new PIXI.Graphics();
@@ -94,14 +100,14 @@ const Mix = () => {
             const boxWidth = canvasWidth * 0.15;
             const boxHeight = canvasHeight * 0.08;
             // x좌표 계산
-            const xPosition = 80 + i * (boxWidth + 15)
+            const xPosition = 80 + i * (boxWidth + 15);
             // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-            gradeBox.drawRoundedRect(xPosition, 50, boxWidth, boxHeight, 40)
+            gradeBox.drawRoundedRect(xPosition, 50, boxWidth, boxHeight, 40);
             profileBox.addChild(gradeBox);
 
             // 텍스트 생성 및 스타일 설정
             const labelText = new PIXI.Text(textData[i], {
-                fontFamily: "Arial",
+                fontFamily: 'Arial',
                 fontSize: 20,
                 fill: 0x000000,
             });
@@ -114,7 +120,6 @@ const Mix = () => {
             gradeBox.addChild(labelText);
         }
 
-
         //  ## 인벤토리
         const animalGroupBox = new PIXI.Graphics();
         animalGroupBox.beginFill(0xffffff, 0.5); // (채우기, 투명도)
@@ -123,22 +128,19 @@ const Mix = () => {
         animalGroupBox.drawRoundedRect(80, 120, boxWidth, boxHeight, 35);
         profileBox.addChild(animalGroupBox);
 
-
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-
                 const animalBox = new PIXI.Graphics();
                 animalBox.beginFill(0xffffff, 0.5);
                 const boxWidth = canvasWidth * 0.12;
                 const boxHeight = canvasHeight * 0.21;
                 // x좌표 계산
-                const xPosition = 83 + i * (boxWidth + 15)
+                const xPosition = 83 + i * (boxWidth + 15);
                 // y좌표 계산
-                const yPosition = 130 + j * (boxHeight + 15)
+                const yPosition = 130 + j * (boxHeight + 15);
                 // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-                animalBox.drawRoundedRect(xPosition, yPosition, boxWidth, boxHeight, 40)
+                animalBox.drawRoundedRect(xPosition, yPosition, boxWidth, boxHeight, 40);
                 profileBox.addChild(animalBox);
-
 
                 // ## 인벤토리 안에 있는 동물
                 // setAnimal()
@@ -158,7 +160,7 @@ const Mix = () => {
                     const imgInventorySprite = new PIXI.Sprite(imgInventoryTexture);
                     // Count 텍스트 생성 및 스타일 설정
                     const countText = new PIXI.Text(countList[imageIndex], {
-                        fontFamily: "Arial",
+                        fontFamily: 'Arial',
                         fontSize: 20,
                         fill: 0x000000,
                     });
@@ -180,7 +182,6 @@ const Mix = () => {
             }
         }
 
-
         // 항아리
         const mixPotTexture = PIXI.Texture.from(mixPot);
         const mixPotSprite = new PIXI.Sprite(mixPotTexture);
@@ -189,7 +190,6 @@ const Mix = () => {
         mixPotSprite.x = 475;
         mixPotSprite.y = 130;
         profileBox.addChild(mixPotSprite);
-
 
         // 1. animal을 4개 선택하고
         // 2. 합성하기 버튼을 누르면
@@ -228,12 +228,6 @@ const Mix = () => {
         //     thing.rotation = movingCount * 0.1;
         // });
 
-
-
-
-
-
-
         // 합성하기 버튼
         const mixStartBtn = new PIXI.Graphics();
         mixStartBtn.beginFill(0x00ffff, 0.8);
@@ -250,22 +244,13 @@ const Mix = () => {
 
         profileBox.addChild(mixStartBtn);
 
-
-
         // Cleanup on component unmount
         return () => {
             app.destroy();
         };
     }, []);
 
-
-
-
-
-    return (
-        <div ref={canvasRef} className="outlet-container">
-        </div>
-    );
+    return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
 export default Mix;
