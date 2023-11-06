@@ -118,12 +118,12 @@ const Draw = () => {
         const drawAnimalBtn = new PIXI.Graphics();
         drawAnimalBtn.beginFill(0x6AFFF6, 0.7);
         const drawAnimalBtnWidth = 100;
-        const drawAnimalBtnHeight = 40;
-        drawAnimalBtn.drawRoundedRect(100, 0, drawAnimalBtnWidth, drawAnimalBtnHeight, 40);
+        const drawAnimalBtnHeight = 36;
+        drawAnimalBtn.drawRoundedRect(100, 2, drawAnimalBtnWidth, drawAnimalBtnHeight, 10);
 
         const animalDrawText = new PIXI.Text('동물', textStyle);
         drawAnimalBtn.addChild(animalDrawText);
-        animalDrawText.x = 130;
+        animalDrawText.x = 131;
         animalDrawText.y = 10;
 
         const animalButtonContainer = new PIXI.Container();
@@ -135,12 +135,12 @@ const Draw = () => {
         const drawBuildingBtn = new PIXI.Graphics();
         drawBuildingBtn.beginFill(0xB6C1EA, 0.7);
         const drawBuildingBtnWidth = 100;
-        const drawBuildingBtnHeight = 40;
-        drawBuildingBtn.drawRoundedRect(210, 0, drawBuildingBtnWidth, drawBuildingBtnHeight, 40);
+        const drawBuildingBtnHeight = 36;
+        drawBuildingBtn.drawRoundedRect(210, 2, drawBuildingBtnWidth, drawBuildingBtnHeight, 10);
 
         const BuildingDrawText = new PIXI.Text('건물', textStyle);
         drawBuildingBtn.addChild(BuildingDrawText);
-        BuildingDrawText.x = 240;
+        BuildingDrawText.x = 241;
         BuildingDrawText.y = 10;
 
         const buildingButtonContainer = new PIXI.Container();
