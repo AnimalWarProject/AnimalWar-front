@@ -32,9 +32,10 @@ const ResourceBox = () => {
 
     const getProfileData = async () => {
         try {
-            const { data: tokenInfo } = await api(`api/v1/auth/me`, 'GET');
-            const userId = tokenInfo.userId;
-            const { data: userProfile } = await api(`api/v1/user/findByID/${userId}`, 'GET');
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: userProfile } = await api('/api/v1/user', 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
             setProfile(userProfile);
         } catch (error) {
             console.error('Failed to fetch user profile:', error);

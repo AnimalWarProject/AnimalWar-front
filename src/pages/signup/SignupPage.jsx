@@ -12,7 +12,7 @@ const SignupPage = () => {
         id: '',
         password: '',
         nickName: '',
-        profileImage: '',
+        profileImage: null, // 초기 profileImage 상태를 null로 변경
         species: '',
     });
     const speciesTranslations = {
@@ -45,24 +45,15 @@ const SignupPage = () => {
         fetchImageUrls();
     }, []);
 
-    const handleImageUpload = async (event) => {
+    const handleImageUpload = (event) => {
         const file = event.target.files[0];
         const maxSize = 3 * 1024 * 1024;
         if (file && file.size > maxSize) {
             toast.error('파일 크기가 3MB를 초과하였습니다. 다른 사진을 선택해주세요.');
             return;
         }
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setPreviewImage(reader.result);
-        };
-        reader.readAsDataURL(file);
-        try {
-            const imageUrl = await uploadImageToFirebase(file);
-            setFormData((prevData) => ({ ...prevData, profileImage: imageUrl }));
-        } catch (error) {
-            toast.error('파일 업로드에 에러가 발생하였습니다.');
-        }
+        setPreviewImage(URL.createObjectURL(file));
+        setFormData((prevData) => ({ ...prevData, profileImage: file }));
     };
 
     const handleSpeciesSelect = (species) => {
@@ -75,8 +66,24 @@ const SignupPage = () => {
             toast.error('모든 입력란을 채워주세요.');
             return;
         }
+
+        // If an image was selected, upload it
+        let imageUrl = formData.profileImage;
+        if (formData.profileImage && formData.profileImage instanceof File) {
+            toast.info('이미지를 업로드 중입니다...');
+            try {
+                imageUrl = await uploadImageToFirebase(formData.profileImage);
+                setFormData((prevData) => ({ ...prevData, profileImage: imageUrl }));
+            } catch (error) {
+                toast.error('파일 업로드에 에러가 발생하였습니다.');
+                return;
+            }
+        }
+
+        // API call to register the user with the uploaded image URL or null if no image was selected
         try {
-            await apiNoToken('/api/v1/auth/signup', 'POST', formData);
+            const completeFormData = { ...formData, profileImage: imageUrl };
+            await apiNoToken('/api/v1/auth/signup', 'POST', completeFormData);
             toast.success('회원가입이 성공적으로 완료되었습니다.');
             navigate('/login');
         } catch (error) {
