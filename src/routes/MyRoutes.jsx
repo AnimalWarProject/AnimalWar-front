@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
 import RankingPage from '../pages/Ranking/RankingPage';
@@ -13,6 +12,8 @@ import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
+
+import MyPage from '../pages/myPage/myPage';
 import DrawLoading from "../pixi/draw/components/DrawLoading";
 import DrawResult from "../pixi/draw/components/DrawResult";
 import UpGradePage from "../pixi/upGrade/components/UpGradePage";
@@ -23,7 +24,6 @@ const MyRoutes = () => {
     return (
         <Routes>
             <Route element={<GameTemplate />}>
-                <Route path="/test" element={<BattlePage />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/loading" element={<DrawLoading />} />
@@ -37,14 +37,14 @@ const MyRoutes = () => {
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
-                <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
-                <Route path="/match2" element={<MatchProcess />}></Route>
-                <Route path="/match3" element={<MatchComplete />}></Route>
+                <Route path="/match2" element={<MatchProcess />} />
+                <Route path="/match3" element={<MatchComplete />} />
             </Route>
             <Route element={<BorderTemplate />}>
-                <Route path="/login" element={<LoginPage />}></Route>
-                <Route path="/signup" element={<SignupPage />}></Route>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/my" element={<MyPage />} />
             </Route>
         </Routes>
     );

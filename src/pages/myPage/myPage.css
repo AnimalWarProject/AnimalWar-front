@@ -1,13 +1,108 @@
 .myPage {
+    box-sizing: border-box;
+    width: 42rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: rgba(255, 223, 186, 0.8);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
 }
 
-.myPage img {
+.updateForm {
+    width: calc(100% - 1.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.updateForm input[type='file'] {
+    display: none;
+}
+
+.updateForm input[type='text'],
+.updateForm input[type='password'],
+.updateForm input:not([type]) {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    border: 0.0625rem solid #ffdea1;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0.875rem;
+    border-radius: 0.3125rem;
+}
+
+.updateForm label {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.input-common {
+    width: calc(100% - 1.8rem);
+    padding: 0.875rem;
+    border: 0.0625rem solid #ffdea1;
+    border-radius: 0.3125rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.75rem;
+}
+
+.file-input-button {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 0.0625rem solid #ffdea1;
+    border-radius: 0.3125rem;
+    padding: 0.875rem;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    width: 100%;
+    cursor: pointer;
+    display: block;
+    color: #333;
+    text-align: center;
+}
+
+.info-update-button {
+    background-color: #f9d371;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 10px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.file-input-button:hover {
+    background-color: #ecdab9;
+}
+
+.info-update-button:hover {
+    background-color: #f7c063;
+}
+
+.profile-image-preview {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
+    border: 1px solid #ccc;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.file-input-container {
+    width: calc(100% - 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.file-name {
+    font-size: 1rem;
+    color: #333;
+    padding-top: 0.5rem;
+    padding-left: 0;
+    margin-bottom: 0.75rem;
 }
