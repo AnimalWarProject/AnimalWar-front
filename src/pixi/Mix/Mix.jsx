@@ -8,7 +8,7 @@ import fish from './imgs/Fish.png';
 import mixPot from './imgs/MIXPOT 1.png';
 import mixBackground from './imgs/Rectangle 12348.png';
 
-const Mix = () => {
+const   Mix = () => {
     const canvasRef = useRef(null);
     const [animal, setAnimal] = useState([
         pig,
@@ -67,12 +67,12 @@ const Mix = () => {
         const mixAnimalBtn = new PIXI.Graphics();
         mixAnimalBtn.beginFill(0x6afff6, 0.7);
         const mixAnimalBtnWidth = 100;
-        const mixAnimalBtnHeight = 40;
-        mixAnimalBtn.drawRoundedRect(100, 0, mixAnimalBtnWidth, mixAnimalBtnHeight, 40);
+        const mixAnimalBtnHeight = 36;
+        mixAnimalBtn.drawRoundedRect(100, 2, mixAnimalBtnWidth, mixAnimalBtnHeight, 10);
 
         const animalMixText = new PIXI.Text('동물', textStyle);
         mixAnimalBtn.addChild(animalMixText);
-        animalMixText.x = 130;
+        animalMixText.x = 131;
         animalMixText.y = 10;
 
         profileBox.addChild(mixAnimalBtn);
@@ -81,12 +81,12 @@ const Mix = () => {
         const mixBuildingBtn = new PIXI.Graphics();
         mixBuildingBtn.beginFill(0xb6c1ea, 0.7);
         const mixBuildingBtnWidth = 100;
-        const mixBuildingBtnHeight = 40;
-        mixBuildingBtn.drawRoundedRect(210, 0, mixBuildingBtnWidth, mixBuildingBtnHeight, 40);
+        const mixBuildingBtnHeight = 36;
+        mixBuildingBtn.drawRoundedRect(210, 2, mixBuildingBtnWidth, mixBuildingBtnHeight, 10);
 
         const BuildingMixText = new PIXI.Text('건물', textStyle);
         mixBuildingBtn.addChild(BuildingMixText);
-        BuildingMixText.x = 240;
+        BuildingMixText.x = 241;
         BuildingMixText.y = 10;
 
         profileBox.addChild(mixBuildingBtn);
