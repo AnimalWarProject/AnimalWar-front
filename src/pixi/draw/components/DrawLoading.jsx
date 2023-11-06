@@ -1,23 +1,22 @@
-import {useEffect, useRef} from "react";
-import * as PIXI from "pixi.js";
-import back from "../imgs/Rectangle 12299.png";
-import randomEgg from "../imgs/RANDOMEGG 2.png";
-import randomBuilding from "../imgs/RandomBuilding.png";
-import smokeImage from "../action/smoke.png";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useEffect, useRef } from 'react';
+import * as PIXI from 'pixi.js';
+import back from '../imgs/Rectangle 12299.png';
+import randomEgg from '../imgs/RANDOMEGG 2.png';
+import randomBuilding from '../imgs/RandomBuilding.png';
+import smokeImage from '../action/smoke.png';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const DrawLoading = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
     const location = useLocation();
-    const drawData = location.state; // 전달된 데이터에 접근
+    const drawData = location.state;
     const type = drawData.type;
 
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
         const smokeTexture = PIXI.Texture.from(smokeImage);
-
         const app = new PIXI.Application({
             background: '#1099bb',
             width: canvasWidth,
@@ -50,7 +49,7 @@ const DrawLoading = () => {
             fill: 0x0f1828,
             fontSize: 18,
             fontFamily: 'Arial',
-            fontWeight: "bold"
+            fontWeight: 'bold',
         });
 
         const oneDrawText = new PIXI.Text('클릭하면 결과를 확인할 수 있습니다.', textStyle);
@@ -58,7 +57,6 @@ const DrawLoading = () => {
         oneDrawText.x = 330;
         oneDrawText.y = 450;
         app.stage.addChild(profileBox);
-
 
         const randomEggTexture = PIXI.Texture.from(randomEgg); // randomEgg 이미지
         const randomEggSprite = new PIXI.Sprite(randomEggTexture);
@@ -71,17 +69,16 @@ const DrawLoading = () => {
         randomEggSprite.interactive = true;
         randomEggSprite.buttonMode = true;
         randomEggSprite.on('pointertap', () => {
-            nav('/draw/result')
+            nav('/draw/result');
         });
 
-        if (type === "animal"){
-            randomEggSprite.texture = PIXI.Texture.from(randomEgg)
-        }else {
-            randomEggSprite.texture = PIXI.Texture.from(randomBuilding)
+        if (type === 'animal') {
+            randomEggSprite.texture = PIXI.Texture.from(randomEgg);
+        } else {
+            randomEggSprite.texture = PIXI.Texture.from(randomBuilding);
         }
 
         profileBox.addChild(randomEggSprite);
-
 
         // Create variables for animation
         let rotationSpeed = 0.01; // 회전 속도
@@ -98,7 +95,7 @@ const DrawLoading = () => {
         });
         function animateFirework(firework) {
             // 확대 애니메이션 및 투명도 효과
-            firework.scale.x += 0.010;
+            firework.scale.x += 0.01;
             firework.scale.y += 0.01;
             firework.alpha -= 0.005;
 
@@ -114,7 +111,7 @@ const DrawLoading = () => {
         };
     }, []);
 
-        return <div ref={canvasRef} className="outlet-container"></div>
+    return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
 export default DrawLoading;

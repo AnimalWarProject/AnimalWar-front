@@ -31,19 +31,20 @@ const MyRoutes = () => {
                 <Route path="/upgrade" element={<UpGradePage />} />
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />
+                <Route path="/mix" element={<Mix />}></Route>
+
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
                 <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
-                <Route path="/mix" element={<Mix />}></Route>
                 <Route path="/match2" element={<MatchProcess />}></Route>
                 <Route path="/match3" element={<MatchComplete />}></Route>
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/login" element={<LoginPage />}></Route>
-                <Route path="/singup" element={<SignupPage />}></Route>
+                <Route path="/signup" element={<SignupPage />}></Route>
             </Route>
         </Routes>
     );

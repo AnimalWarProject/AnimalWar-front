@@ -5,7 +5,6 @@ import ResourceBox from '../common/components/ResourceBox';
 import Chatting from '../common/components/Chatting';
 import './GameTemplate.css';
 import ProfileBox from '../common/components/ProfileBox';
-import Match from '../pixi/Match/Match';
 
 const GameTemplate = () => {
     return (

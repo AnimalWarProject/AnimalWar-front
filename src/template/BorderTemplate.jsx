@@ -1,13 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import Background from '../common/components/Background';
+import './BorderTemplate.css';
 
 const BorderTemplate = () => {
     return (
-        <>
-            <Background className="background">
+        <Background className="big-box">
+            <div className="inside-box">
                 <Outlet />
-            </Background>
-        </>
+            </div>
+        </Background>
     );
 };
 

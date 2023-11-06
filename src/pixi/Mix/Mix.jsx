@@ -1,22 +1,33 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from 'react';
 import * as PIXI from 'pixi.js';
-import pig from './imgs/PIG 5.png'
-import bird from './imgs/Bird.png'
-import cat from './imgs/Cat.png'
-import dog from './imgs/Dog.png'
-import fish from './imgs/Fish.png'
-import mixPot from './imgs/MIXPOT 1.png'
-import mixBackground from './imgs/Rectangle 12348.png'
-
+import pig from './imgs/PIG 5.png';
+import bird from './imgs/Bird.png';
+import cat from './imgs/Cat.png';
+import dog from './imgs/Dog.png';
+import fish from './imgs/Fish.png';
+import mixPot from './imgs/MIXPOT 1.png';
+import mixBackground from './imgs/Rectangle 12348.png';
 
 const Mix = () => {
-
     const canvasRef = useRef(null);
-    const [animal, setAnimal] = useState([pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish]);
+    const [animal, setAnimal] = useState([
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+    ]);
     const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
-    const [scrollOffset, setScrollOffset] = useState(0);
-    const itemsPerPage = 9;
-    const scrollableContainerRef = useRef(null);
 
     useEffect(() => {
         const canvasWidth = 960;
@@ -42,9 +53,46 @@ const Mix = () => {
         const profileWidth = canvasWidth * 0.85;
         const profileHeight = canvasHeight * 0.85;
         profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
+        app.stage.addChild(profileBox);
+
+        const textStyle = new PIXI.TextStyle({
+            fill: 0x0f1828,
+            fontSize: 18,
+            fontFamily: 'Arial',
+            fontWeight: 'bold',
+        });
+
+        // 건물/동물 인벤토리
+        // 동물
+        const mixAnimalBtn = new PIXI.Graphics();
+        mixAnimalBtn.beginFill(0x6afff6, 0.7);
+        const mixAnimalBtnWidth = 100;
+        const mixAnimalBtnHeight = 40;
+        mixAnimalBtn.drawRoundedRect(100, 0, mixAnimalBtnWidth, mixAnimalBtnHeight, 40);
+
+        const animalMixText = new PIXI.Text('동물', textStyle);
+        mixAnimalBtn.addChild(animalMixText);
+        animalMixText.x = 130;
+        animalMixText.y = 10;
+
+        profileBox.addChild(mixAnimalBtn);
+
+        // 건물
+        const mixBuildingBtn = new PIXI.Graphics();
+        mixBuildingBtn.beginFill(0xb6c1ea, 0.7);
+        const mixBuildingBtnWidth = 100;
+        const mixBuildingBtnHeight = 40;
+        mixBuildingBtn.drawRoundedRect(210, 0, mixBuildingBtnWidth, mixBuildingBtnHeight, 40);
+
+        const BuildingMixText = new PIXI.Text('건물', textStyle);
+        mixBuildingBtn.addChild(BuildingMixText);
+        BuildingMixText.x = 240;
+        BuildingMixText.y = 10;
+
+        profileBox.addChild(mixBuildingBtn);
 
         // ## 위에 등급 선택 메뉴
-        const textData = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+        const textData = ['노말', '레어', '슈퍼레어', '유니크', '레전드'];
 
         for (let i = 0; i < 5; i++) {
             const gradeBox = new PIXI.Graphics();
@@ -52,14 +100,14 @@ const Mix = () => {
             const boxWidth = canvasWidth * 0.15;
             const boxHeight = canvasHeight * 0.08;
             // x좌표 계산
-            const xPosition = 80 + i * (boxWidth + 15)
+            const xPosition = 80 + i * (boxWidth + 15);
             // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-            gradeBox.drawRoundedRect(xPosition, 50, boxWidth, boxHeight, 40)
+            gradeBox.drawRoundedRect(xPosition, 50, boxWidth, boxHeight, 40);
             profileBox.addChild(gradeBox);
 
             // 텍스트 생성 및 스타일 설정
             const labelText = new PIXI.Text(textData[i], {
-                fontFamily: "Arial",
+                fontFamily: 'Arial',
                 fontSize: 20,
                 fill: 0x000000,
             });
@@ -72,7 +120,6 @@ const Mix = () => {
             gradeBox.addChild(labelText);
         }
 
-
         //  ## 인벤토리
         const animalGroupBox = new PIXI.Graphics();
         animalGroupBox.beginFill(0xffffff, 0.5); // (채우기, 투명도)
@@ -81,44 +128,19 @@ const Mix = () => {
         animalGroupBox.drawRoundedRect(80, 120, boxWidth, boxHeight, 35);
         profileBox.addChild(animalGroupBox);
 
-        // 인벤토리 컨테이너
-        const scrollableContainer = new PIXI.Container();
-        animalGroupBox.addChild(scrollableContainer);
-
-        // animalGroupBox에 스크롤 이벤트 핸들러 연결
-        animalGroupBox.interactive = true;
-
-        const handleScroll = (event) => {
-            const container = scrollableContainerRef.current;
-            if (container) {
-                container.y = -event.target.scrollTop;
-            }
-        };
-
-        animalGroupBox.on("scroll", handleScroll);
-
-
-        // // 스크롤 가능한 컨테이너를 ref에 연결
-        // scrollableContainerRef.current = scrollableContainer;
-
-
-
-
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-
                 const animalBox = new PIXI.Graphics();
                 animalBox.beginFill(0xffffff, 0.5);
                 const boxWidth = canvasWidth * 0.12;
                 const boxHeight = canvasHeight * 0.21;
                 // x좌표 계산
-                const xPosition = 83 + i * (boxWidth + 15)
+                const xPosition = 83 + i * (boxWidth + 15);
                 // y좌표 계산
-                const yPosition = 130 + j * (boxHeight + 15)
+                const yPosition = 130 + j * (boxHeight + 15);
                 // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-                animalBox.drawRoundedRect(xPosition, yPosition, boxWidth, boxHeight, 40)
+                animalBox.drawRoundedRect(xPosition, yPosition, boxWidth, boxHeight, 40);
                 profileBox.addChild(animalBox);
-
 
                 // ## 인벤토리 안에 있는 동물
                 // setAnimal()
@@ -138,7 +160,7 @@ const Mix = () => {
                     const imgInventorySprite = new PIXI.Sprite(imgInventoryTexture);
                     // Count 텍스트 생성 및 스타일 설정
                     const countText = new PIXI.Text(countList[imageIndex], {
-                        fontFamily: "Arial",
+                        fontFamily: 'Arial',
                         fontSize: 20,
                         fill: 0x000000,
                     });
@@ -160,7 +182,6 @@ const Mix = () => {
             }
         }
 
-
         // 항아리
         const mixPotTexture = PIXI.Texture.from(mixPot);
         const mixPotSprite = new PIXI.Sprite(mixPotTexture);
@@ -170,13 +191,58 @@ const Mix = () => {
         mixPotSprite.y = 130;
         profileBox.addChild(mixPotSprite);
 
+        // 1. animal을 4개 선택하고
+        // 2. 합성하기 버튼을 누르면
+        // 3. 항아리가 움직이고
+        // 4. 3초 뒤에 새로운 동물(성공) or 실패가 떠야 함..
+        // 항아리 움직이기
+        // const container = new PIXI.Container();
+        // container.x = 670;
+        // container.y = 350;
+        // // add a bunch of sprites
+        // const pot = PIXI.Sprite.from(mixPot);
+        // pot.anchor.set(0.5);
+        // container.addChild(pot);
+        // app.stage.addChild(container);
+        //
+        // // let's create a moving shape
+        // const thing = new PIXI.Graphics();
+        // app.stage.addChild(thing);
+        // thing.x = app.screen.width / 2;
+        // thing.y = app.screen.height / 2;
+        // thing.lineStyle(0);
+        //
+        // container.mask = null; // 'container'를 'thing'으로 마스킹
+        //
+        // let movingCount = 0;
+        //
+        // app.ticker.add(()=>{
+        //     pot.scale.x = 1 + Math.sin(movingCount) * 0.04;
+        //     pot.scale.y = 1 + Math.cos(movingCount) * 0.04;
+        //     movingCount += 0.1;
+        //     thing.clear();
+        //     thing.moveTo(-120 + Math.sin(movingCount) * 20, -100 + Math.cos(movingCount) * 20);
+        //     thing.lineTo(120 + Math.cos(movingCount) * 20, -100 + Math.sin(movingCount) * 20);
+        //     thing.lineTo(120 + Math.sin(movingCount) * 20, 100 + Math.cos(movingCount) * 20);
+        //     thing.lineTo(-120 + Math.cos(movingCount) * 20, 100 + Math.sin(movingCount) * 20);
+        //     thing.rotation = movingCount * 0.1;
+        // });
 
+        // 합성하기 버튼
+        const mixStartBtn = new PIXI.Graphics();
+        mixStartBtn.beginFill(0x00ffff, 0.8);
+        const mixStartBtnWidth = 150;
+        const mixStartBtnHeight = 40;
+        mixStartBtn.drawRoundedRect(730, 590, mixStartBtnWidth, mixStartBtnHeight, 40);
 
+        const mixStartText = new PIXI.Text('합성하기', textStyle);
+        mixStartBtn.addChild(mixStartText);
 
+        // 가운데 정렬을 위해 텍스트의 x, y 좌표를 조정
+        mixStartText.x = 730 + (mixStartBtnWidth - mixStartText.width) / 2;
+        mixStartText.y = 590 + (mixStartBtnHeight - mixStartText.height) / 2;
 
-        app.stage.addChild(profileBox);
-
-
+        profileBox.addChild(mixStartBtn);
 
         // Cleanup on component unmount
         return () => {
@@ -184,27 +250,7 @@ const Mix = () => {
         };
     }, []);
 
-
-
-
-
-    return (
-        <div ref={canvasRef} className="outlet-container">
-            {/* 스크롤 가능한 컨테이너를 만들고 스크롤 이벤트를 처리합니다. */}
-            <div
-                // npm install react-pixi-fiber :  @inlet/react-pixi 라이브러리를 사용하여 PixiJS를 React와 통합하고 스크롤 이벤트 처리를 훨씬 쉽게 구현
-                // 스크롤 이벤트를 제대로 처리할 수 있어야 합니다. 이렇게 수정하면 onScroll 이벤트가 제대로 작동해야 합니다.
-                // onScroll={handleScroll}
-                style={{
-                    width: '100%',
-                    height: '600px', // 원하는 높이 설정
-                    overflow: 'scroll',
-                }}
-            >
-                <div style={{ height: '100%' }}>{/* 실제 스크롤 가능한 내용 */}</div>
-            </div>
-        </div>
-    );
+    return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
 export default Mix;
