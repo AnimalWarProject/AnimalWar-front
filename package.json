@@ -10,6 +10,9 @@
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
     "firebase": "^10.5.2",
+    "highlight.js": "^11.9.0",
+    "pixi-scrollbox": "^2.3.1",
+    "pixi-viewport": "^5.0.2",
     "pixi.js": "^7.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -19,7 +22,9 @@
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.5",
     "reactstrap": "^9.2.0",
-    "web-vitals": "^2.1.4"
+    "scrollbox": "^4.0.0",
+    "web-vitals": "^2.1.4",
+    "yy-fps": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

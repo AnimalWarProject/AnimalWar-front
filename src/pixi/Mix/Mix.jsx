@@ -8,16 +8,17 @@ import fish from './imgs/Fish.png'
 import mixPot from './imgs/MIXPOT 1.png'
 import mixBackground from './imgs/Rectangle 12348.png'
 import {useHistory} from 'react-router-use-history';
-import {ButtonContainer} from "@pixi/ui";
+import {ButtonContainer, ScrollBox} from "@pixi/ui";
 
 const Mix = () => {
     const canvasRef = useRef(null);
-    const [animal, setAnimal] = useState([pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish]);
-    const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
+    const [animal, setAnimal] = useState([pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish]);
+    const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
     const [potAnimals, setPotAnimals] = useState([]);
     const [xValue, setXvalue] = useState(0);
     const history = useHistory();
     const grade = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+
 
     useEffect(() => {
         const canvasWidth = 960;
@@ -56,10 +57,22 @@ const Mix = () => {
 
 
         const profileInnerBox = new PIXI.Graphics(); // 작은 틀
+
+        profileInnerBox.position.set(80, 120);
+
+
+
         profileInnerBox.beginFill(0xffffff, 0.5);
         const InnerBoxWidth = 377;
         const InnerBoxHeight = 448;
+
         profileBox.drawRoundedRect(80, 120, InnerBoxWidth, InnerBoxHeight, 40);
+
+
+
+
+
+
 
         for (let i = 0; i < 5; i++) { // 등급 칸 & 텍스트
             const inventory = new PIXI.Graphics();
@@ -106,19 +119,38 @@ const Mix = () => {
 
         profileBox.addChild(mixBuildingBtn);
 
+        let testArr = [];
 
         let clickNum = 0;
+
+        const testArr2 = [
+            [{x : 25, y : 25}, {x : 35, y : 25}, {x : 45, y : 25}],
+            [{x : 25, y : 125}, {x : 35, y : 125}, {x : 45, y : 125}],
+            [{x : 25, y : 225}, {x : 35, y : 225}, {x : 45, y : 225}],
+            [{x : 25, y : 325}, {x : 35, y : 325}, {x : 45, y : 325}],
+            [{x : 25, y : 425}, {x : 35, y : 425}, {x : 45, y : 425}],
+        ];
+
+
         // 인벤토리
         for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
+            for (let j = 0; j < animal.length / 3; j++) {
+                //
+                // console.log(j)
+                //
+                console.log(' x : ' + testArr2[i][1].x)
+
+
 
                 // 인벤토리
                 const inventoryBtn = new ButtonContainer(
                     new PIXI.Graphics()
                         .beginFill(0xffffff, 0.5)
-                        .drawRoundedRect(95 + (i * 120), 150 + (j * 135), 105, 122, 40)
+                        .drawRoundedRect(25, 25, 105, 122, 40)
+                        // .drawRoundedRect(95 + (i * 120), 150 + (j * 135), 105, 122, 40)
                 );
 
+                testArr.push(inventoryBtn)
                 profileBox.addChild(inventoryBtn)
 
                 // 인벤토리 index
@@ -140,8 +172,11 @@ const Mix = () => {
                     // 인벤토리 칸의 가운데로 위치 조정
                     const inventoryWidth = 105; // 인벤토리 칸의 가로 크기
                     const inventoryHeight = 122; // 인벤토리 칸의 세로 크기
-                    const xPosition = 95 + (i * 120); // 인벤토리 칸의 x 위치
-                    const yPosition = 150 + (j * 135); // 인벤토리 칸의 y 위치
+                    // const xPosition = 95 + (i * 120); // 인벤토리 칸의 x 위치
+                    // const yPosition = 150 + (j * 135); // 인벤토리 칸의 y 위치
+
+                    const xPosition = 25; // 인벤토리 칸의 x 위치
+                    const yPosition = 25; // 인벤토리 칸의 y 위치
 
                     // image 가운데로 위치 조정
                     imgInventorySprite.x = xPosition + (inventoryWidth - imgInventorySprite.width) / 2;
@@ -150,6 +185,10 @@ const Mix = () => {
                     // Count 텍스트 위치 설정 (가운데 정렬 및 동물 이미지 머리 바로 위에 표시)
                     countText.x = xPosition + (inventoryWidth - countText.width) / 2;
                     countText.y = yPosition - countText.height + 25; // 동물 이미지 머리 바로 위에 표시
+
+
+                    inventoryBtn.addChild(imgInventorySprite); // inventoryBtn에 스프라이트 추가
+                    inventoryBtn.addChild(countText);
 
                     // 인벤토리 안에 클릭하면
                     inventoryBtn.onPress.connect(() => {
@@ -219,12 +258,26 @@ const Mix = () => {
                     });
 
 
-                    profileBox.addChild(imgInventorySprite);
-                    profileBox.addChild(countText);
+                    // profileBox.addChild(imgInventorySprite);
+                    // profileBox.addChild(countText);
                 }
             }
         }
 
+        console.log(testArr)
+
+
+        const scrollBox = new ScrollBox({
+            width: 377,
+            height: 448,
+            radius : 40,
+            items: testArr
+        });
+
+        scrollBox.x = 80; // x 좌표
+        scrollBox.y = 120; // y 좌표
+
+        profileBox.addChild(scrollBox);
 
         // 항아리
         const mixPotTexture = PIXI.Texture.from(mixPot);
@@ -242,8 +295,8 @@ const Mix = () => {
         const mixStartBtnHeight = 40;
         const mixStartBtn = new ButtonContainer(
             new PIXI.Graphics()
-            .beginFill(0x00ffff, 0.8)
-            .drawRoundedRect(720, 590, mixStartBtnWidth, mixStartBtnHeight, 40))
+                .beginFill(0x00ffff, 0.8)
+                .drawRoundedRect(720, 590, mixStartBtnWidth, mixStartBtnHeight, 40))
 
         const mixStartText = new PIXI.Text('합성하기', textStyle);
         mixStartBtn.addChild(mixStartText);

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
@@ -33,6 +33,7 @@ const MyRoutes = () => {
                 <Route path="/mix2" element={<MixStart />}></Route>
                 <Route path="/mix3" element={<MixFail />}></Route>
                 <Route path="/mix4" element={<MixSuccess />}></Route>
+
                 <Route path="/upgrade" element={<UpGradePage />} />
             </Route>
             <Route element={<BasicTemplate />}>
