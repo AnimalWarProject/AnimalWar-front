@@ -92,7 +92,7 @@ const UpGrade = () => {
         AnimalBtn.beginFill(0xF698ED, 1);
         const AnimalBtnWidth = 110;
         const AnimalBtnHeight = 35;
-        AnimalBtn.drawRoundedRect(80, 3, AnimalBtnWidth, AnimalBtnHeight, 40);
+        AnimalBtn.drawRoundedRect(80, 3, AnimalBtnWidth, AnimalBtnHeight, 10);
         const animalDrawText = new PIXI.Text('동물', textStyle);
         AnimalBtn.addChild(animalDrawText);
         animalDrawText.x = 135;
@@ -107,7 +107,7 @@ const UpGrade = () => {
         BuildingBtn.beginFill(0xFF594F, 1);
         const BuildingBtnWidth = 110;
         const BuildingBtnHeight = 35;
-        BuildingBtn.drawRoundedRect(200, 3, BuildingBtnWidth, BuildingBtnHeight, 40);
+        BuildingBtn.drawRoundedRect(200, 3, BuildingBtnWidth, BuildingBtnHeight, 10);
         const BuildingDrawText = new PIXI.Text('건물', textStyle);
         BuildingBtn.addChild(BuildingDrawText);
         BuildingDrawText.x = 255;

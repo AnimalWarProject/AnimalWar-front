@@ -1,16 +1,18 @@
-import { useEffect, useRef } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import * as PIXI from 'pixi.js';
 import back from '../imgs/Rectangle 12299.png';
 import randomEgg from '../imgs/RANDOMEGG 2.png';
 import randomBuilding from '../imgs/RandomBuilding.png';
 import smokeImage from '../action/smoke.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const DrawLoading = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
     const location = useLocation();
     const drawData = location.state;
+    const qty = drawData.qty;
     const type = drawData.type;
 
     useEffect(() => {
@@ -22,8 +24,11 @@ const DrawLoading = () => {
             width: canvasWidth,
             height: canvasHeight,
         });
+        const drawRequest = {
+            cnt: qty,
+            userUUID: "bc654f15-a1a3-4b97-a32f-5390ca92d0f2"
+        };
 
-        // Use ref to append the PIXI application view to the DOM.
         if (canvasRef.current) {
             canvasRef.current.appendChild(app.view);
         }
@@ -43,7 +48,7 @@ const DrawLoading = () => {
         profileInnerBox.beginFill(0xffffff, 0.5);
         const InnerBoxWidth = 450;
         const InnerBoxHeight = 484;
-        profileBox.drawRoundedRect(250, 70, InnerBoxWidth, InnerBoxHeight, 40);
+        profileInnerBox.drawRoundedRect(250, 70, InnerBoxWidth, InnerBoxHeight, 40);
 
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
@@ -69,7 +74,15 @@ const DrawLoading = () => {
         randomEggSprite.interactive = true;
         randomEggSprite.buttonMode = true;
         randomEggSprite.on('pointertap', () => {
-            nav('/draw/result');
+            axios.post("http://localhost:8083/api/v1/draw/animal", drawRequest)
+                .then((response) => {
+                    // 결과가 빈 객체로 오는 경우, response.data를 살펴봐야 할 수 있음
+                    console.log("loading data : ", response.data);
+                    nav('/draw/result', { state: response.data });
+                })
+                .catch((error) => {
+                    console.error("데이터 가져오기 실패: ", error);
+                });
         });
 
         if (type === 'animal') {
