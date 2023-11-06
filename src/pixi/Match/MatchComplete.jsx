@@ -1,8 +1,6 @@
 import * as PIXI from 'pixi.js';
 import back from './imgs/Rectangle12273.png';
 import { useEffect, useRef, useState } from 'react';
-import clockImg from './imgs/Rectangle 12282.png';
-import axios from 'axios';
 import { useLocation } from 'react-router';
 
 

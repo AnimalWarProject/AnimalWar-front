@@ -11,6 +11,7 @@ import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
+import Exchange from '../pixi/Exchange/Exchange';
 
 const MyRoutes = () => {
     return (
@@ -23,6 +24,8 @@ const MyRoutes = () => {
                 <Route path="/match" element={<Match />}></Route>
                 <Route path="/match2" element={<MatchProcess />}></Route>
                 <Route path="/match3" element={<MatchComplete />}></Route>
+                <Route path="/exchange" element={<Exchange />}></Route>
+
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />}></Route>
