@@ -17,8 +17,6 @@ const DrawLoading = () => {
         const canvasWidth = 960;
         const canvasHeight = 640;
         const smokeTexture = PIXI.Texture.from(smokeImage);
-        console.log(drawData);
-
         const app = new PIXI.Application({
             background: '#1099bb',
             width: canvasWidth,
