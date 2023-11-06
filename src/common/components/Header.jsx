@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
-import Search from '../imgs/Search.png';
 import { api } from '../../network/api';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import logoImage from '../imgs/Logo.webp';
+import searchImage from '../imgs/Search.webp';
 
 function Header() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [profile, setProfile] = useState({});
     const [searchedUser, setSearchedUser] = useState(null);
     const [searchInput, setSearchInput] = useState('');
-    const [searchImageUrl, setSearchImageUrl] = useState(null);
-    const [logoUrl, setLogoUrl] = useState(null);
 
     const getProfileData = async () => {
         try {
-            const { data: tokenInfo } = await api(`api/v1/auth/me`, 'GET');
-            const userId = tokenInfo.userId;
-            const { data: userProfile } = await api(`api/v1/user/findByID/${userId}`, 'GET');
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: userProfile } = await api('/api/v1/user', 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
             setProfile(userProfile);
         } catch (error) {
             console.error('Failed to fetch user profile:', error);
@@ -33,82 +34,95 @@ function Header() {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            await api('/api/v1/auth/logout', 'POST', null, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            localStorage.removeItem('accessToken');
+
+            setProfile({});
+            setSearchedUser(null);
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
     useEffect(() => {
         getProfileData();
-        fetchLogoUrl();
-        fetchSearchImageUrl();
     }, []);
-
-    const fetchLogoUrl = async () => {
-        const storage = getStorage();
-        const logoRef = ref(storage, 'Logo.png');
-
-        try {
-            const url = await getDownloadURL(logoRef);
-            setLogoUrl(url);
-        } catch (error) {
-            console.error('Failed to fetch logo URL:', error);
-        }
-    };
-
-    const fetchSearchImageUrl = async () => {
-        const storage = getStorage();
-        const searchImageRef = ref(storage, 'Search.png');
-
-        try {
-            const url = await getDownloadURL(searchImageRef);
-            setSearchImageUrl(url);
-        } catch (error) {
-            console.error('Failed to fetch search image URL:', error);
-        }
-    };
 
     return (
         <div className="header-container">
-            <img className="logo" src={logoUrl || 'default-image-path'} alt="Logo" />
-
-            <div className="menu-buttons">
-                <NavLink to="/main">홈</NavLink>
-                <NavLink to="/battle">전투</NavLink>
-                <NavLink to="/draw">뽑기</NavLink>
-                <NavLink to="/battle">합성</NavLink>
-                <NavLink to="/draw">강화</NavLink>
-                <NavLink to="/battle">배치</NavLink>
-                <NavLink to="/draw">이사</NavLink>
-                <NavLink to="/battle">교환소</NavLink>
-                <NavLink to="/draw">거래소</NavLink>
-                <NavLink to="/battle">랭킹</NavLink>
-            </div>
-
-            <div className="search-box">
-                <input
-                    type="text"
-                    placeholder=" 유저 검색"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                />
-                <button onClick={handleSearch}>
-                    <img className="search-icon" src={searchImageUrl || 'default-image-path'} alt="Search" />
-                </button>
-            </div>
-
-            {searchedUser && (
-                <div className="searched-user-info">
-                    <img src={searchedUser.profileImage || 'default-image-path'} alt="Searched User" />
-                    <span>{searchedUser.nickName || 'Unknown'}</span>
+            <img className="logo" src={logoImage} alt="Logo" />
+            <div className="header-middle">
+                <div className="menu-buttons">
+                    <NavLink to="/main" activeClassName="active">
+                        홈
+                    </NavLink>
+                    <NavLink to="/battle" activeClassName="active">
+                        전투
+                    </NavLink>
+                    <NavLink to="/draw" activeClassName="active">
+                        뽑기
+                    </NavLink>
+                    <NavLink to="/mix" activeClassName="active">
+                        합성
+                    </NavLink>
+                    <NavLink to="/upgrade" activeClassName="active">
+                        강화
+                    </NavLink>
+                    <NavLink to="/place" activeClassName="active">
+                        배치
+                    </NavLink>
+                    <NavLink to="/terrain" activeClassName="active">
+                        이사
+                    </NavLink>
+                    <NavLink to="/exchange" activeClassName="active">
+                        교환소
+                    </NavLink>
+                    <NavLink to="/market" activeClassName="active">
+                        거래소
+                    </NavLink>
+                    <NavLink to="/rank" activeClassName="active">
+                        랭킹
+                    </NavLink>
                 </div>
-            )}
 
-            <div className="profile-section">
-                <img src={profile.profileImage || 'default-image-path'} alt="Profile" />
-                <span>{profile.nickName || 'Unknown'}</span>
-                <button onClick={() => setDropdownVisible(!dropdownVisible)}>↓</button>
-                {dropdownVisible && (
-                    <div className="dropdown-content">
-                        <button>마이페이지</button>
-                        <button>로그아웃</button>
+                <div className="search-box">
+                    <input
+                        type="text"
+                        placeholder=" 유저 검색"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                    />
+                    <button onClick={handleSearch}>
+                        <img className="search-icon" src={searchImage} alt="Search" />
+                    </button>
+                </div>
+
+                {searchedUser && (
+                    <div className="searched-user-info">
+                        <img src={searchedUser.profileImage || 'default-user-profile-path'} alt="Searched User" />
+                        <span>{searchedUser.nickName || 'Unknown'}</span>
                     </div>
                 )}
+            </div>
+            <div className="profile-section">
+                <img src={profile.profileImage || 'default-profile-path'} alt="Profile" />
+                <span>{profile.nickName || 'Unknown'}</span>
+                <button onClick={() => setDropdownVisible(!dropdownVisible)}>
+                    <FontAwesomeIcon icon={faCog} className="fa-icon" />
+                </button>
+                <div className={`dropdown-content ${dropdownVisible ? 'show' : ''}`}>
+                    <button>마이페이지</button>
+                    <button onClick={handleLogout}>로그아웃</button>
+                </div>
             </div>
         </div>
     );

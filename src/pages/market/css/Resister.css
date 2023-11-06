@@ -19,7 +19,7 @@
 .register-wrap-item{
     width: 12rem;
     height: 11.5rem;
-    border: solid black 1px;
+    border: solid black 0.06rem;
     border-radius: 1rem;
     margin-top: 2rem;
     background-color: #FFFFFF;

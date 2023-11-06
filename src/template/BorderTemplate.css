@@ -1,0 +1,13 @@
+.big-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inside-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
