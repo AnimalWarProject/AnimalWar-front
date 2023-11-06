@@ -1,14 +1,43 @@
 import * as PIXI from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
-import back from './imgs/Rectangle12273.png';
 import test from './imgs/Rectangle 3.png';
 import axios from 'axios';
 import { ButtonContainer } from '@pixi/ui';
-import { Link, NavLink } from 'react-router-dom';
-import MatchProcess from './MatchProcess';
 import { useHistory } from 'react-router-use-history';
 
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+
 const Match = () => {
+
+    //firbase 스타트
+    const [backImg, setBackImg] = useState(null);
+    const [isFirebaseLoaded, setFirebaseLoaded] = useState(false);
+
+    const getBackImg = async () => {
+        const storage = getStorage();
+        const searchImageRef = ref(storage, 'MatchBackground.png');
+        try {
+            const url = await getDownloadURL(searchImageRef);
+            console.log(url);
+            setBackImg(url);
+            setFirebaseLoaded(true);
+        } catch (error) {
+            console.error('Failed to fetch search image URL:', error);
+        }
+
+
+    }
+
+    useEffect(() => {
+        if (!isFirebaseLoaded) {
+            getBackImg();
+        }
+
+    }, [isFirebaseLoaded])
+    //파이어 베이스 끝
+
+
+
     const canvasRef = useRef(null);
     const history = useHistory();
 
@@ -46,8 +75,7 @@ const Match = () => {
 
 
     useEffect(() => {
-
-        if (isDataLoaded) {
+        if (isDataLoaded && isFirebaseLoaded) {
             const canvasWidth = 960;
             const canvasHeight = 640;
 
@@ -61,7 +89,7 @@ const Match = () => {
                 canvasRef.current.appendChild(app.view);
             }
 
-            const background = PIXI.Sprite.from(back);
+            const background = PIXI.Sprite.from(backImg);
             background.width = app.screen.width;
             background.height = app.screen.height;
 
@@ -175,7 +203,7 @@ const Match = () => {
 
         }
 
-    }, [isDataLoaded, userData]);
+    }, [isDataLoaded, isFirebaseLoaded, userData]);
 
     return <div ref={canvasRef}></div>;
 };
