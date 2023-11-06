@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
 import { api } from '../../network/api';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
+import logoImage from '../imgs/Logo.webp';
+import searchImage from '../imgs/Search.webp';
 
 function Header() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [profile, setProfile] = useState({});
     const [searchedUser, setSearchedUser] = useState(null);
     const [searchInput, setSearchInput] = useState('');
-    const [searchImageUrl, setSearchImageUrl] = useState(null);
-    const [logoUrl, setLogoUrl] = useState(null);
 
     const getProfileData = async () => {
         try {
@@ -56,37 +55,11 @@ function Header() {
 
     useEffect(() => {
         getProfileData();
-        fetchLogoUrl();
-        fetchSearchImageUrl();
     }, []);
-
-    const fetchLogoUrl = async () => {
-        const storage = getStorage();
-        const logoRef = ref(storage, 'Logo.png');
-
-        try {
-            const url = await getDownloadURL(logoRef);
-            setLogoUrl(url);
-        } catch (error) {
-            console.error('Failed to fetch logo URL:', error);
-        }
-    };
-
-    const fetchSearchImageUrl = async () => {
-        const storage = getStorage();
-        const searchImageRef = ref(storage, 'Search.png');
-
-        try {
-            const url = await getDownloadURL(searchImageRef);
-            setSearchImageUrl(url);
-        } catch (error) {
-            console.error('Failed to fetch search image URL:', error);
-        }
-    };
 
     return (
         <div className="header-container">
-            <img className="logo" src={logoUrl || 'default-image-path'} alt="Logo" />
+            <img className="logo" src={logoImage} alt="Logo" />
             <div className="header-middle">
                 <div className="menu-buttons">
                     <NavLink to="/main" activeClassName="active">
@@ -129,7 +102,7 @@ function Header() {
                         onChange={(e) => setSearchInput(e.target.value)}
                     />
                     <button onClick={handleSearch}>
-                        <img className="search-icon" src={searchImageUrl || 'default-image-path'} alt="Search" />
+                        <img className="search-icon" src={searchImage} alt="Search" />
                     </button>
                 </div>
 

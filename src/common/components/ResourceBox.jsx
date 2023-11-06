@@ -1,33 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../../network/api';
 import './ResourceBox.css';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import GoldImage from '../imgs/Gold.webp';
+import FoodImage from '../imgs/Food.webp';
+import WoodImage from '../imgs/Wood.webp';
+import IronImage from '../imgs/Iron.webp';
 
 const ResourceBox = () => {
     const [profile, setProfile] = useState({});
-    const [icons, setIcons] = useState({});
 
-    const fetchImageFromFirebase = async (imageName) => {
-        const storage = getStorage();
-        const imageRef = ref(storage, imageName);
-
-        try {
-            return await getDownloadURL(imageRef);
-        } catch (error) {
-            console.error(`Failed to fetch ${imageName} URL:`, error);
-            return null;
-        }
-    };
-
-    const loadIcons = async () => {
-        const imageNames = ['Gold.png', 'Food.png', 'Wood.png', 'Iron.png'];
-
-        const newIcons = {};
-        for (let name of imageNames) {
-            newIcons[name.split('.')[0]] = await fetchImageFromFirebase(name);
-        }
-
-        setIcons(newIcons);
+    const icons = {
+        Gold: GoldImage,
+        Food: FoodImage,
+        Wood: WoodImage,
+        Iron: IronImage,
     };
 
     const getProfileData = async () => {
@@ -42,8 +28,9 @@ const ResourceBox = () => {
         }
     };
 
-    getProfileData();
-    loadIcons();
+    useEffect(() => {
+        getProfileData();
+    }, []);
 
     return (
         <div className="resource-box">

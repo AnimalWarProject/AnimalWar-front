@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
 import RankingPage from '../pages/Ranking/RankingPage';
@@ -20,7 +19,6 @@ const MyRoutes = () => {
     return (
         <Routes>
             <Route element={<GameTemplate />}>
-                <Route path="/test" element={<BattlePage />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/result" element={<DrawResult />} />
@@ -29,13 +27,12 @@ const MyRoutes = () => {
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
-                <Route path="/test" element={<BattlePage />} />
                 <Route path="/match" element={<Match />}></Route>
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
             </Route>
             <Route element={<BorderTemplate />}>
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/my" element={<MyPage />} />
             </Route>

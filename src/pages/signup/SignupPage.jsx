@@ -2,17 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 import uploadImageToFirebase from '../../network/FirebaseUtils';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { apiNoToken } from '../../network/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+// 여기에 이미지를 import 합니다.
+import DogImage from '../../common/imgs/Dog.webp';
+import CatImage from '../../common/imgs/Cat.webp';
+import GliresImage from '../../common/imgs/Glires.webp';
+import BirdImage from '../../common/imgs/Bird.webp';
+import FishImage from '../../common/imgs/Fish.webp';
+import LongLogoImage from './imgs/LongLogo.webp';
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
         id: '',
         password: '',
         nickName: '',
-        profileImage: null, // 초기 profileImage 상태를 null로 변경
+        profileImage: null,
         species: '',
     });
     const speciesTranslations = {
@@ -30,19 +37,14 @@ const SignupPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchImageUrls = async () => {
-            const storage = getStorage();
-            const tempImages = {};
-            const speciesList = ['Dog', 'Cat', 'Glires', 'Bird', 'Fish'];
-            for (const species of speciesList) {
-                const imageRef = ref(storage, `${species}.png`);
-                tempImages[species] = await getDownloadURL(imageRef);
-            }
-            setSpeciesImages(tempImages);
-            const logoImageRef = ref(storage, 'LongLogo.png');
-            setLongLogoUrl(await getDownloadURL(logoImageRef));
-        };
-        fetchImageUrls();
+        setSpeciesImages({
+            Dog: DogImage,
+            Cat: CatImage,
+            Glires: GliresImage,
+            Bird: BirdImage,
+            Fish: FishImage,
+        });
+        setLongLogoUrl(LongLogoImage);
     }, []);
 
     const handleImageUpload = (event) => {
@@ -85,7 +87,7 @@ const SignupPage = () => {
             const completeFormData = { ...formData, profileImage: imageUrl };
             await apiNoToken('/api/v1/auth/signup', 'POST', completeFormData);
             toast.success('회원가입이 성공적으로 완료되었습니다.');
-            navigate('/login');
+            navigate('/');
         } catch (error) {
             toast.error('회원가입에 에러가 발생하였습니다.');
         }

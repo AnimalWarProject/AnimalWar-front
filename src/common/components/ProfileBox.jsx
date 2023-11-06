@@ -1,47 +1,37 @@
 import React, { useState } from 'react';
 import { api } from '../../network/api';
 import './ProfileBox.css';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import AttackPowerImage from '../imgs/AttackPower.webp';
+import DefensePowerImage from '../imgs/DefensePower.webp';
+import LifeImage from '../imgs/Life.webp';
+import RateImage from '../imgs/Rate.webp';
+import DogImage from '../imgs/Dog.webp';
+import CatImage from '../imgs/Cat.webp';
+import GliresImage from '../imgs/Glires.webp';
+import FishImage from '../imgs/Fish.webp';
+import BirdImage from '../imgs/Bird.webp';
+import DefaultImage from '../imgs/Default.webp';
+import LandImage from '../imgs/Land.webp';
+import SeaImage from '../imgs/Sea.webp';
+import MountainImage from '../imgs/Mountain.webp';
 
 const ProfileBox = () => {
     const [profile, setProfile] = useState({});
-    const [icons, setIcons] = useState({});
 
-    const fetchImageFromFirebase = async (imageName) => {
-        const storage = getStorage();
-        const imageRef = ref(storage, imageName);
-
-        try {
-            return await getDownloadURL(imageRef);
-        } catch (error) {
-            console.error(`Failed to fetch ${imageName} URL:`, error);
-            return null;
-        }
-    };
-
-    const loadIcons = async () => {
-        const imageNames = [
-            'AttackPower.png',
-            'DefensePower.png',
-            'Life.png',
-            'Rate.png',
-            'Dog.png',
-            'Cat.png',
-            'Glires.png',
-            'Fish.png',
-            'Bird.png',
-            'Default.png',
-            'Land.png',
-            'Sea.png',
-            'Mountain.png',
-        ];
-
-        const newIcons = {};
-        for (let name of imageNames) {
-            newIcons[name.split('.')[0]] = await fetchImageFromFirebase(name);
-        }
-
-        setIcons(newIcons);
+    const icons = {
+        AttackPower: AttackPowerImage,
+        DefensePower: DefensePowerImage,
+        Life: LifeImage,
+        Rate: RateImage,
+        Dog: DogImage,
+        Cat: CatImage,
+        Glires: GliresImage,
+        Fish: FishImage,
+        Bird: BirdImage,
+        Default: DefaultImage,
+        Land: LandImage,
+        Sea: SeaImage,
+        Mountain: MountainImage,
     };
 
     const getProfileData = async () => {
@@ -87,7 +77,6 @@ const ProfileBox = () => {
     };
 
     getProfileData();
-    loadIcons();
 
     return (
         <div className="profile-box">
