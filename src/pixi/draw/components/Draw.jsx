@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
-import back from "../imgs/Rectangle 12299.png";
-import oneEgg from "../imgs/ONEEGG 1.png";
-import manyEgg from "../imgs/MANYEGG 1.png";
-import oneBuilding from "../imgs/ONEBUILDING 1.png";
-import manyBuilding from "../imgs/MANYBUILDING 1.png";
+import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
+import oneEgg from "../imgs/AnyConv.com__ONEEGG 1.webp";
+import manyEgg from "../imgs/AnyConv.com__MANYEGG 1.webp";
+import oneBuilding from "../imgs/AnyConv.com__ONEBUILDING 1.webp";
+import manyBuilding from "../imgs/AnyConv.com__MANYBUILDING 1.webp";
 import { useNavigate } from "react-router-dom";
 
 const Draw = () => {

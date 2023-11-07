@@ -1,11 +1,8 @@
-import back from "../image/Rectangle 12374.png";
+import back from "../image/Rectangle 12374.webp";
 import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
 import {useNavigate} from "react-router-dom";
-import moru from "../image/ANVIL 1.png";
-import upgrade1 from "../image/UPGRADE1 1.png";
-import upgrade2 from "../image/UPGRADE1 2.png";
-import upgrade3 from "../image/UPGRADE1 3.png";
+import moru from "../image/ANVIL 1.webp";
 const UpGrade = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
@@ -92,7 +89,7 @@ const UpGrade = () => {
         AnimalBtn.beginFill(0xF698ED, 1);
         const AnimalBtnWidth = 110;
         const AnimalBtnHeight = 35;
-        AnimalBtn.drawRoundedRect(80, 3, AnimalBtnWidth, AnimalBtnHeight, 40);
+        AnimalBtn.drawRoundedRect(80, 3, AnimalBtnWidth, AnimalBtnHeight, 10);
         const animalDrawText = new PIXI.Text('동물', textStyle);
         AnimalBtn.addChild(animalDrawText);
         animalDrawText.x = 135;
@@ -107,7 +104,7 @@ const UpGrade = () => {
         BuildingBtn.beginFill(0xFF594F, 1);
         const BuildingBtnWidth = 110;
         const BuildingBtnHeight = 35;
-        BuildingBtn.drawRoundedRect(200, 3, BuildingBtnWidth, BuildingBtnHeight, 40);
+        BuildingBtn.drawRoundedRect(200, 3, BuildingBtnWidth, BuildingBtnHeight, 10);
         const BuildingDrawText = new PIXI.Text('건물', textStyle);
         BuildingBtn.addChild(BuildingDrawText);
         BuildingDrawText.x = 255;

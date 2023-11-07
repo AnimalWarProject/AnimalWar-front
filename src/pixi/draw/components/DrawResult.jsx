@@ -1,17 +1,17 @@
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
-import back from "../imgs/Rectangle 12299.png";
-import randomEgg from "../imgs/RANDOMEGG 2.png";
-import {useNavigate} from "react-router-dom";
+import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
+import {useLocation, useNavigate} from "react-router-dom";
 
-const DrawLoading = () => {
+const DrawResult = () => {
     const canvasRef = useRef(null);
-    const nav = useNavigate();
+    const location = useLocation();
+    const resultData = JSON.stringify(location.state);
+
 
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
-
         const app = new PIXI.Application({
             background: '#1099bb',
             width: canvasWidth,
@@ -26,6 +26,7 @@ const DrawLoading = () => {
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
+
 
         const profileBox = new PIXI.Graphics(); // 큰 틀
         profileBox.beginFill(0xffffff, 0.5);
@@ -43,6 +44,7 @@ const DrawLoading = () => {
             }
         }
 
+        console.log("result 결과 : " + resultData)
 
 
         app.stage.addChild(profileBox);
@@ -51,4 +53,4 @@ const DrawLoading = () => {
     return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
-export default DrawLoading;
+export default DrawResult;
