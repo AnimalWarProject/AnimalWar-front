@@ -3,7 +3,6 @@ import "../css/MarketPage.css";
 import SearchBox from "./SearchBox";
 import SideBar from "./SideBar";
 import Main from "./Main";
-import Register from "./Register";
 import MarketInven from "./MarketInven";
 
 const MarketPage = () => {

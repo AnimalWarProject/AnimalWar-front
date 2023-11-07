@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../network/api';
 import './ResourceBox.css';
-import goldIcon from '../imgs/Gold.png';
-import foodIcon from '../imgs/Food.png';
-import woodIcon from '../imgs/Wood.png';
-import ironIcon from '../imgs/Iron.png';
+import GoldImage from '../imgs/Gold.webp';
+import FoodImage from '../imgs/Food.webp';
+import WoodImage from '../imgs/Wood.webp';
+import IronImage from '../imgs/Iron.webp';
 
 const ResourceBox = () => {
     const [profile, setProfile] = useState({});
 
+    const icons = {
+        Gold: GoldImage,
+        Food: FoodImage,
+        Wood: WoodImage,
+        Iron: IronImage,
+    };
+
     const getProfileData = async () => {
         try {
-            const { data: tokenInfo } = await api(`api/v1/auth/me`, 'GET');
-            const userId = tokenInfo.userId;
-            const { data: userProfile } = await api(`api/v1/user/findByID/${userId}`, 'GET');
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: userProfile } = await api('/api/v1/user', 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
             setProfile(userProfile);
         } catch (error) {
             console.error('Failed to fetch user profile:', error);
@@ -28,21 +36,21 @@ const ResourceBox = () => {
         <div className="resource-box">
             <div className="resource-line">
                 <div className="resource-item">
-                    <img src={goldIcon} alt="Gold" />
+                    <img src={icons.Gold} alt="Gold" />
                     <span>{profile.gold}</span>
                 </div>
                 <div className="resource-item">
-                    <img src={foodIcon} alt="Food" />
+                    <img src={icons.Food} alt="Food" />
                     <span>{profile.food}</span>
                 </div>
             </div>
             <div className="resource-line">
                 <div className="resource-item">
-                    <img src={woodIcon} alt="Wood" />
+                    <img src={icons.Wood} alt="Wood" />
                     <span>{profile.wood}</span>
                 </div>
                 <div className="resource-item">
-                    <img src={ironIcon} alt="Iron" />
+                    <img src={icons.Iron} alt="Iron" />
                     <span>{profile.iron}</span>
                 </div>
             </div>
