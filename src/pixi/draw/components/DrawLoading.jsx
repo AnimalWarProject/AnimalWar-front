@@ -1,9 +1,8 @@
 import {useEffect, useRef, useState} from 'react';
 import * as PIXI from 'pixi.js';
-import back from '../imgs/Rectangle 12299.png';
-import randomEgg from '../imgs/RANDOMEGG 2.png';
-import randomBuilding from '../imgs/RandomBuilding.png';
-import smokeImage from '../action/smoke.png';
+import back from '../imgs/AnyConv.com__Rectangle 12299.webp';
+import randomEgg from '../imgs/AnyConv.com__RANDOMEGG 2.webp';
+import randomBuilding from '../imgs/AnyConv.com__RandomBuilding.webp';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
@@ -18,7 +17,6 @@ const DrawLoading = () => {
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
-        const smokeTexture = PIXI.Texture.from(smokeImage);
         const app = new PIXI.Application({
             background: '#1099bb',
             width: canvasWidth,

@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
-import back from "../imgs/Rectangle 12299.png";
-import randomEgg from "../imgs/RANDOMEGG 2.png";
+import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
 import {useLocation, useNavigate} from "react-router-dom";
 
 const DrawResult = () => {
