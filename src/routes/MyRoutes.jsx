@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
 import RankingPage from '../pages/Ranking/RankingPage';
@@ -14,21 +13,24 @@ import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
+import Battle from '../pixi/battle/components/Battle';
+import Skill from '../pixi/battle/components/Skill';
+
 
 const MyRoutes = () => {
     return (
         <Routes>
             <Route element={<GameTemplate />}>
-                <Route path="/test" element={<BattlePage />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/result" element={<DrawResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
+                <Route path="/battle" element={<Battle />}></Route>
+                <Route path="/skill" element={<Skill />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
-                <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
                 <Route path="/match2" element={<MatchProcess />}></Route>
                 <Route path="/match3" element={<MatchComplete />}></Route>
