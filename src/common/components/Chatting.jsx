@@ -7,7 +7,6 @@ import Rectangle7 from "../imgs/Rectangle 7.png"
 import sendIcon from "../imgs/send.png"
 import plusIcon from "../imgs/plusIcon.png"
 import {useRef, useState} from "react";
-import {calculateNewValue} from "@testing-library/user-event/dist/utils";
 
 const Chatting = () => {
     const [inputText, setInputText] = useState('');

@@ -215,9 +215,9 @@ const Mix = () => {
 
 
                             if (clickNum > 0) {
-                                selectedAnimalSprite.x = startPoint + (73 * clickNum);
+                                selectedAnimalSprite.x = startPoint + (73 * clickNum); // 1~3부터는 x축 옆으로 이동(가로 나열)
                             } else {
-                                selectedAnimalSprite.x = startPoint;
+                                selectedAnimalSprite.x = startPoint; // 0이면
                             }
 
                             selectedAnimalSprite.y = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) /2 + 60;
@@ -225,18 +225,28 @@ const Mix = () => {
 
 
                             // 이미지를 항아리에 추가하고 x 좌표를 조절하여 가로로 나열
-                            const spacing = 10; // 이미지 간의 간격
-                            const xOffset = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
-                            const yOffset = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) / 2 + 55;
-
-                            // 이미지의 x 좌표 계산
-                            // 이미지를 이동 및 추가
-                            // selectedAnimalSprite.x = xOffset + potAnimals.length * (selectedAnimalSprite.width + spacing);
-                            // selectedAnimalSprite.y = yOffset;
-
+                            // const spacing = 10; // 이미지 간의 간격
+                            // const xOffset = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
+                            // const yOffset = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) / 2 + 55;
 
                             profileBox.addChild(selectedAnimalSprite);
 
+
+
+                            // Feat : 클릭 시 count -1
+                            // "count" 배열을 복제하여 업데이트할 값을 변경한 다음 상태 업데이트
+                            const updatedCount = [...count];
+                            updatedCount[imageIndex]--;
+                            setCount(updatedCount);
+
+                            // "countText" 업데이트
+                            countText.text = updatedCount[imageIndex];
+
+
+
+
+
+                            // TODO 항아리에 들어가는 합성동물 배열로 변환 필요
                             // 항아리 동물 목록에 추가
                             // setPotAnimals([...potAnimals, selectedAnimalSprite]);
 
@@ -245,21 +255,24 @@ const Mix = () => {
                             })
 
                             // 항아리에서 동물을 클릭하면
-                            mixPotSprite.interactive = true;
-                            mixPotSprite.on('pointertap', () => {
-                                // 항아리에서 마지막으로 추가된 동물을 제거
-                                clickNum = 0;
-                                const lastAddedAnimal = profileBox.children[profileBox.children.length - 1];
-                                if (lastAddedAnimal !== mixPotSprite) {
-                                    profileBox.removeChild(lastAddedAnimal);
-                                }
+                            mixPotSprite.interactive = true; //  mixPotSprite 객체를 상호작용, 클릭 이벤트를 감지
+                            mixPotSprite.on('pointertap', () => { // 항아리 (mixPotSprite)를 클릭할 때
+
+
+                            // 항아리에서 마지막으로 추가된 동물을 제거
+                            clickNum = 0;
+                            profileBox.removeChild(selectedAnimalSprite);
+
+
+                                // const lastAddedAnimal = profileBox.children[profileBox.children.length - 1]; // 항아리에 마지막으로 추가된 동물
+                                // if (lastAddedAnimal !== mixPotSprite) {
+                                //     profileBox.removeChild(lastAddedAnimal); // 4번 초과해서 클릭 했을 때, 4번째 mixPotSprite와 다를 경우에는 삭제
+                                // }
+
+
                             });
                         }
                     });
-
-
-                    // profileBox.addChild(imgInventorySprite);
-                    // profileBox.addChild(countText);
                 }
             }
         }
@@ -289,14 +302,11 @@ const Mix = () => {
         profileBox.addChild(mixPotSprite);
 
 
-
-        // 합성하기 버튼
-        const mixStartBtnWidth = 150;
-        const mixStartBtnHeight = 40;
+        // Feat 합성하기 버튼
         const mixStartBtn = new ButtonContainer(
             new PIXI.Graphics()
                 .beginFill(0x00ffff, 0.8)
-                .drawRoundedRect(720, 590, mixStartBtnWidth, mixStartBtnHeight, 40))
+                .drawRoundedRect(720, 590, 150, 40, 40))
 
         const mixStartText = new PIXI.Text('합성하기', textStyle);
         mixStartBtn.addChild(mixStartText);
@@ -309,11 +319,20 @@ const Mix = () => {
             history.push("/mix2");
         });
 
+        background.addChild(mixStartBtn); // profileBox.addChild(mixStartBtn);이었는데  profileBox.removeChild(lastAddedAnimal);항아리 클릭하면 제거하는 함수와 profileBox가 겹쳐서 그런지 합성하기 버튼도 삭제되길래 -> background로 바꿈..
 
 
 
 
-        profileBox.addChild(mixStartBtn);
+
+
+
+
+
+
+
+
+
 
         // Cleanup on component unmount
         return () => {

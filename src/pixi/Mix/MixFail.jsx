@@ -2,10 +2,12 @@ import {useEffect, useRef} from "react";
 import failMix from './imgs/FAILMIX 1.png'
 import * as PIXI from "pixi.js";
 import mixBackground from "./imgs/Rectangle 12348.png";
+import {ButtonContainer} from "@pixi/ui";
+import {useHistory} from "react-router-use-history";
 
 const MixFail = () => {
     const canvasRef = useRef(null);
-
+    const history = useHistory();
 
 
     useEffect(() => {
@@ -66,6 +68,27 @@ const MixFail = () => {
         failText.x = ash.x - 20;
         failText.y = ash.y + 240;
         profileBox.addChild(failText);
+
+
+
+        // Feat 또 합성하기 버튼
+        const mixStartBtn = new ButtonContainer(
+            new PIXI.Graphics()
+                .beginFill(0x00ffff, 0.8)
+                .drawRoundedRect(720, 590, 150, 40, 40))
+
+        const mixStartText = new PIXI.Text('또 합성하기', textStyle);
+        mixStartBtn.addChild(mixStartText);
+
+        // 가운데 정렬을 위해 텍스트의 x, y 좌표를 조정
+        mixStartText.x = 750
+        mixStartText.y = 600
+
+        mixStartBtn.onPress.connect(() => {
+            history.push("/mix");
+        });
+
+        background.addChild(mixStartBtn);
     });
 
 

@@ -2,6 +2,7 @@ import {useEffect, useRef} from "react";
 import * as PIXI from "pixi.js";
 import mixBackground from "./imgs/Rectangle 12348.png";
 import inThePot from "./imgs/INTHEPOT 1.png"
+import {useHistory} from "react-router-use-history";
 
 const MixStart = () => {
     const canvasRef = useRef(null);
@@ -9,6 +10,7 @@ const MixStart = () => {
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
+        // const history = useHistory();
 
         // 글꼴
         const textStyle = new PIXI.TextStyle({
@@ -81,6 +83,19 @@ const MixStart = () => {
         clickTest.x = container.x/2 + 80; // TODO x축 가운데 정렬
         clickTest.y = container.y + 270;
         profileBox.addChild(clickTest);
+
+        // Feat : 합성 항이리 클릭 후 결과 반영
+        // TODO : DB연결 후 확인 필요(화면에 넘어오는 거 보고 HttpStatus 반영 필요)
+        // pot.interactive = true;
+        // pot.on('pointertap', () => {
+        //     // 화면에서 합성실패(error)가 나오면 "/mix2"
+        //     if(HttpStatus ==='NOT_FOUND') {
+        //         history.push("/mix3");
+        //     } else { // 합성 성공
+        //         history.push("/mix4");
+        //     }
+        // });
+
 
     });
 
