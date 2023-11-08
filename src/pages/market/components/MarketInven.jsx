@@ -7,7 +7,6 @@ const MarketInven = () => {
         const animalButton = document.querySelector('.marketinven-section-animalBtn');
         const buildingButton = document.querySelector('.marketinven-section-buildingBtn');
         const container = document.querySelector('.marketinven-container');
-
         // 동물 버튼을 클릭했을 때의 동작
         animalButton.addEventListener('click', function() {
             container.style.backgroundColor = '#A3FFF9';
@@ -18,7 +17,6 @@ const MarketInven = () => {
             container.style.backgroundColor = '#FFD1FA';
         });
     }, []);
-
 
     return <>
         <div className="marketinven-container">
