@@ -7,12 +7,8 @@ import ExecutionImage from '../imgs/Execution.webp';
 import hiddenAceImage from '../imgs/HiddenAce.webp';
 import poisonImage from '../imgs/Poison.webp';
 import speedRunImage from '../imgs/SpeedRun.webp';
+import transparency from '../imgs/Transparency.png';
 import {ScrollBox} from "@pixi/ui";
-import {Graphics} from "pixi.js";
-
-
-
-
 
 const Battle = () => {
     const pixiContainer = useRef(null);
@@ -46,7 +42,7 @@ const Battle = () => {
                 fontSize: 27,
                 fill: 0x0f1828,
                 align: 'center',
-                fontWeight: 'bold',
+                fontWeight: 'normal',
                 fontFamily: 'Arial'
             });
             message.anchor.set(0.5);
@@ -54,28 +50,21 @@ const Battle = () => {
             message.y = y;
             app.stage.addChild(message);
         };
-        addRoundedText('공격형 스킬', app.renderer.width / 4.88, app.renderer.height / 7, 255, 70, 40, 0x0f1828);
-        addRoundedText('수비형 스킬', app.renderer.width / 1.95, app.renderer.height / 7, 255, 70, 40, 0x0f1828);
-        addRoundedText('유틸형 스킬', app.renderer.width / 1.23, app.renderer.height / 7, 255, 70, 40, 0x0f1828);
-
+        addRoundedText('공격형 스킬', app.renderer.width / 5.5, app.renderer.height / 7, 277, 70, 40, 0x0f1828);
+        addRoundedText('수비형 스킬', app.renderer.width / 1.99, app.renderer.height / 7, 277, 70, 40, 0x0f1828);
+        addRoundedText('유틸형 스킬', app.renderer.width / 1.215, app.renderer.height / 7, 277, 70, 40, 0x0f1828);
 
         // 큰 박스를 담을 컨테이너
         const bigBoxContainer = new PIXI.Container();
         app.stage.addChild(bigBoxContainer);
 
-
-        // TODO 배열 만들어라 or 하나하나 넣던지
-        // for(let i=0; i<bigBoxContainer.length; i++) {
-        //     testArr.push(bigBoxContainer)
-        // }
-
         // 큰 스킬 박스
         const bigBox = new PIXI.Graphics();
         bigBox.beginFill(0xffffff, 0.5);
-        const bigBoxWidth = 254;
+        const bigBoxWidth = 277;
         const bigBoxHeight = 480;
         const cornerRadius = 30;
-        bigBox.drawRoundedRect(70, 133, bigBoxWidth, bigBoxHeight, cornerRadius);
+        bigBox.drawRoundedRect(34, 140, bigBoxWidth, bigBoxHeight, cornerRadius);
         bigBox.endFill();
         bigBoxContainer.addChild(bigBox);
 
@@ -84,13 +73,14 @@ const Battle = () => {
 
 
         // 각 스킬들 설정
-        const addSkillBox = (x, y, imageUrl, skillName, skillDescription) => {
+        const addSkillBox = (imageUrl, skillName, skillDescription) => {
 
             const container = new PIXI.Container();
             container.interactive = true;
             container.buttonMode = true;
-            container.x = x;
-            container.y = y;
+            // container.x = x;
+            // container.y = y;
+
 
             testArr.push(container);
 
@@ -98,29 +88,29 @@ const Battle = () => {
             const box = new PIXI.Graphics();
             const cornerRadiusBox = 15; // 모서리 반경을 조정할 수 있습니다
             box.beginFill('#FFFFFF', 1.0);
-            box.drawRoundedRect(15, -13, 220, 100, cornerRadiusBox);
+            box.drawRoundedRect(0, 20, 243, 95, cornerRadiusBox);
             box.endFill();
             container.addChild(box);
 
             // 스킬사진 크기 및 위치
             const image = PIXI.Sprite.from(imageUrl);
-            image.width = 60;
-            image.height = 60;
-            image.x = 15;
-            image.y = 5;
+            image.width = 65;
+            image.height = 65;
+            image.x = 8;
+            image.y = 35;
             box.addChild(image);
 
             // 스킬 이름 크기 및 폰트
             const nameText = new PIXI.Text(skillName, {
-                fontSize: 23,
+                fontSize: 21,
                 fill: 0x0f1828,
                 align: 'justify',
-                fontWeight: 'bold',
+                fontWeight: 'bolder',
                 fontFamily: 'Arial'
             });
             nameText.anchor.set(0, 0.5);
             nameText.x = 75;
-            nameText.y = 14;
+            nameText.y = 48;
             box.addChild(nameText);
 
 
@@ -130,77 +120,77 @@ const Battle = () => {
                 fill: '#000000',
                 align: 'justify',
                 fontFamily: 'Arial',
+                fontWeight: 'bold',
                 wordWrap: true,
-                wordWrapWidth: 170,// 너비 조정을 위한 속성
+                wordWrapWidth: 180,// 너비 조정을 위한 속성
                 lineHeight: 16
             });
             descriptionText.anchor.set(0, 0.5);
             descriptionText.x = 75;
-            descriptionText.y = 52.5;
+            descriptionText.y = 78;
             box.addChild(descriptionText);
 
         };
 
-
         addSkillBox(
-            app.renderer.width / 4.88,
-            app.renderer.height / 4.16,
             berserkerImage,
             '버서커',
-            '(지속)자신의 체력이 20% 이하 일때, 기본공격 데미지 3.5배 증가.'
+            '자신의 체력이 20% 이하, 기본공격 3.5배 데미지 변경'
         );
 
         addSkillBox(
-            app.renderer.width / 4.88,
-            app.renderer.height / 4.16,
-            berserkerImage,
-            '버서커',
-            '(지속)자신의 체력이 20% 이하 일때, 기본공격 데미지 3.5배 증가.'
-        );
-        addSkillBox(
-            app.renderer.width / 4.88,
-            app.renderer.height / 2.35,
             bombDropImage,
             '폭탄 투하',
-            '(1회성)상대방 현재 체력의 20%에 해당하는 데미지                 '
+            '상대방 현재 체력의 20%에 해당하는 데미지'
         );
         addSkillBox(
-            app.renderer.width / 4.88,
-            app.renderer.height / 1.64,
             ExecutionImage,
             '처형',
-            '다음 5회의 공격 이내 상대방이 10%의 체력 아래라면 처형'
+            '5회의 공격이내 상대방이 10%의 체력 이하라면 처형'
         );
         addSkillBox(
-            app.renderer.width / 4.88,
-            app.renderer.height / 1.26,
             hiddenAceImage,
             '비장의 한발',
-            '(1회성)다음 1회의 공격이 상대방보다 체력이 적다면 5배의 피해'
+            '1회의 공격이 상대방보다 체력이 적다면 5배의 피해'
         );
         addSkillBox(
-            app.renderer.width / 4.88,
-            app.renderer.height / 1.03,
             poisonImage,
             '독약',
-            '상대방의 최대 체력의 5%에 해당하는 데미지              '
+            '상대방의 최대 체력의 5%에 해당하는 데미지'
         );
         addSkillBox(
-            app.renderer.width / 4.88,
-            app.renderer.height / 0.69,
             speedRunImage,
             '빨리감기',
-            '상대방의 최대 체력의 5%에 해당하는 데미지              '
+            '상대방의 최대 체력의 5%에 해당하는 데미지'
+        );
+
+        addSkillBox(
+            transparency,
+            '스킬 준비중',
+            '스킬 준비 중...'
+        );
+
+        addSkillBox(
+            transparency,
+            '스킬 준비중',
+            '스킬 준비 중...'
+        );
+
+        addSkillBox(
+            transparency,
+            '스킬 준비중',
+            '스킬 준비 중...'
         );
 
         const scBox = new ScrollBox({
             width: 254,
             height: 480,
             items: testArr,
-            radius : 40
+            radius : 30,
+            elementsMargin: 14
         });
 
-        scBox.x = 70; // x 좌표
+        scBox.x = 50; // x 좌표
         scBox.y = 134; // y 좌표
 
         bigBox.addChild(scBox);
