@@ -13,10 +13,8 @@ import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
-import Battle from '../pixi/battle/components/Battle';
-import Skill from '../pixi/battle/components/Skill';
-
-
+import MyPage from '../pages/myPage/myPage';
+import Battle from "../pixi/battle/components/Battle";
 const MyRoutes = () => {
     return (
         <Routes>
@@ -26,21 +24,20 @@ const MyRoutes = () => {
                 <Route path="/draw/result" element={<DrawResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
                 <Route path="/battle" element={<Battle />}></Route>
-                <Route path="/skill" element={<Skill />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
                 <Route path="/match" element={<Match />}></Route>
-                <Route path="/match2" element={<MatchProcess />}></Route>
-                <Route path="/match3" element={<MatchComplete />}></Route>
+                <Route path="/match2" element={<MatchProcess />} />
+                <Route path="/match3" element={<MatchComplete />} />
             </Route>
             <Route element={<BorderTemplate />}>
-                <Route path="/login" element={<LoginPage />}></Route>
-                <Route path="/signup" element={<SignupPage />}></Route>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/my" element={<MyPage />} />
             </Route>
         </Routes>
     );
 };
-
 export default MyRoutes;

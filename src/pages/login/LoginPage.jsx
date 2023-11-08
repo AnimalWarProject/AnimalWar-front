@@ -1,50 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { apiNoToken } from '../../network/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 
+import AnimalCrowdImage from './imgs/AnimalCrowd.webp';
+import LogoImage from './imgs/Logo.webp';
+import SmallEggImage from './imgs/SmallEgg.webp';
+import LockImage from './imgs/Lock.webp';
+
 const LoginPage = () => {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
-    const [imgUrl, setImgUrl] = useState('');
-    const [logoUrl, setLogoUrl] = useState('');
-    const [idIconUrl, setIdIconUrl] = useState('');
-    const [passwordIconUrl, setPasswordIconUrl] = useState('');
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const storage = getStorage();
-        const fetchImage = async (imagePath, setImage) => {
-            const imageRef = ref(storage, imagePath);
-
-            try {
-                const url = await getDownloadURL(imageRef);
-                setImage(url);
-            } catch (error) {
-                console.error(`Failed to fetch ${imagePath} URL:`, error);
-            }
-        };
-
-        fetchImage('AnimalCrowd.png', setImgUrl);
-        fetchImage('Logo.png', setLogoUrl);
-        fetchImage('SmallEgg.png', setIdIconUrl);
-        fetchImage('Lock.png', setPasswordIconUrl);
-    }, []);
-    //didmount, willmount로 수정 고려
 
     const handleLogin = async () => {
         try {
-            const response = await apiNoToken('api/v1/auth/login', 'POST', {
+            const response = await apiNoToken('/api/v1/auth/login', 'POST', {
                 id,
                 password,
             });
             if (response.data && response.data.accessToken && response.data.refreshToken) {
                 localStorage.setItem('accessToken', response.data.accessToken);
-                //리프레시 데이터로 보내는 것 추가해야함
-                navigate('/');
+                navigate('/home');
             } else {
                 toast.error('아이디 또는 비밀번호를 다시 확인해주세요');
             }
@@ -60,11 +39,11 @@ const LoginPage = () => {
     return (
         <div className="login-page-container">
             <div className="login-container">
-                {logoUrl && <img src={logoUrl} alt="Logo" className="login-logo" />}
+                <img src={LogoImage} alt="Logo" className="login-logo" />
                 <div className="input-with-icon">
-                    {idIconUrl && <img src={idIconUrl} alt="ID Icon" className="input-icon" />}
+                    <img src={SmallEggImage} alt="ID Icon" className="input-icon" />
                     <input
-                        type="id"
+                        type="text" // 변경된 부분: 'id' 타입이 존재하지 않으므로 'text'로 변경
                         placeholder="아이디"
                         value={id}
                         onChange={(e) => setId(e.target.value)}
@@ -72,7 +51,7 @@ const LoginPage = () => {
                     />
                 </div>
                 <div className="input-with-icon">
-                    {passwordIconUrl && <img src={passwordIconUrl} alt="Password Icon" className="input-icon" />}
+                    <img src={LockImage} alt="Password Icon" className="input-icon" />
                     <input
                         type="password"
                         placeholder="비밀번호"
@@ -86,7 +65,7 @@ const LoginPage = () => {
                     <button onClick={handleSignUp}>회원가입</button>
                 </div>
             </div>
-            {imgUrl && <div className="login-image" style={{ backgroundImage: `url(${imgUrl})` }} />}
+            <div className="login-image" style={{ backgroundImage: `url(${AnimalCrowdImage})` }} />
             <ToastContainer
                 position="top-center"
                 autoClose={5000}
