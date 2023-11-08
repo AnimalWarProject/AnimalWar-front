@@ -43,7 +43,7 @@ const LoginPage = () => {
                 <div className="input-with-icon">
                     <img src={SmallEggImage} alt="ID Icon" className="input-icon" />
                     <input
-                        type="text" // 변경된 부분: 'id' 타입이 존재하지 않으므로 'text'로 변경
+                        type="text"
                         placeholder="아이디"
                         value={id}
                         onChange={(e) => setId(e.target.value)}

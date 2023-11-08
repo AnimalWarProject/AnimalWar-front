@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
-import { api } from '../../network/api';
+import { api, apiNoToken } from '../../network/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import logoImage from '../imgs/Logo.webp';
@@ -12,6 +12,7 @@ function Header() {
     const [profile, setProfile] = useState({});
     const [searchedUser, setSearchedUser] = useState(null);
     const [searchInput, setSearchInput] = useState('');
+    const navigate = useNavigate();
 
     const getProfileData = async () => {
         try {
@@ -27,7 +28,8 @@ function Header() {
 
     const handleSearch = async () => {
         try {
-            const { data: foundUser } = await api(`api/v1/user/findByNickName/${searchInput}`, 'GET');
+            const { data: foundUser } = await apiNoToken(`api/v1/user/findByNickName/${searchInput}`, 'GET');
+            navigate(`/userinfo/${searchInput}`, { state: { user: foundUser } });
             setSearchedUser(foundUser);
         } catch (error) {
             console.error('Failed to search user:', error);
@@ -91,6 +93,9 @@ function Header() {
                     </NavLink>
                     <NavLink to="/rank" activeClassName="active">
                         랭킹
+                    </NavLink>
+                    <NavLink to="/board" activeClassName="active">
+                        게시판
                     </NavLink>
                 </div>
 

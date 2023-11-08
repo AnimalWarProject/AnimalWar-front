@@ -89,7 +89,7 @@
     align-items: center;
     gap: 0.5rem;
     margin: 0 2rem 0 0;
-    position: relative; /* 이 부분을 추가하세요 */
+    position: relative;
 }
 
 .dropdown-content.show {

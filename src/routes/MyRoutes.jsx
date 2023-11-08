@@ -14,11 +14,12 @@ import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
 
 import MyPage from '../pages/myPage/myPage';
-import DrawLoading from "../pixi/draw/components/DrawLoading";
-import DrawResult from "../pixi/draw/components/DrawResult";
-import UpGradePage from "../pixi/upGrade/components/UpGradePage";
-import UpGradeLoading from "../pixi/upGrade/components/UpGradeLoading";
-import UpGradeResult from "../pixi/upGrade/components/UpGradeResult";
+import DrawLoading from '../pixi/draw/components/DrawLoading';
+import DrawResult from '../pixi/draw/components/DrawResult';
+import UpGradePage from '../pixi/upGrade/components/UpGradePage';
+import UpGradeLoading from '../pixi/upGrade/components/UpGradeLoading';
+import UpGradeResult from '../pixi/upGrade/components/UpGradeResult';
+import UserInfo from '../pages/userInfo/UserInfo';
 
 const MyRoutes = () => {
     return (
@@ -32,7 +33,6 @@ const MyRoutes = () => {
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
-
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
@@ -40,11 +40,12 @@ const MyRoutes = () => {
                 <Route path="/match" element={<Match />}></Route>
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
+                <Route path="/my" element={<MyPage />} />
+                <Route path="/userInfo" element={<UserInfo />} />
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
-                <Route path="/my" element={<MyPage />} />
             </Route>
         </Routes>
     );
