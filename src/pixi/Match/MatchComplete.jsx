@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js';
 import back from './imgs/Rectangle12273.png';
+import VS from './imgs/VS 1.webp';
+import test from './imgs/Rectangle 3.png';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 
@@ -36,6 +38,9 @@ const MatchComplete = () => {
 
         app.stage.addChild(background);
 
+
+
+
         //하얀 내 반투명 박스
         const profileBox = new PIXI.Graphics();
         profileBox.beginFill(0xffffff, 0.5);
@@ -44,6 +49,16 @@ const MatchComplete = () => {
         profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
 
         app.stage.addChild(profileBox);
+
+        //내 테스트 이미지 프로필 
+
+        const profileImage = PIXI.Texture.from(test);
+        const profileSprite = new PIXI.Sprite(profileImage);
+        profileSprite.width = 100;
+        profileSprite.height = 80;
+        profileSprite.x = canvasWidth * 0.1;
+        profileSprite.y = canvasHeight * 0.1;
+        profileBox.addChild(profileSprite);
 
 
         //하얀 내 컬럼
@@ -56,14 +71,14 @@ const MatchComplete = () => {
             box1.beginFill(0xffffff, 0.5);
             const boxWidth = canvasWidth * 0.3;
             const boxHeight = canvasHeight * 0.08;
-            box1.drawRoundedRect(100, 120 + i * 70, boxWidth, boxHeight, 20);
+            box1.drawRoundedRect(100, 160 + i * 70, boxWidth, boxHeight, 20);
             profileBox.addChild(box1);
 
             const column = new PIXI.Graphics();
             column.beginFill(0xFC5740);
             const columnWidth = canvasWidth * 0.1;
             const columnHeight = canvasHeight * 0.07;
-            column.drawRoundedRect(120, 122 + i * 70, columnWidth, columnHeight, 10);
+            column.drawRoundedRect(120, 162 + i * 70, columnWidth, columnHeight, 10);
             profileBox.addChild(column);
 
             // 텍스트 스프라이트를 생성합니다.
@@ -76,7 +91,7 @@ const MatchComplete = () => {
             const text = new PIXI.Text(array[i], textStyle);
             column.addChild(text);
             text.x = 127;
-            text.y = 132 + i * 70;
+            text.y = 172 + i * 70;
 
             // 컨텐츠 텍스트 스프라이트
 
@@ -88,7 +103,7 @@ const MatchComplete = () => {
             const text2 = new PIXI.Text(content[i], textStyle2);
 
             text2.x = 230;
-            text2.y = 135 + i * 70;
+            text2.y = 175 + i * 70;
             column.addChild(text2);
         }
 
@@ -102,24 +117,34 @@ const MatchComplete = () => {
         const profileHeight2 = canvasHeight * 0.85;
         profileBox.drawRoundedRect(100 + profileWidth2, 40, profileWidth, profileHeight, 40);
 
+
+        //적 테스트 이미지 프로필 
+
+        const profileImage2 = PIXI.Texture.from(test);
+        const profileSprite2 = new PIXI.Sprite(profileImage2);
+        profileSprite2.width = 100;
+        profileSprite2.height = 80;
+        profileSprite2.x = canvasWidth * 0.55;
+        profileSprite2.y = canvasHeight * 0.1;
+        profileBox.addChild(profileSprite2);
+
         app.stage.addChild(profileBox);
 
         const content2 = [data.state.depender.nickName, data.state.depender.attackPower, data.state.depender.defensePower, data.state.depender.life, data.state.depender.species, data.state.depender.landForm];
-
 
         for (let i = 0; i < 6; i++) {
             const box1 = new PIXI.Graphics();
             box1.beginFill(0xffffff, 0.5);
             const boxWidth = canvasWidth * 0.3;
             const boxHeight = canvasHeight * 0.08;
-            box1.drawRoundedRect(510, 120 + i * 70, boxWidth, boxHeight, 20);
+            box1.drawRoundedRect(510, 160 + i * 70, boxWidth, boxHeight, 20);
             profileBox.addChild(box1);
 
             const column = new PIXI.Graphics();
             column.beginFill(0x5B7FFF);
             const columnWidth = canvasWidth * 0.1;
             const columnHeight = canvasHeight * 0.07;
-            column.drawRoundedRect(530, 122 + i * 70, columnWidth, columnHeight, 10);
+            column.drawRoundedRect(530, 162 + i * 70, columnWidth, columnHeight, 10);
             profileBox.addChild(column);
 
             // 텍스트 스프라이트를 생성합니다.
@@ -132,7 +157,7 @@ const MatchComplete = () => {
             const text = new PIXI.Text(array[i], textStyle);
             column.addChild(text);
             text.x = 537;
-            text.y = 132 + i * 70;
+            text.y = 172 + i * 70;
 
             // 컨텐츠 텍스트 스프라이트
 
@@ -144,9 +169,19 @@ const MatchComplete = () => {
             const text2 = new PIXI.Text(content2[i], textStyle2);
 
             text2.x = 640;
-            text2.y = 135 + i * 70;
+            text2.y = 175 + i * 70;
             column.addChild(text2);
         }
+
+
+        // VS 스프라이트
+        const VSImage = PIXI.Texture.from(VS);
+        const imageSprite = new PIXI.Sprite(VSImage);
+        imageSprite.width = 146;
+        imageSprite.height = 127;
+        imageSprite.x = canvasWidth * 0.4;
+        imageSprite.y = canvasHeight * 0.4;
+        profileBox.addChild(imageSprite);
 
 
     }, [])

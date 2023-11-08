@@ -127,13 +127,13 @@ const Match = () => {
                 column.addChild(text2);
             }
 
-            //매칭 시작 버튼 
-            const box1 = new PIXI.Graphics();
-            box1.beginFill(0xFFC000);
+            // //매칭 시작 버튼 
+            // const box1 = new PIXI.Graphics();
+            // box1.beginFill(0xFFC000);
             const boxWidth = canvasWidth * 0.16;
             const boxHeight = canvasHeight * 0.1;
 
-            box1.drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.78, boxWidth, boxHeight, 50);
+            // box1.drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.78, boxWidth, boxHeight, 50);
 
             // 매칭 시작 텍스트 스프라이트
             const textStyle2 = new PIXI.TextStyle({
