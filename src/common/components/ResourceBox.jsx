@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { api } from '../../network/api';
 import './ResourceBox.css';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
@@ -41,8 +41,12 @@ const ResourceBox = () => {
         }
     };
 
-    getProfileData();
-    loadIcons();
+    useEffect(() => {
+        getProfileData();
+        loadIcons();
+    }, []);
+
+
 
     return (
         <div className="resource-box">

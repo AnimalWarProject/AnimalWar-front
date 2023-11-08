@@ -1,18 +1,90 @@
 import classes from "./Chatting.module.css"
-import Rectangle3 from "../imgs/Rectangle 3.png"
 import Rectangle4 from "../imgs/Rectangle 4.png"
-import Rectangle5 from "../imgs/Rectangle 5.png"
-import Rectangle6 from "../imgs/Rectangle 6.png"
-import Rectangle7 from "../imgs/Rectangle 7.png"
 import sendIcon from "../imgs/send.png"
 import plusIcon from "../imgs/plusIcon.png"
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
+import axios from "axios";
+// import SockJS from 'sockjs-client';
+// import Stomp from 'webstomp-client';
+// import stompClient from "sockjs-client/lib/transport/iframe";
+
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+
+
+
 
 const Chatting = () => {
     const [inputText, setInputText] = useState('');
     const maxLength = 100; // 최대 글자 수
     const [isFocused, setIsFocused] = useState(false);
     const wrapRef = useRef();
+    const [nickName, setNickName] = useState('');
+    const [profileImage, setProfileImage] = useState('')
+    const [showMessage, setShowMessage] = useState('');
+    const [stompClient, setStompClient] = useState(null);
+    const [greetings, setGreetings] = useState([]);
+
+    useEffect(() => {
+
+
+        const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6Imdvb2Rib3kiLCJ1c2VyVVVJRCI6IjBhOGE2MDFhLTkxNGQtNDQxZi1iZmMzLTFhMDAwZGU0YWRiNyIsImlkIjoianVua2kiLCJwcm9maWxlSW1hZ2UiOiJDOlxcVXNlcnNcXFBsYXlkYXRhXFxEZXNrdG9wXFxEQlxcQ0FUKFBORylcXExFR0VORCIsInN1YiI6Imp1bmtpIiwiZXhwIjoxNjk5NTAyODE4fQ.VMl_BLEFs9fZFbK2LCcRbQaP2NBpPGs_5MsOI5DljLA';
+
+        axios.get('http://localhost:8000/api/v1/user', {
+            headers : {
+                Authorization: token,
+                ContentType : 'application/json'
+            }
+        }).then((res) => {
+
+            setNickName(res.data.nickName);
+            setProfileImage(res.data.profileImage)
+        }).catch((err) => {
+            console.log(err)
+        })
+
+
+        const socket = new SockJS('http://localhost:8082/stomp-endpoint'); // #1 socket열기(server와 연결) // npm install stompjs
+        const stomp = Stomp.over(socket); // STOMP 클라이언트를 통해 STOMP 프로토콜을 사용하여 메시지를 전송 및 수신
+
+
+        stomp.connect({}, (frame) => {
+            setStompClient(stomp);
+            console.log('Connected: ' + frame); // STOMP 클라이언트를 서버와 연결하고, 연결에 성공하면 콜백 함수를 실행.. {}는 헤더(연결에 대한 추가 설정)
+
+            // #2'/topic/greetings'을 구독
+            stomp.subscribe('/topic/greetings', (greeting) => { // 메시지를 파싱하고 표시
+                const parseMessage = JSON.parse(greeting.body)
+                setGreetings(prevState => [...prevState, parseMessage.message])
+                    // const showMessage = messageParsing(greeting);
+                    // setShowMessage(showMessage);
+                    // showGreeting(JSON.parse(greeting.body)); // #2-2 '/topic/greetings'에서 받은 메세지를 분해해서 보여주기
+                });
+        });
+
+
+
+
+        // 컴포넌트가 언마운트될 때 WebSocket 연결 해제
+        return () => {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+        };
+
+
+
+
+    }, []);
+
+
+    const sendName = () => {
+        const obj = {
+            'nickname': nickName || 'GUEST',
+            'content': inputText
+        };
+        stompClient.send('/app/hello', {}, JSON.stringify(obj));
+    };
 
 
 
@@ -29,10 +101,9 @@ const Chatting = () => {
     }
 
 
-
     const handleInputChange = (event) => {
         const text = event.target.value;
-
+        setInputText(text);
         // 입력된 텍스트 길이가 최대 길이를 초과하지 않도록 확인
         if (text.length <= maxLength) {
             setInputText(text);
@@ -61,6 +132,14 @@ const Chatting = () => {
         height: isFocused ? '80%' : '100%', // 커서가 입력 필드에 있을 때와 없을 때의 너비 조절
     };
 
+    const keydownHandler = (e) => {
+        if (e.key === 'Enter') {
+            sendName();
+            setInputText('')
+        }
+    }
+
+
 
     return (
         <section className={classes.Wrap} ref={wrapRef}>
@@ -68,36 +147,22 @@ const Chatting = () => {
                 <div className={classes.title}>CHATTING</div>
                 <div className={classes.message} style={messageStyle}>
                     <div className={classes.message_title}>GOOD CHATTING PLZ!</div>
-                    <div className={classes.message_container}>
-                        <img className={classes.profileImg} src={Rectangle4}/>
-                        <div className={classes.profileNickname} style={{ color: randomColor }}>Cat:</div>
-                        <div className={classes.messageRecord}>유례없는 흉작으로 사과 생산량이 감소해 가격이 치솟자</div>
-                    </div>
-                    <div className={classes.message_container}>
-                        <img className={classes.profileImg} src={Rectangle5}/>
-                        <div className={classes.profileNickname} style={{ color: randomColor }}>Cat:</div>
-                        <div className={classes.messageRecord}>유례없는 흉작으로 사과 생산량이 감소해 가격이 치솟자</div>
-                    </div>
-                    <div className={classes.message_container}>
-                        <img className={classes.profileImg} src={Rectangle3}/>
-                        <div className={classes.profileNickname} style={{ color: randomColor }}>Cat:</div>
-                        <div className={classes.messageRecord}>유례없는 흉작으로 사과 생산량이 감소해 가격이 치솟자</div>
-                    </div>
-                    <div className={classes.message_container}>
-                        <img className={classes.profileImg} src={Rectangle6}/>
-                        <div className={classes.profileNickname} style={{ color: randomColor }}>Cat:</div>
-                        <div className={classes.messageRecord}>유례없는 흉작으로 사과 생산량이 감소해 가격이 치솟자</div>
-                    </div>
-                    <div className={classes.message_container}>
-                        <img className={classes.profileImg} src={Rectangle7}/>
-                        <div className={classes.profileNickname} style={{ color: randomColor }}>Cat:</div>
-                        <div className={classes.messageRecord}>유례없는 흉작으로 사과 생산량이 감소해 가격이 치솟자</div>
-                    </div>
+
+                    {greetings.map((item, idx) => (
+                        <div key={idx} className={classes.message_container}>
+                            <img className={classes.profileImg} src={profileImage}/>
+                            <div className={classes.profileNickname} style={{ color: randomColor}}>{nickName}</div>
+                            <div className={classes.messageRecord}>{item}</div>
+                        </div>
+                    ))}
+
                 </div>
 
 
+
+
                 <div className={classes.send_box}>
-                    <button lassName={classes.send_plus_button}>
+                    <button className={classes.send_plus_button}>
                         <img src={plusIcon}/>
                     </button>
 
@@ -106,14 +171,14 @@ const Chatting = () => {
                            onChange={handleInputChange}
                            onFocus={handleFocus}
                            onBlur={handleBlur}
-                           maxLength={maxLength}>
-                    </input>
-
-                    <button className={classes.send_button}>
+                           onKeyDown={keydownHandler}
+                           maxLength={maxLength} />
+                    <button className={classes.send_button}
+                    onClick={sendName}
+                    >
                         <img src={sendIcon}/>
                     </button>
                 </div>
-
 
 
 

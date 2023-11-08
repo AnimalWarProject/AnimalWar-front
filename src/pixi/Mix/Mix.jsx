@@ -277,9 +277,10 @@ const Mix = () => {
             }
         }
 
+
+
+        // Feat : inventory scroll
         console.log(testArr)
-
-
         const scrollBox = new ScrollBox({
             width: 377,
             height: 448,
@@ -292,7 +293,7 @@ const Mix = () => {
 
         profileBox.addChild(scrollBox);
 
-        // 항아리
+        // Feat : 항아리
         const mixPotTexture = PIXI.Texture.from(mixPot);
         const mixPotSprite = new PIXI.Sprite(mixPotTexture);
         mixPotSprite.width = canvasWidth * 0.4;

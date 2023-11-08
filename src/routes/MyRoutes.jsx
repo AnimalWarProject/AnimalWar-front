@@ -19,6 +19,7 @@ import DrawResult from "../pixi/draw/components/DrawResult";
 import UpGradePage from "../pixi/upGrade/components/UpGradePage";
 import MixFail from "../pixi/Mix/MixFail";
 import MixSuccess from "../pixi/Mix/MixSuccess";
+import WebSocketComponent from "../common/components/WebSocketComponent";
 
 const MyRoutes = () => {
     return (
@@ -35,6 +36,7 @@ const MyRoutes = () => {
                 <Route path="/mix4" element={<MixSuccess />}></Route>
 
                 <Route path="/upgrade" element={<UpGradePage />} />
+                <Route path="/test" element={<WebSocketComponent />} />
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
