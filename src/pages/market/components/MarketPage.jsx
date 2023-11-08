@@ -24,7 +24,6 @@ const MarketPage = () => {
             <div>
                 <div>
                     <MarketInven />
-                    {/*<Register />*/}
                 </div>
             </div>
         </div>

@@ -8,9 +8,10 @@ const Main = () => {
     const itemsPerRow = 3; // 한 행당 표시할 항목 수
     const itemsPerPage = 9; // 한 페이지에 표시할 항목 수
 
+
     useEffect(() => {
         axios
-            .get("http://localhost:8082/api/v1/exchange/all")
+            .get("http://localhost:8000/api/v1/market/all")
             .then((response) => {
                 setData(response.data); // 데이터를 상태에 저장
             })
