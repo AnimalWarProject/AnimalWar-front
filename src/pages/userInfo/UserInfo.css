@@ -1,0 +1,131 @@
+.user-info-part {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 42rem;
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+    background-color: rgba(255, 223, 186, 0.8);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.profile-part {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.profile-image-part,
+.nickname-part {
+    margin: 0.75rem;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+}
+
+.nickname-part h2 {
+    margin: 0;
+}
+
+.resources-part h3,
+.other-info-part h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.resources-part {
+    background-color: #fff;
+    padding: 0.875rem;
+    border-radius: 0.3125rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    width: calc(100% - 3rem);
+    text-align: left;
+}
+
+.no-user-info {
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.resources-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.other-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px;
+    font-size: 15px;
+    margin: 7px 0 0 0;
+    border-left: 4px solid #ffa500;
+    background-color: #f9f9f9;
+}
+
+.other-item-label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 5px;
+}
+
+.other-item-value {
+    margin-left: auto;
+    font-weight: bold;
+    color: #ffa500;
+}
+
+.other-info-part {
+    background-color: #fff;
+    padding: 0.875rem;
+    border-radius: 0.3125rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    width: calc(100% - 3rem);
+    text-align: left;
+    margin-top: 0.5rem;
+}
+
+.user-details-part {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.nickname-part,
+.species-landform-battle-box {
+    flex: 0 0 auto;
+}
+
+.user-resource-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    font-size: 15px;
+    margin: 0.5rem 0 0.2rem 0;
+    border-left: 4px solid #ffa500;
+    background-color: #f9f9f9;
+    flex-basis: 100%;
+}
+
+.user-resource-item-label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 20px;
+}
+
+.user-resource-item-value {
+    margin-right: 1rem;
+    font-weight: bold;
+    color: #ffa500;
+}

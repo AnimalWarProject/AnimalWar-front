@@ -14,6 +14,7 @@ import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
 import MyPage from '../pages/myPage/myPage';
+import UserInfo from '../pages/userInfo/UserInfo';
 
 const MyRoutes = () => {
     return (
@@ -30,11 +31,12 @@ const MyRoutes = () => {
                 <Route path="/match" element={<Match />}></Route>
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
+                <Route path="/my" element={<MyPage />} />
+                <Route path="/userInfo" element={<UserInfo />} />
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
-                <Route path="/my" element={<MyPage />} />
             </Route>
         </Routes>
     );

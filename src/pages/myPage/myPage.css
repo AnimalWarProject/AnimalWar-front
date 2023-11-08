@@ -1,7 +1,7 @@
 .myPage {
     box-sizing: border-box;
     width: 42rem;
-    margin: 0 auto;
+    margin: 6rem auto;
     padding: 1.5rem;
     background-color: rgba(255, 223, 186, 0.8);
     border-radius: 0.75rem;
