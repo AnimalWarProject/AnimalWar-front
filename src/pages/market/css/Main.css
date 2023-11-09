@@ -1,8 +1,8 @@
-
 .main-container{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin: 0;
 }
 .main-list-wrap{
     display: flex;
@@ -35,3 +35,6 @@
 .page-button:hover{
     background-color: #4e5ad3;
 }
+
+
+

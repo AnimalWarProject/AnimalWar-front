@@ -1,8 +1,9 @@
 import "../css/SearchBox.css" ;
-
-
-const SearchBox = () => {
-    return <>
+const SearchBox = ({ onAnimalTypeSelect }) => {
+    const handleAnimalTypeClick = (animalType) => {
+        onAnimalTypeSelect(animalType);
+    };
+    return<>
         <div className="searchbox-container">
             <div className="searchbox-wrap">
                 <input className="searchbox-input" placeholder={"동물/건물을 입력하세요."}/>
@@ -21,22 +22,22 @@ const SearchBox = () => {
                             </div>
                             <div className="searchbox-type-content-wrap">
                                 <div className="searchbox-type-content">
-                                    <a href="">개</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('DOG')}>개</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">고양이</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('CAT')}>고양이</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">설치류</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('GLIRES')}>설치류</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">조류</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('BIRD')}>조류</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">어류</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('FISH')}>어류</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">공통</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('COMMON')}>공통</a>
                                 </div>
                             </div>
                         </div>

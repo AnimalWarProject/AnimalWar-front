@@ -18,6 +18,12 @@ const Draw = () => {
             type: "animal",
             qty: 1
         };
+        const textStyle = new PIXI.TextStyle({
+            fill: 0x0f1828,
+            fontSize: 18,
+            fontFamily: 'Arial',
+            fontWeight: "bold",
+        });
 
         const app = new PIXI.Application({
             backgroundColor: 0x1099bb,
@@ -74,7 +80,6 @@ const Draw = () => {
         const drawOneBtnWidth = 170;
         const drawOneBtnHeight = 40;
         drawOneBtn.drawRoundedRect(190, 480, drawOneBtnWidth, drawOneBtnHeight, 40);
-
         const oneButtonContainer = new PIXI.Container();
         oneButtonContainer.interactive = true;
         oneButtonContainer.buttonMode = true;
@@ -82,13 +87,7 @@ const Draw = () => {
         oneButtonContainer.on('pointertap', () => {
             drawData.qty = 1;
             nav('/draw/loading', {state : drawData});
-        });
-
-        const textStyle = new PIXI.TextStyle({
-            fill: 0x0f1828,
-            fontSize: 18,
-            fontFamily: 'Arial',
-            fontWeight: "bold",
+            // todo : user에 돈이있는지 없는지 확인
         });
         const oneDrawText = new PIXI.Text('1회 뽑기', textStyle);
         drawOneBtn.addChild(oneDrawText);
@@ -100,7 +99,6 @@ const Draw = () => {
         const drawManyBtnWidth = 170;
         const drawManyBtnHeight = 40;
         drawManyBtn.drawRoundedRect(580, 480, drawManyBtnWidth, drawManyBtnHeight, 40);
-
         const manyButtonContainer = new PIXI.Container();
         manyButtonContainer.interactive = true;
         manyButtonContainer.buttonMode = true;
@@ -108,8 +106,8 @@ const Draw = () => {
         manyButtonContainer.on('pointertap', () => {
             drawData.qty = 10;
             nav('/draw/loading', {state : drawData});
+            // todo : user에 돈이있는지 없는지 확인
         });
-
         const manyDrawText = new PIXI.Text('10회 뽑기', textStyle);
         drawManyBtn.addChild(manyDrawText);
         manyDrawText.x = 630;
