@@ -6,7 +6,7 @@ import * as PIXI from 'pixi.js';
 import foodImg from '../../../src/common/imgs/Food.webp'
 import ironImg from '../../../src/common/imgs/Iron.webp'
 import woodImg from '../../../src/common/imgs/Wood.webp'
-import gold from '../../../src/common/imgs/Gold.webp'
+import goldImg from '../../../src/common/imgs/Gold.webp'
 import axios from "axios";
 import { ButtonContainer } from "@pixi/ui";
 import { ToastContainer, toast } from "react-toastify";
@@ -28,6 +28,7 @@ const Exchange = React.memo(() => {
     const [wood, setWood] = useState();
     const [iron, setIron] = useState();
     const [food, setFood] = useState();
+    const [gold, setGold] = useState();
 
 
     const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -59,6 +60,7 @@ const Exchange = React.memo(() => {
                     setWood(response.data.wood);
                     setIron(response.data.iron);
                     setFood(response.data.food);
+                    setGold(response.data.gold);
                     setIsDataLoaded(true);
 
                 });
@@ -74,10 +76,7 @@ const Exchange = React.memo(() => {
 
     useEffect(() => {
 
-        if (isDataLoaded) {
-
-
-
+        if (isDataLoaded && canvasRef.current) {
 
             const app = new PIXI.Application({
                 width: canvasWidth,
@@ -131,7 +130,6 @@ const Exchange = React.memo(() => {
 
 
 
-
             for (let i = 0; i < 3; i++) {
 
                 const matBox = new PIXI.Graphics();
@@ -158,7 +156,7 @@ const Exchange = React.memo(() => {
                 const amountBox = new PIXI.Graphics();
                 amountBox.beginFill(0xD4F1FE);
                 amountBox.lineStyle(2, 0x000);
-                const amountBoxWidth = canvasWidth * 0.15;
+                const amountBoxWidth = canvasWidth * 0.13;
                 const amountBoxHeight = canvasHeight * 0.05;
                 amountBox.drawRect(230, 140 + i * (matBoxHeight + 20), amountBoxWidth, amountBoxHeight);
 
@@ -170,7 +168,7 @@ const Exchange = React.memo(() => {
                     fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
                 });
 
-                const text = new PIXI.Text('20000', textStyle);
+                const text = new PIXI.Text('2000', textStyle);
 
                 //Object.keys(remain)[i]
 
@@ -179,20 +177,39 @@ const Exchange = React.memo(() => {
                 app.stage.addChild(text);
                 amountBox.addChild(text);
 
-                const text2Style = new PIXI.TextStyle({
-                    fill: 0x0F1828,
-                    fontSize: 15, // 폰트 크기
-                    fontWeight: 'bold',
-                    fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
-                });
 
-                const text2 = new PIXI.Text(Object.keys(remain)[i] + " :" + Object.values(remain)[i], text2Style);
 
-                text2.x = 220;
-                text2.y = 180 + i * (matBoxHeight + 20);
-                app.stage.addChild(text2);
+
+
 
             }
+
+            const text2Style = new PIXI.TextStyle({
+                fill: 0x0F1828,
+                fontSize: 15, // 폰트 크기
+                fontWeight: 'bold',
+                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+            });
+
+            const woodText = new PIXI.Text(Object.keys(remain)[0] + " :" + Object.values(remain)[0], text2Style);
+
+            woodText.x = 220;
+            woodText.y = 180;
+            app.stage.addChild(woodText);
+
+
+            const ironText = new PIXI.Text(Object.keys(remain)[1] + " :" + Object.values(remain)[1], text2Style);
+
+            ironText.x = 220;
+            ironText.y = 180 + 1 * (canvasHeight * 0.15 + 20);
+
+            app.stage.addChild(ironText);
+
+            const foodText = new PIXI.Text(Object.keys(remain)[2] + " :" + Object.values(remain)[2], text2Style);
+
+            foodText.x = 220;
+            foodText.y = 180 + 2 * (canvasHeight * 0.15 + 20);
+            app.stage.addChild(foodText);
 
             //오른쪽 하얀틀
 
@@ -224,15 +241,22 @@ const Exchange = React.memo(() => {
 
             const text = new PIXI.Text("1000", textStyle);
 
-
             text.x = 660;
             text.y = 265;
             app.stage.addChild(text);
             matBox.addChild(text);
 
+            //잔여 골드
+            const goldText = new PIXI.Text(`잔여 골드 : ${userData.gold}`, text2Style);
+
+            goldText.x = 600;
+            goldText.y = 350;
+            app.stage.addChild(goldText);
 
 
-            const img = PIXI.Sprite.from(gold);
+
+
+            const img = PIXI.Sprite.from(goldImg);
 
             img.width = canvasWidth * 0.1;
             img.height = canvasWidth * 0.08;
@@ -261,12 +285,10 @@ const Exchange = React.memo(() => {
 
             app.stage.addChild(button);
 
+            let count = 0;
 
             //버튼 액션 
             button.onPress.connect(async () => {
-
-
-
 
                 try {
                     // postExchange 함수를 비동기로 호출하고 요청이 끝날 때까지 기다립니다.
@@ -275,9 +297,39 @@ const Exchange = React.memo(() => {
                     // postExchange 요청이 성공적으로 완료된 후에 실행할 로직을 여기에 추가합니다.
                     console.log('postExchange 요청이 완료되었습니다.');
 
+
+                    count++;
+
+
+                    const newWood = wood - count * 2000;
+                    const newIron = iron - count * 2000;
+                    const newFood = food - count * 2000;
+
+                    const newGold = gold + count * 1000;
+
+                    woodText.text = `잔여 목재 :${newWood}`;
+                    ironText.text = `잔여 철 :${newIron}`;
+                    foodText.text = `잔여 식량 :${newFood}`;
+                    goldText.text = `잔여 골드 : ${newGold}`;
+
+
+
+                    // const text2Style = new PIXI.TextStyle({
+                    //     fill: 0x0F1828,
+                    //     fontSize: 15, // 폰트 크기
+                    //     fontWeight: 'bold',
+                    //     fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                    // });
+
+                    // const text2 = new PIXI.Text(`잔여 목재: ${newWood}`, text2Style);
+
+                    // text2.x = 220;
+                    // text2.y = 180;
+                    // app.stage.addChild(text2);
+
                     // 페이지를 새로 고침할 경우
 
-                    window.location.reload();
+                    // window.location.reload();
 
                 } catch (error) {
                     // 요청이 실패한 경우 에러 처리
@@ -285,6 +337,31 @@ const Exchange = React.memo(() => {
                     toast.error("교환 실패 !!  자원이 없습니다");
                 }
 
+                const starTexture = PIXI.Texture.from(goldImg); // 별 이미지의 경로를 넣어주세요
+                const numberOfStars = 10;
+
+                for (let i = 0; i < numberOfStars; i++) {
+                    const star = new PIXI.Sprite(starTexture);
+                    star.anchor.set(0.5); // 이미지의 중심을 기준으로 회전하도록 설정
+                    star.x = Math.random() * app.screen.width;
+                    star.y = Math.random() * app.screen.height;
+                    star.rotation = Math.random() * Math.PI * 2; // 랜덤한 각도로 초기 회전값 설정
+                    star.scale.set(0.5 + Math.random() * 0.5); // 랜덤한 크기로 초기화
+
+                    background.addChild(star);
+
+
+                    // 별이 아래로 떨어지는 애니메이션 설정
+                    const speed = 3 + Math.random() * 2; // 떨어지는 속도를 랜덤하게 설정
+                    app.ticker.add(() => {
+                        star.y += speed;
+                        star.rotation += 0.1;
+                        if (star.y > app.screen.height) {
+                            // 화면 아래로 벗어난 경우 다시 위로 올리기
+                            app.stage.removeChild(star);
+                        }
+                    });
+                }
             }
 
             );
@@ -307,7 +384,10 @@ const Exchange = React.memo(() => {
 
 
 
-    }, [isDataLoaded, wood])
+    }, [isDataLoaded])
+
+
+
 
     return (<div ref={canvasRef}>
 
