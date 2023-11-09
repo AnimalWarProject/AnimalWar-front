@@ -13,7 +13,7 @@ import {ButtonContainer, ScrollBox} from "@pixi/ui";
 const Mix = () => {
     const canvasRef = useRef(null);
     const [animal, setAnimal] = useState([pig, bird, fish, cat]);
-    const [count, setCount] = useState([12, 5, 30, 7]);
+    const [count, setCount] = useState([1, 2, 3, 4]);
     const [potAnimals, setPotAnimals] = useState([]);
     const [xValue, setXvalue] = useState(0);
     const history = useHistory();
@@ -70,10 +70,6 @@ const Mix = () => {
 
 
 
-
-
-
-
         for (let i = 0; i < 5; i++) { // 등급 칸 & 텍스트
             const inventory = new PIXI.Graphics();
             inventory.beginFill(0xffffff, 0.5);
@@ -123,11 +119,10 @@ const Mix = () => {
 
         let clickNum = 0;
 
+        // TODO animal에 4개가 들어있으면 3개만 나옴.. 반올림처리가 잘못되었나봄..3의 나머지가 1일 때 나머지 1이 안나옴..
         // 인벤토리
         for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < Math.round(animal.length / 3); j++) {
-
-
+            for (let j = 0; j < Math.ceil(animal.length / 3); j++) {
                 // 인벤토리
                 const inventoryBtn = new ButtonContainer(
                     new PIXI.Graphics()
@@ -140,8 +135,10 @@ const Mix = () => {
                 profileBox.addChild(inventoryBtn)
 
                 // 인벤토리 index
-                const imageIndex = j * 3 + i;
+                const imageIndex =  i * Math.round(animal.length / 3) + j;
 
+
+                console.log(imageIndex)
                 // 이미지 텍스처 생성
                 if (imageIndex < animal.length) {
                     const imgInventoryTexture = PIXI.Texture.from(animal[imageIndex]);
@@ -158,8 +155,6 @@ const Mix = () => {
                     // 인벤토리 칸의 가운데로 위치 조정
                     const inventoryWidth = 105; // 인벤토리 칸의 가로 크기
                     const inventoryHeight = 122; // 인벤토리 칸의 세로 크기
-                    // const xPosition = 95 + (i * 120); // 인벤토리 칸의 x 위치
-                    // const yPosition = 150 + (j * 135); // 인벤토리 칸의 y 위치
 
                     const xPosition = 10; // 인벤토리 칸의 x 위치
                     const yPosition = 0; // 인벤토리 칸의 y 위치
@@ -192,11 +187,6 @@ const Mix = () => {
                             // 이미지 크기를 100x100으로 변경
                             selectedAnimalSprite.width = 45;
                             selectedAnimalSprite.height = 78;
-
-                            // 이미지를 항아리에 추가
-                            // setXvalue(mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105);
-
-                            // selectedAnimalSprite.x = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
                             let startPoint = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
 
 
@@ -208,12 +198,6 @@ const Mix = () => {
 
                             selectedAnimalSprite.y = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) /2 + 60;
                             clickNum++;
-
-
-                            // 이미지를 항아리에 추가하고 x 좌표를 조절하여 가로로 나열
-                            // const spacing = 10; // 이미지 간의 간격
-                            // const xOffset = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
-                            // const yOffset = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) / 2 + 55;
 
                             profileBox.addChild(selectedAnimalSprite);
 
@@ -233,9 +217,6 @@ const Mix = () => {
 
 
                             // TODO 항아리에 들어가는 합성동물 배열로 변환 필요
-                            // 항아리 동물 목록에 추가
-                            // setPotAnimals([...potAnimals, selectedAnimalSprite]);
-
                             setPotAnimals(prevState =>  {
                                 return [...prevState, 1];
                             })
