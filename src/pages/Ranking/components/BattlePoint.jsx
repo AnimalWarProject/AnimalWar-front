@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 const BattlePoint = () => {
 
 
-x``
     const [data, setData] = useState([]);
     const getData = () =>
 

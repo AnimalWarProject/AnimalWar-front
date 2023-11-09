@@ -12,9 +12,9 @@ import { ButtonContainer } from "@pixi/ui";
 import { ToastContainer, toast } from "react-toastify";
 import { useHistory } from "react-router-use-history";
 
+
+
 const Exchange = React.memo(() => {
-
-
     const history = useHistory();
     const canvasRef = useRef(null);
     const canvasWidth = 960;
@@ -75,6 +75,7 @@ const Exchange = React.memo(() => {
 
 
     useEffect(() => {
+
 
         if (isDataLoaded && canvasRef.current) {
 
@@ -381,8 +382,6 @@ const Exchange = React.memo(() => {
 
 
         }
-
-
 
     }, [isDataLoaded])
 
