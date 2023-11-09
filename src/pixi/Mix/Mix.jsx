@@ -12,8 +12,8 @@ import {ButtonContainer, ScrollBox} from "@pixi/ui";
 
 const Mix = () => {
     const canvasRef = useRef(null);
-    const [animal, setAnimal] = useState([pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish, pig, bird, cat, dog, fish]);
-    const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
+    const [animal, setAnimal] = useState([pig, bird, fish, cat]);
+    const [count, setCount] = useState([12, 5, 30, 7]);
     const [potAnimals, setPotAnimals] = useState([]);
     const [xValue, setXvalue] = useState(0);
     const history = useHistory();
@@ -123,30 +123,16 @@ const Mix = () => {
 
         let clickNum = 0;
 
-        const testArr2 = [
-            [{x : 25, y : 25}, {x : 35, y : 25}, {x : 45, y : 25}],
-            [{x : 25, y : 125}, {x : 35, y : 125}, {x : 45, y : 125}],
-            [{x : 25, y : 225}, {x : 35, y : 225}, {x : 45, y : 225}],
-            [{x : 25, y : 325}, {x : 35, y : 325}, {x : 45, y : 325}],
-            [{x : 25, y : 425}, {x : 35, y : 425}, {x : 45, y : 425}],
-        ];
-
-
         // 인벤토리
         for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < animal.length / 3; j++) {
-                //
-                // console.log(j)
-                //
-                console.log(' x : ' + testArr2[i][1].x)
-
+            for (let j = 0; j < Math.round(animal.length / 3); j++) {
 
 
                 // 인벤토리
                 const inventoryBtn = new ButtonContainer(
                     new PIXI.Graphics()
                         .beginFill(0xffffff, 0.5)
-                        .drawRoundedRect(25, 25, 105, 122, 40)
+                        .drawRoundedRect(10, 0, 105, 122, 40)
                         // .drawRoundedRect(95 + (i * 120), 150 + (j * 135), 105, 122, 40)
                 );
 
@@ -175,8 +161,8 @@ const Mix = () => {
                     // const xPosition = 95 + (i * 120); // 인벤토리 칸의 x 위치
                     // const yPosition = 150 + (j * 135); // 인벤토리 칸의 y 위치
 
-                    const xPosition = 25; // 인벤토리 칸의 x 위치
-                    const yPosition = 25; // 인벤토리 칸의 y 위치
+                    const xPosition = 10; // 인벤토리 칸의 x 위치
+                    const yPosition = 0; // 인벤토리 칸의 y 위치
 
                     // image 가운데로 위치 조정
                     imgInventorySprite.x = xPosition + (inventoryWidth - imgInventorySprite.width) / 2;
@@ -285,7 +271,10 @@ const Mix = () => {
             width: 377,
             height: 448,
             radius : 40,
-            items: testArr
+            items: testArr,
+            elementsMargin : 10,
+            vertPadding : 20,
+            horPadding : 10
         });
 
         scrollBox.x = 80; // x 좌표
