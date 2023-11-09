@@ -1,27 +1,10 @@
 import "../css/Gold.css"
 
 import axios from "axios";
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+
 import { useState, useEffect } from "react";
 
 const Gold = () => {
-
-    const [crown, setCrown] = useState(null);
-
-    const getCrown = async () => {
-        const storage = getStorage();
-        const searchImageRef = ref(storage, 'CROWN 1.png');
-        try {
-            const url = await getDownloadURL(searchImageRef);
-            setCrown(url);
-        } catch (error) {
-            console.error('Failed to fetch search image URL:', error);
-        }
-    }
-
-    useEffect(() => {
-        getCrown()
-    }, [])
 
 
 
@@ -46,10 +29,7 @@ const Gold = () => {
             <div className="userList">
 
                 {data.map((el, index) => (
-
-                    <p className="power__title">
-                        {index === 0 && <img className="clown" src={crown} alt="Crown" />}
-                        {index + 1}. {el.nickName}</p>
+                    <p className="power__title">{index + 1}. {el.nickName}</p>
                 ))}
 
             </div>
