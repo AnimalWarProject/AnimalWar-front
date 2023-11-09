@@ -55,7 +55,6 @@ const Mix = () => {
         app.stage.addChild(profileBox);
 
 
-
         const profileInnerBox = new PIXI.Graphics(); // 작은 틀
 
         profileInnerBox.position.set(80, 120);
@@ -293,25 +292,11 @@ const Mix = () => {
         background.addChild(mixStartBtn); // profileBox.addChild(mixStartBtn);이었는데  profileBox.removeChild(lastAddedAnimal);항아리 클릭하면 제거하는 함수와 profileBox가 겹쳐서 그런지 합성하기 버튼도 삭제되길래 -> background로 바꿈..
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         // Cleanup on component unmount
         return () => {
             app.destroy();
         };
     }, []);
-
-
 
 
 
