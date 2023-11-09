@@ -20,8 +20,6 @@ import DrawResult from "../pixi/draw/components/DrawResult";
 import UpGradePage from "../pixi/upGrade/components/UpGradePage";
 import UpGradeLoading from "../pixi/upGrade/components/UpGradeLoading";
 import UpGradeResult from "../pixi/upGrade/components/UpGradeResult";
-import Exchange from '../pixi/Exchange/Exchange';
-
 
 const MyRoutes = () => {
     return (
@@ -37,17 +35,17 @@ const MyRoutes = () => {
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
-                <Route path="/exchange" element={<Exchange/>}></Route>
 
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
+                <Route path="/my" element={<MyPage />} />
+                <Route path="/userInfo" element={<UserInfo />} />
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
-                <Route path="/my" element={<MyPage />} />
             </Route>
         </Routes>
     );

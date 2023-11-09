@@ -1,12 +1,12 @@
-import back from "../image/Rectangle 12374.png";
-import pig from "../image/PIG 12.png";
+import back from "../image/Rectangle 12374.webp";
+import pig from "../image/PIG 12.webp";
 import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
-import result1 from "../image/result-1.png";
-import result2 from "../image/result-2.png";
-import result3 from "../image/result-3.png";
-import result4 from "../image/result-4.png";
-import result5 from "../image/result-5.png";
+import result1 from "../image/result-1.webp";
+import result2 from "../image/result-2.webp";
+import result3 from "../image/result-3.webp";
+import result4 from "../image/result-4.webp";
+import result5 from "../image/result-5.webp";
 const UpGradeLoading = () => {
     const canvasRef = useRef(null);
 

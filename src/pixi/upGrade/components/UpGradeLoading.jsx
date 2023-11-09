@@ -1,9 +1,9 @@
-import back from "../image/Rectangle 12374.png";
+import back from "../image/Rectangle 12374.webp";
 import { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
-import upgrade1 from "../image/UPGRADE1 1.png";
-import upgrade2 from "../image/UPGRADE1 2.png";
-import upgrade3 from "../image/UPGRADE1 3.png";
+import upgrade1 from "../image/UPGRADE1 1.webp";
+import upgrade2 from "../image/UPGRADE1 2.webp";
+import upgrade3 from "../image/UPGRADE1 3.webp";
 import { useNavigate } from "react-router-dom";
 
 const UpGradeLoading = () => {
