@@ -58,28 +58,28 @@ const SearchBox = ({ onAnimalTypeSelect }) => {
                             </div>
                             <div className="searchbox-type-content-wrap">
                                 <div className="searchbox-type-content">
-                                    <a href="">본부</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('CommandCenter')}>본부</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">동물훈련소</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('TrainingCenter')}>동물훈련소</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">목공소</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('WoodFactory')}>목공소</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">제철소</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('SteelMill')}>제철소</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">식품 저장소</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('FoodStorage')}>식품 저장소</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">동물원</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('Zoo')}>동물원</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">토템</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('Totem')}>토템</a>
                                 </div>
                                 <div className="searchbox-type-content">
-                                    <a href="">울타리</a>
+                                    <a href="#" onClick={() => handleAnimalTypeClick('Fence')}>울타리</a>
                                 </div>
                             </div>
                         </div>
