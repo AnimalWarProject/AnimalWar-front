@@ -9,6 +9,7 @@ import poisonImage from '../imgs/Poison.webp';
 import speedRunImage from '../imgs/SpeedRun.webp';
 import transparency from '../imgs/Transparency.png';
 import {ScrollBox} from "@pixi/ui";
+import {Container, Graphics} from "pixi.js";
 
 const Battle = () => {
     const pixiContainer = useRef(null);
@@ -72,17 +73,14 @@ const Battle = () => {
 
 
 
+
+
         // 각 스킬들 설정
         const addSkillBox = (imageUrl, skillName, skillDescription) => {
 
             const container = new PIXI.Container();
             container.interactive = true;
             container.buttonMode = true;
-            // container.x = x;
-            // container.y = y;
-
-
-            testArr.push(container);
 
             // 스킬 박스 위치 및 크기
             const box = new PIXI.Graphics();
@@ -96,7 +94,7 @@ const Battle = () => {
             const image = PIXI.Sprite.from(imageUrl);
             image.width = 65;
             image.height = 65;
-            image.x = 8;
+            image.x = 4;
             image.y = 35;
             box.addChild(image);
 
@@ -109,7 +107,7 @@ const Battle = () => {
                 fontFamily: 'Arial'
             });
             nameText.anchor.set(0, 0.5);
-            nameText.x = 75;
+            nameText.x = 70;
             nameText.y = 48;
             box.addChild(nameText);
 
@@ -126,11 +124,23 @@ const Battle = () => {
                 lineHeight: 16
             });
             descriptionText.anchor.set(0, 0.5);
-            descriptionText.x = 75;
+            descriptionText.x = 70;
             descriptionText.y = 78;
             box.addChild(descriptionText);
 
+
+
+            container.on('pointertap', () => {
+                // 클릭된 스킬박스의 외부 테두리 스타일 변경
+                box.lineStyle(4, 0xFF0000); // 테두리를 빨간색으로 변경하고 두께를 4로 설정
+            });
+
+
+
+            testArr.push(container);
+
         };
+
 
         addSkillBox(
             berserkerImage,
@@ -164,30 +174,22 @@ const Battle = () => {
             '상대방의 최대 체력의 5%에 해당하는 데미지'
         );
 
-        addSkillBox(
-            transparency,
-            '스킬 준비중',
-            '스킬 준비 중...'
-        );
+        // addSkillBox(
+        //     transparency,
+        //     '스킬 준비중',
+        //     '스킬 준비 중...'
+        // );
 
-        addSkillBox(
-            transparency,
-            '스킬 준비중',
-            '스킬 준비 중...'
-        );
 
-        addSkillBox(
-            transparency,
-            '스킬 준비중',
-            '스킬 준비 중...'
-        );
 
         const scBox = new ScrollBox({
             width: 254,
             height: 480,
             items: testArr,
-            radius : 30,
-            elementsMargin: 14
+            radius : 25,
+            elementsMargin: 20,
+            vertPadding: 1
+            // padding: 10
         });
 
         scBox.x = 50; // x 좌표
