@@ -4,12 +4,10 @@ import sendIcon from "../imgs/send.png"
 import plusIcon from "../imgs/plusIcon.png"
 import {useEffect, useRef, useState} from "react";
 import axios from "axios";
-// import SockJS from 'sockjs-client';
-// import Stomp from 'webstomp-client';
-// import stompClient from "sockjs-client/lib/transport/iframe";
-
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import randomColor from 'random-color';
+
 
 
 
@@ -19,11 +17,13 @@ const Chatting = () => {
     const maxLength = 100; // 최대 글자 수
     const [isFocused, setIsFocused] = useState(false);
     const wrapRef = useRef();
-    const [nickName, setNickName] = useState('');
+    const [nickName, setNickName] = useState('GUEST');
     const [profileImage, setProfileImage] = useState('')
     const [showMessage, setShowMessage] = useState('');
     const [stompClient, setStompClient] = useState(null);
     const [greetings, setGreetings] = useState([]);
+    const [userColor, serUserColor] = useState('yellow');
+
 
     useEffect(() => {
 
@@ -56,10 +56,7 @@ const Chatting = () => {
             stomp.subscribe('/topic/greetings', (greeting) => { // 메시지를 파싱하고 표시
                 const parseMessage = JSON.parse(greeting.body)
                 setGreetings(prevState => [...prevState, parseMessage.message])
-                    // const showMessage = messageParsing(greeting);
-                    // setShowMessage(showMessage);
-                    // showGreeting(JSON.parse(greeting.body)); // #2-2 '/topic/greetings'에서 받은 메세지를 분해해서 보여주기
-                });
+            });
         });
 
 
@@ -78,6 +75,17 @@ const Chatting = () => {
     }, []);
 
 
+// Feat : 채팅에 유저마다 닉네임 색깔 지정
+    function getRandomColor(nickName) {
+        // nickName을 기반으로 고유한 색상 생성
+        const seed = parseInt(nickName, 36); // userId를 36진수로 파싱
+        return randomColor(seed).hexString(); // 색상을 반환
+    }
+
+
+
+
+// Feat : 메시지 보내기
     const sendName = () => {
         const obj = {
             'nickname': nickName || 'GUEST',
@@ -86,21 +94,7 @@ const Chatting = () => {
         stompClient.send('/app/hello', {}, JSON.stringify(obj));
     };
 
-
-
-
-// 랜덤한 16진수 색상 코드를 생성하는 함수
-    const randomColor = getRandomColor(); // 랜덤한 색상 코드를 가져옵니다
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-
+// Feat : 채팅 길이 제한
     const handleInputChange = (event) => {
         const text = event.target.value;
         setInputText(text);
@@ -113,7 +107,7 @@ const Chatting = () => {
     };
 
 
-// 커서를 올려두었을 때 채팅창 커지게 하기
+// Feat : 커서를 올려두었을 때 채팅창 커지게 하기
     const handleFocus = () => {
         // setIsFocused(true);
         wrapRef.current.style.position = 'absolute'; //GameTemplate.css의 box-container에 position: relative; 이렇게 주면 위치를 변동하곘다는거임..
@@ -141,6 +135,9 @@ const Chatting = () => {
 
 
 
+
+
+
     return (
         <section className={classes.Wrap} ref={wrapRef}>
             <div className={classes.box}>
@@ -151,15 +148,12 @@ const Chatting = () => {
                     {greetings.map((item, idx) => (
                         <div key={idx} className={classes.message_container}>
                             <img className={classes.profileImg} src={profileImage}/>
-                            <div className={classes.profileNickname} style={{ color: randomColor}}>{nickName}</div>
+                            <div className={classes.profileNickname} style={{ color: getRandomColor(nickName)}}>{nickName}</div>
                             <div className={classes.messageRecord}>{item}</div>
                         </div>
                     ))}
 
                 </div>
-
-
-
 
                 <div className={classes.send_box}>
                     <button className={classes.send_plus_button}>
@@ -174,7 +168,7 @@ const Chatting = () => {
                            onKeyDown={keydownHandler}
                            maxLength={maxLength} />
                     <button className={classes.send_button}
-                    onClick={sendName}
+                            onClick={sendName}
                     >
                         <img src={sendIcon}/>
                     </button>
