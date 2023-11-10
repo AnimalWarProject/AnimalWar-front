@@ -1,3 +1,4 @@
+
 import {Route, Routes} from 'react-router-dom';
 import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
@@ -19,12 +20,20 @@ import DrawResult from "../pixi/draw/components/DrawResult";
 import UpGradePage from "../pixi/upGrade/components/UpGradePage";
 import MixFail from "../pixi/Mix/MixFail";
 import MixSuccess from "../pixi/Mix/MixSuccess";
+import MyPage from '../pages/myPage/myPage';
+import DrawLoading from '../pixi/draw/components/DrawLoading';
+import DrawResult from '../pixi/draw/components/DrawResult';
+import UpGradePage from '../pixi/upGrade/components/UpGradePage';
+import UpGradeLoading from '../pixi/upGrade/components/UpGradeLoading';
+import UpGradeResult from '../pixi/upGrade/components/UpGradeResult';
+import UserInfo from '../pages/userInfo/UserInfo';
+import TerrainPage from '../pixi/terrain/TerrainPage';
+
 
 const MyRoutes = () => {
     return (
         <Routes>
             <Route element={<GameTemplate />}>
-                <Route path="/test" element={<BattlePage />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/loading" element={<DrawLoading />} />
@@ -34,18 +43,23 @@ const MyRoutes = () => {
                 <Route path="/mix3" element={<MixFail />}></Route>
                 <Route path="/mix4" element={<MixSuccess />}></Route>
                 <Route path="/upgrade" element={<UpGradePage />} />
+                <Route path="/upgrade/loading" element={<UpGradeLoading />} />
+                <Route path="/upgrade/result" element={<UpGradeResult />} />
+                <Route path="/mix" element={<Mix />}></Route>
+                <Route path="/terrain" element={<TerrainPage />} />
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
-                <Route path="/test" element={<BattlePage />}></Route>
                 <Route path="/match" element={<Match />}></Route>
-                <Route path="/match2" element={<MatchProcess />}></Route>
-                <Route path="/match3" element={<MatchComplete />}></Route>
+                <Route path="/match2" element={<MatchProcess />} />
+                <Route path="/match3" element={<MatchComplete />} />
+                <Route path="/my" element={<MyPage />} />
+                <Route path="/userInfo" element={<UserInfo />} />
             </Route>
             <Route element={<BorderTemplate />}>
-                <Route path="/login" element={<LoginPage />}></Route>
-                <Route path="/singup" element={<SignupPage />}></Route>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
             </Route>
         </Routes>
     );

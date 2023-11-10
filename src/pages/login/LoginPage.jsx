@@ -1,62 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import { apiNoToken } from '../../network/api';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { apiNoToken } from '../../network/api';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
+
+import AnimalCrowdImage from './imgs/AnimalCrowd.webp';
+import LogoImage from './imgs/Logo.webp';
+import SmallEggImage from './imgs/SmallEgg.webp';
+import LockImage from './imgs/Lock.webp';
 
 const LoginPage = () => {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
-    const [imgUrl, setImgUrl] = useState('');
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchImageFromFirebase = async () => {
-            const storage = getStorage();
-            const imageRef = ref(storage, 'AnimalCrowd.png');
-
-            try {
-                const url = await getDownloadURL(imageRef);
-                setImgUrl(url);
-            } catch (error) {
-                console.error('Failed to fetch image URL:', error);
-            }
-        };
-
-        fetchImageFromFirebase();
-    }, []);
 
     const handleLogin = async () => {
         try {
-            const response = await apiNoToken('api/v1/auth/login', 'POST', {
+            const response = await apiNoToken('/api/v1/auth/login', 'POST', {
                 id,
                 password,
             });
             if (response.data && response.data.accessToken && response.data.refreshToken) {
                 localStorage.setItem('accessToken', response.data.accessToken);
-                navigate('/');
+                navigate('/home');
             } else {
-                alert('로그인 실패');
+                toast.error('아이디 또는 비밀번호를 다시 확인해주세요');
             }
         } catch (error) {
-            alert('서버 오류 발생');
+            toast.error('서버 오류 발생');
         }
+    };
+
+    const handleSignUp = () => {
+        navigate('/signup');
     };
 
     return (
         <div className="login-page-container">
             <div className="login-container">
-                <h2>로그인</h2>
-                <input type="id" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)} />
-                <input
-                    type="password"
-                    placeholder="비밀번호"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button onClick={handleLogin}>로그인</button>
+                <img src={LogoImage} alt="Logo" className="login-logo" />
+                <div className="input-with-icon">
+                    <img src={SmallEggImage} alt="ID Icon" className="input-icon" />
+                    <input
+                        type="text"
+                        placeholder="아이디"
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
+                        className="login-input"
+                    />
+                </div>
+                <div className="input-with-icon">
+                    <img src={LockImage} alt="Password Icon" className="input-icon" />
+                    <input
+                        type="password"
+                        placeholder="비밀번호"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="login-input"
+                    />
+                </div>
+                <div className="button-container">
+                    <button onClick={handleLogin}>로그인</button>
+                    <button onClick={handleSignUp}>회원가입</button>
+                </div>
             </div>
-            {imgUrl && <img src={imgUrl} alt="Animal Crowd" className="login-image" />}
+            <div className="login-image" style={{ backgroundImage: `url(${AnimalCrowdImage})` }} />
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     );
 };

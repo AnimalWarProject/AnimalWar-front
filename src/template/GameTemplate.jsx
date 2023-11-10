@@ -4,8 +4,7 @@ import Header from '../common/components/Header';
 import ResourceBox from '../common/components/ResourceBox';
 import './GameTemplate.css';
 import ProfileBox from '../common/components/ProfileBox';
-import Match from '../pixi/Match/Match';
-import Chatting from "../common/components/Chatting";
+
 
 const GameTemplate = () => {
     return (

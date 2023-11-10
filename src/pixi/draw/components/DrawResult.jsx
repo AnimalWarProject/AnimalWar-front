@@ -1,17 +1,16 @@
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
-import back from "../imgs/Rectangle 12299.png";
-import randomEgg from "../imgs/RANDOMEGG 2.png";
-import {useNavigate} from "react-router-dom";
+import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
+import {useLocation, useNavigate} from "react-router-dom";
 
-const DrawLoading = () => {
+const DrawResult = () => {
     const canvasRef = useRef(null);
-    const nav = useNavigate();
+    const location = useLocation();
+    const resultData = location.state;
 
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
-
         const app = new PIXI.Application({
             background: '#1099bb',
             width: canvasWidth,
@@ -27,28 +26,81 @@ const DrawLoading = () => {
         background.height = app.screen.height;
         app.stage.addChild(background);
 
-        const profileBox = new PIXI.Graphics(); // 큰 틀
-        profileBox.beginFill(0xffffff, 0.5);
-        const profileWidth = canvasWidth * 0.85;
-        const profileHeight = canvasHeight * 0.85;
-        profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
+        if (Array.isArray(resultData) && resultData.length > 1) {
+            // 여러 개의 데이터 출력
+            // 행과 열의 개수를 지정
+            const rows = 2;
+            const columns = 5;
+            const itemWidth = 150;
+            const itemHeight = 210;
 
-        for (let j = 0; j < 2; j++) {
-            for (let i = 0; i < 5; i++) {
-                const profileInnerBox1 = new PIXI.Graphics(); // 작은 틀
-                profileInnerBox1.beginFill(0xffffff, 0.5);
-                const InnerBoxWidth = 150;
-                const InnerBoxHeight = 210;
-                profileBox.drawRoundedRect(75 + (i * 160), 70 + (j * 250), InnerBoxWidth, InnerBoxHeight, 40);
-            }
+            const profileBox = new PIXI.Graphics(); // 큰 틀
+            profileBox.beginFill(0xffffff, 0.5);
+            const profileWidth = canvasWidth * 0.85;
+            const profileHeight = canvasHeight * 0.85;
+            profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
+
+            resultData.slice(0, rows * columns).forEach((item, index) => {
+                const rowIndex = Math.floor(index / columns);
+                const colIndex = index % columns;
+
+                const profileInnerBox = new PIXI.Graphics();
+                profileInnerBox.beginFill(0xffffff, 0.5);
+                const x = 75 + colIndex * (itemWidth + 10);
+                const y = 90 + rowIndex * (itemHeight + 10);
+                profileInnerBox.drawRoundedRect(x, y, itemWidth, itemHeight, 40);
+
+                const textStyle = new PIXI.TextStyle({
+                    fill: 0x0f1828,
+                    fontSize: 18,
+                    fontFamily: 'Arial',
+                    fontWeight: 'bold',
+                });
+                const text = new PIXI.Text(item.name, textStyle);
+                text.anchor.set(0.5);
+                text.x = x + itemWidth / 2;
+                text.y = y + itemHeight * 0.9;
+
+                profileBox.addChild(profileInnerBox);
+                profileBox.addChild(text);
+            });
+
+            app.stage.addChild(profileBox);
+        } else if (resultData.length === 1) {
+            // 1개의 데이터 출력
+            const profileBox = new PIXI.Graphics(); // 큰 틀
+            profileBox.beginFill(0xffffff, 0.5);
+            const profileWidth = canvasWidth * 0.85;
+            const profileHeight = canvasHeight * 0.85;
+            profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
+
+            const profileInnerBox = new PIXI.Graphics(); // 작은 틀
+            profileInnerBox.beginFill(0xffffff, 0.5);
+            const InnerBoxWidth = profileWidth / 2;
+            const InnerBoxHeight = 480;
+            profileInnerBox.drawRoundedRect(250, 70, InnerBoxWidth, InnerBoxHeight, 40);
+
+            const item = resultData[0];
+
+            const textStyle = new PIXI.TextStyle({
+                fill: 0x0f1828,
+                fontSize: 24,
+                fontFamily: 'Arial',
+                fontWeight: 'bold',
+            });
+
+            const text = new PIXI.Text(item.name, textStyle);
+            text.anchor.set(0.5);
+            text.x = 450;
+            text.y = 500;
+
+            app.stage.addChild(profileInnerBox);
+            app.stage.addChild(profileBox);
+            profileBox.addChild(text);
         }
-
-
-
-        app.stage.addChild(profileBox);
-    }, []);
+    }, [resultData]);
 
     return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
-export default DrawLoading;
+export default DrawResult;

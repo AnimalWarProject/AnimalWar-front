@@ -1,8 +1,8 @@
-import back from "../image/Rectangle 12374.png";
+import back from "../image/Rectangle 12374.webp";
 import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
 import {useNavigate} from "react-router-dom";
-import moru from "../image/ANVIL 1.png";
+import moru from "../image/ANVIL 1.webp";
 const UpGrade = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
@@ -38,7 +38,7 @@ const UpGrade = () => {
         profileBox.beginFill(0xffffff, 0.5);
         const profileWidth = canvasWidth * 0.85;
         const profileHeight = canvasHeight * 0.85;
-        profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
+        profileBox.drawRoundedRect(70, 40, profileWidth, profileHeight, 40);
 
         const profileInnerBox = new PIXI.Graphics(); // 작은 틀
         profileInnerBox.beginFill(0xffffff, 0.5);
@@ -87,13 +87,14 @@ const UpGrade = () => {
 
         const AnimalBtn = new PIXI.Graphics(); // 동물버튼
         AnimalBtn.beginFill(0xF698ED, 1);
-        const AnimalBtnWidth = 100;
-        const AnimalBtnHeight = 40;
-        AnimalBtn.drawRoundedRect(100, 0, AnimalBtnWidth, AnimalBtnHeight, 40);
+        const AnimalBtnWidth = 110;
+        const AnimalBtnHeight = 35;
+        AnimalBtn.drawRoundedRect(80, 3, AnimalBtnWidth, AnimalBtnHeight, 10);
         const animalDrawText = new PIXI.Text('동물', textStyle);
         AnimalBtn.addChild(animalDrawText);
-        animalDrawText.x = 130;
-        animalDrawText.y = 10;
+        animalDrawText.x = 135;
+        animalDrawText.y = 20;
+        animalDrawText.anchor.set(0.5)
         const animalButtonContainer = new PIXI.Container();
         animalButtonContainer.interactive = true;
         animalButtonContainer.buttonMode = true;
@@ -101,13 +102,14 @@ const UpGrade = () => {
 
         const BuildingBtn = new PIXI.Graphics(); // 건물버튼
         BuildingBtn.beginFill(0xFF594F, 1);
-        const BuildingBtnWidth = 100;
-        const BuildingBtnHeight = 40;
-        BuildingBtn.drawRoundedRect(210, 0, BuildingBtnWidth, BuildingBtnHeight, 40);
+        const BuildingBtnWidth = 110;
+        const BuildingBtnHeight = 35;
+        BuildingBtn.drawRoundedRect(200, 3, BuildingBtnWidth, BuildingBtnHeight, 10);
         const BuildingDrawText = new PIXI.Text('건물', textStyle);
         BuildingBtn.addChild(BuildingDrawText);
-        BuildingDrawText.x = 240;
-        BuildingDrawText.y = 10;
+        BuildingDrawText.x = 255;
+        BuildingDrawText.y = 20;
+        BuildingDrawText.anchor.set(0.5)
         const buildingButtonContainer = new PIXI.Container();
         buildingButtonContainer.interactive = true;
         buildingButtonContainer.buttonMode = true;
@@ -126,6 +128,9 @@ const UpGrade = () => {
         upGradeButtonContainer.interactive = true;
         upGradeButtonContainer.buttonMode = true;
         upGradeButtonContainer.addChild(upGradeBtn);
+        upGradeButtonContainer.on('pointertap', () => {
+            nav('/upgrade/loading');
+        });
 
 
         const moruImage = PIXI.Texture.from(moru);

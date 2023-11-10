@@ -1,17 +1,21 @@
-import React from "react";
+import React, {useState} from "react";
 import "../css/MarketPage.css";
 import SearchBox from "./SearchBox";
 import SideBar from "./SideBar";
 import Main from "./Main";
-import Register from "./Register";
 import MarketInven from "./MarketInven";
 
 const MarketPage = () => {
+    const [selectedAnimalType, setSelectedAnimalType] = useState('');
+
+    const handleAnimalTypeSelect = (animalType) => {
+        setSelectedAnimalType(animalType);
+    };
     return <>
         <div className="marketPage-container">
             <div>
                 <div>
-                    <SearchBox />
+                    <SearchBox onAnimalTypeSelect={handleAnimalTypeSelect} />
                 </div>
             </div>
             <div className="sidebar-main">
@@ -19,13 +23,12 @@ const MarketPage = () => {
                     <SideBar />
                 </div>
                 <div>
-                    <Main />
+                    <Main selectedAnimalType={selectedAnimalType} />
                 </div>
             </div>
             <div>
                 <div>
                     <MarketInven />
-                    {/*<Register />*/}
                 </div>
             </div>
         </div>

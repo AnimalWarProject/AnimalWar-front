@@ -1,16 +1,40 @@
-
 .main-container{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin: 0;
 }
 .main-list-wrap{
     display: flex;
 
 }
 .main-list-content{
+    display: flex;
+    flex-direction: column;
     width: 11.4rem;
     height: 9.6rem;
     border: solid black 0.06rem;
     margin: 0 2.8rem 2.2rem 0;
 }
+.pagination{
+    display: flex;
+    gap: 1rem;
+    margin-top: -2.5rem;
+}
+.page-button{
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: black solid 0.1rem;
+    border-radius: 8rem;
+    font-weight: bold;
+    background-color: #61dafb;
+}
+.page-button:hover{
+    background-color: #4e5ad3;
+}
+
+
+

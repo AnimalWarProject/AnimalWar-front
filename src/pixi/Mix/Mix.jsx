@@ -1,23 +1,35 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from 'react';
 import * as PIXI from 'pixi.js';
-import pig from './imgs/PIG 5.png'
-import bird from './imgs/Bird.png'
-import cat from './imgs/Cat.png'
-import dog from './imgs/Dog.png'
-import fish from './imgs/Fish.png'
-import mixPot from './imgs/MIXPOT 1.png'
-import mixBackground from './imgs/Rectangle 12348.png'
 import {useHistory} from 'react-router-use-history';
 import {ButtonContainer, ScrollBox} from "@pixi/ui";
+import pig from './imgs/PIG 5.png';
+import bird from './imgs/Bird.png';
+import cat from './imgs/Cat.png';
+import dog from './imgs/Dog.png';
+import fish from './imgs/Fish.png';
+import mixPot from './imgs/MIXPOT 1.png';
+import mixBackground from './imgs/Rectangle 12348.png';
 
-const Mix = () => {
+const   Mix = () => {
     const canvasRef = useRef(null);
-    const [animal, setAnimal] = useState([pig, bird, fish, cat]);
-    const [count, setCount] = useState([1, 2, 3, 4]);
-    const [potAnimals, setPotAnimals] = useState([]);
-    const [xValue, setXvalue] = useState(0);
-    const history = useHistory();
-    const grade = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+    const [animal, setAnimal] = useState([
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+        pig,
+        bird,
+        cat,
+        dog,
+        fish,
+    ]);
+    const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
 
 
     useEffect(() => {
@@ -53,6 +65,7 @@ const Mix = () => {
         const profileHeight = canvasHeight * 0.85;
         profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
         app.stage.addChild(profileBox);
+
 
 
         const profileInnerBox = new PIXI.Graphics(); // 작은 틀
@@ -133,6 +146,7 @@ const Mix = () => {
                 testArr.push(inventoryBtn)
                 profileBox.addChild(inventoryBtn)
 
+
                 // 인벤토리 index
                 const imageIndex =  i * Math.round(animal.length / 3) + j;
 
@@ -146,6 +160,7 @@ const Mix = () => {
                     const imgInventorySprite = new PIXI.Sprite(imgInventoryTexture);
 
                     // Count 텍스트 생성 및 스타일 설정
+
                     const countText = new PIXI.Text(count[imageIndex], textStyle);
 
                     imgInventorySprite.width = 69;
@@ -245,6 +260,7 @@ const Mix = () => {
 
 
 
+
         // Feat : inventory scroll
         console.log(testArr)
         const scrollBox = new ScrollBox({
@@ -263,6 +279,7 @@ const Mix = () => {
         profileBox.addChild(scrollBox);
 
         // Feat : 항아리
+
         const mixPotTexture = PIXI.Texture.from(mixPot);
         const mixPotSprite = new PIXI.Sprite(mixPotTexture);
         mixPotSprite.width = canvasWidth * 0.4;
@@ -272,16 +289,19 @@ const Mix = () => {
         profileBox.addChild(mixPotSprite);
 
 
+
         // Feat 합성하기 버튼
         const mixStartBtn = new ButtonContainer(
             new PIXI.Graphics()
                 .beginFill(0x00ffff, 0.8)
                 .drawRoundedRect(720, 590, 150, 40, 40))
 
+
         const mixStartText = new PIXI.Text('합성하기', textStyle);
         mixStartBtn.addChild(mixStartText);
 
         // 가운데 정렬을 위해 텍스트의 x, y 좌표를 조정
+
         mixStartText.x = 760
         mixStartText.y = 600
 
@@ -297,6 +317,7 @@ const Mix = () => {
             app.destroy();
         };
     }, []);
+
 
 
 

@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
-import back from "../imgs/Rectangle 12299.png";
-import oneEgg from "../imgs/ONEEGG 1.png";
-import manyEgg from "../imgs/MANYEGG 1.png";
-import oneBuilding from "../imgs/ONEBUILDING 1.png";
-import manyBuilding from "../imgs/MANYBUILDING 1.png";
+import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
+import oneEgg from "../imgs/AnyConv.com__ONEEGG 1.webp";
+import manyEgg from "../imgs/AnyConv.com__MANYEGG 1.webp";
+import oneBuilding from "../imgs/AnyConv.com__ONEBUILDING 1.webp";
+import manyBuilding from "../imgs/AnyConv.com__MANYBUILDING 1.webp";
 import { useNavigate } from "react-router-dom";
 
 const Draw = () => {
@@ -18,6 +18,12 @@ const Draw = () => {
             type: "animal",
             qty: 1
         };
+        const textStyle = new PIXI.TextStyle({
+            fill: 0x0f1828,
+            fontSize: 18,
+            fontFamily: 'Arial',
+            fontWeight: "bold",
+        });
 
         const app = new PIXI.Application({
             backgroundColor: 0x1099bb,
@@ -74,7 +80,6 @@ const Draw = () => {
         const drawOneBtnWidth = 170;
         const drawOneBtnHeight = 40;
         drawOneBtn.drawRoundedRect(190, 480, drawOneBtnWidth, drawOneBtnHeight, 40);
-
         const oneButtonContainer = new PIXI.Container();
         oneButtonContainer.interactive = true;
         oneButtonContainer.buttonMode = true;
@@ -82,13 +87,7 @@ const Draw = () => {
         oneButtonContainer.on('pointertap', () => {
             drawData.qty = 1;
             nav('/draw/loading', {state : drawData});
-        });
-
-        const textStyle = new PIXI.TextStyle({
-            fill: 0x0f1828,
-            fontSize: 18,
-            fontFamily: 'Arial',
-            fontWeight: "bold",
+            // todo : user에 돈이있는지 없는지 확인
         });
         const oneDrawText = new PIXI.Text('1회 뽑기', textStyle);
         drawOneBtn.addChild(oneDrawText);
@@ -100,7 +99,6 @@ const Draw = () => {
         const drawManyBtnWidth = 170;
         const drawManyBtnHeight = 40;
         drawManyBtn.drawRoundedRect(580, 480, drawManyBtnWidth, drawManyBtnHeight, 40);
-
         const manyButtonContainer = new PIXI.Container();
         manyButtonContainer.interactive = true;
         manyButtonContainer.buttonMode = true;
@@ -108,8 +106,8 @@ const Draw = () => {
         manyButtonContainer.on('pointertap', () => {
             drawData.qty = 10;
             nav('/draw/loading', {state : drawData});
+            // todo : user에 돈이있는지 없는지 확인
         });
-
         const manyDrawText = new PIXI.Text('10회 뽑기', textStyle);
         drawManyBtn.addChild(manyDrawText);
         manyDrawText.x = 630;
@@ -118,12 +116,12 @@ const Draw = () => {
         const drawAnimalBtn = new PIXI.Graphics();
         drawAnimalBtn.beginFill(0x6AFFF6, 0.7);
         const drawAnimalBtnWidth = 100;
-        const drawAnimalBtnHeight = 40;
-        drawAnimalBtn.drawRoundedRect(100, 0, drawAnimalBtnWidth, drawAnimalBtnHeight, 40);
+        const drawAnimalBtnHeight = 36;
+        drawAnimalBtn.drawRoundedRect(100, 2, drawAnimalBtnWidth, drawAnimalBtnHeight, 10);
 
         const animalDrawText = new PIXI.Text('동물', textStyle);
         drawAnimalBtn.addChild(animalDrawText);
-        animalDrawText.x = 130;
+        animalDrawText.x = 131;
         animalDrawText.y = 10;
 
         const animalButtonContainer = new PIXI.Container();
@@ -135,12 +133,12 @@ const Draw = () => {
         const drawBuildingBtn = new PIXI.Graphics();
         drawBuildingBtn.beginFill(0xB6C1EA, 0.7);
         const drawBuildingBtnWidth = 100;
-        const drawBuildingBtnHeight = 40;
-        drawBuildingBtn.drawRoundedRect(210, 0, drawBuildingBtnWidth, drawBuildingBtnHeight, 40);
+        const drawBuildingBtnHeight = 36;
+        drawBuildingBtn.drawRoundedRect(210, 2, drawBuildingBtnWidth, drawBuildingBtnHeight, 10);
 
         const BuildingDrawText = new PIXI.Text('건물', textStyle);
         drawBuildingBtn.addChild(BuildingDrawText);
-        BuildingDrawText.x = 240;
+        BuildingDrawText.x = 241;
         BuildingDrawText.y = 10;
 
         const buildingButtonContainer = new PIXI.Container();
