@@ -1,4 +1,6 @@
-import { Routes, Route } from 'react-router-dom';
+
+import {Route, Routes} from 'react-router-dom';
+import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
 import BasicTemplate from '../template/BasicTemplate';
 import RankingPage from '../pages/Ranking/RankingPage';
@@ -12,7 +14,12 @@ import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
 import MatchComplete from '../pixi/Match/MatchComplete';
 import BorderTemplate from '../template/BorderTemplate';
-
+import MixStart from "../pixi/Mix/MixStart";
+import DrawLoading from "../pixi/draw/components/DrawLoading";
+import DrawResult from "../pixi/draw/components/DrawResult";
+import UpGradePage from "../pixi/upGrade/components/UpGradePage";
+import MixFail from "../pixi/Mix/MixFail";
+import MixSuccess from "../pixi/Mix/MixSuccess";
 import MyPage from '../pages/myPage/myPage';
 import DrawLoading from '../pixi/draw/components/DrawLoading';
 import DrawResult from '../pixi/draw/components/DrawResult';
@@ -22,6 +29,7 @@ import UpGradeResult from '../pixi/upGrade/components/UpGradeResult';
 import UserInfo from '../pages/userInfo/UserInfo';
 import TerrainPage from '../pixi/terrain/TerrainPage';
 
+
 const MyRoutes = () => {
     return (
         <Routes>
@@ -30,6 +38,10 @@ const MyRoutes = () => {
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/loading" element={<DrawLoading />} />
                 <Route path="/draw/result" element={<DrawResult />} />
+                <Route path="/mix" element={<Mix />}></Route>
+                <Route path="/mix2" element={<MixStart />}></Route>
+                <Route path="/mix3" element={<MixFail />}></Route>
+                <Route path="/mix4" element={<MixSuccess />}></Route>
                 <Route path="/upgrade" element={<UpGradePage />} />
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />

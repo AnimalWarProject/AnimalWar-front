@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import { api } from '../../network/api';
 import './ResourceBox.css';
 import GoldImage from '../imgs/Gold.webp';
@@ -30,7 +31,13 @@ const ResourceBox = () => {
 
     useEffect(() => {
         getProfileData();
+        loadIcons();
     }, []);
+
+
+
+    }, []);
+
 
     return (
         <div className="resource-box">
