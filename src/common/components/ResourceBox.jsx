@@ -36,8 +36,6 @@ const ResourceBox = () => {
 
 
 
-    }, []);
-
 
     return (
         <div className="resource-box">

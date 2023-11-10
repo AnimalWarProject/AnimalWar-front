@@ -328,3 +328,47 @@ const   Mix = () => {
 };
 
 export default Mix;
+
+
+
+
+
+
+
+
+// // 클릭된 컨테이너를 저장할 변수
+// let clickedContainer = null;
+//
+// // 테두리를 추가할 그래픽 객체 생성
+// const border = new PIXI.Graphics();
+// // 모서리 반경을 조정
+// const cornerRadiusBox1 = 15;
+// border.lineStyle(0); // 기본 테두리 스타일 설정
+// border.drawRoundedRect(-110, -13, 220, 100, cornerRadiusBox1);
+// container.addChild(border);
+//
+// // 클릭 이벤트 핸들링 함수
+// container.on('pointertap', () => {
+//     console.log(`${skillName}이(가) 클릭되었습니다.`);
+//     if (clickedContainer !== container) {
+//         // 다른 컨테이너를 클릭한 경우
+//         if (clickedContainer) {
+//             // 이전에 클릭된 컨테이너가 있다면 테두리 색상을 원래대로 되돌림
+//             clickedContainer.children[1].clear(); // 이전에 클릭된 컨테이너의 테두리를 지웁니다.
+//             clickedContainer.children[1].lineStyle(0); // 테두리 스타일 초기화
+//             clickedContainer.children[1].lineStyle(3, '#000000'); // 테두리 스타일을 다시 설정합니다.
+//             clickedContainer.children[1].drawRoundedRect(-110, -13, 220, 100, cornerRadiusBox); // 테두리 다시 그리기
+//         }
+//         // 새로운 컨테이너를 클릭했으므로 테두리 색상을 변경
+//         border.clear(); // 현재 컨테이너의 테두리를 지웁니다.
+//         border.lineStyle(3, '#000000'); // 클릭된 컨테이너의 테두리 색상을 변경합니다.
+//         border.drawRoundedRect(-110, -13, 220, 100, cornerRadiusBox1); // 테두리 다시 그리기
+//         clickedContainer = container; // 현재 클릭된 컨테이너로 설정
+//     } else {
+//         // 이미 클릭된 컨테이너를 다시 클릭한 경우
+//         border.clear(); // 현재 컨테이너의 테두리를 지웁니다.
+//         border.lineStyle(0); // 테두리 스타일 초기화
+//         border.drawRoundedRect(-110, -13, 220, 100, cornerRadiusBox1); // 테두리 다시 그리기
+//         clickedContainer = null; // 클릭된 컨테이너를 null로 초기화
+//     }
+// });
