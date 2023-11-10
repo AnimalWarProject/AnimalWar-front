@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../../network/api';
 import './ProfileBox.css';
 import AttackPowerImage from '../imgs/AttackPower.webp';
@@ -76,7 +76,9 @@ const ProfileBox = () => {
         }
     };
 
-    getProfileData();
+    useEffect(() => {
+        getProfileData();
+    }, []);
 
     return (
         <div className="profile-box">

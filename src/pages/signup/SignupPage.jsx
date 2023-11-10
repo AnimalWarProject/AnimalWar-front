@@ -84,7 +84,7 @@ const SignupPage = () => {
 
         // API call to register the user with the uploaded image URL or null if no image was selected
         try {
-            const completeFormData = { ...formData, profileImage: imageUrl };
+            const completeFormData = { ...formData, profileImage: imageUrl, species: formData.species.toUpperCase() };
             await apiNoToken('/api/v1/auth/signup', 'POST', completeFormData);
             toast.success('회원가입이 성공적으로 완료되었습니다.');
             navigate('/');

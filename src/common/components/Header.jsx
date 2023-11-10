@@ -29,7 +29,7 @@ function Header() {
     const handleSearch = async () => {
         try {
             const { data: foundUser } = await apiNoToken(`api/v1/user/findByNickName/${searchInput}`, 'GET');
-            navigate(`/userinfo/${searchInput}`, { state: { user: foundUser } });
+            navigate(`/userInfo`, { state: { user: foundUser } });
             setSearchedUser(foundUser);
         } catch (error) {
             console.error('Failed to search user:', error);
