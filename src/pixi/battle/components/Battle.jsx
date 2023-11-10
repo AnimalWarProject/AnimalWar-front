@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import * as PIXI from "pixi.js";
 import {ScrollBox} from "@pixi/ui";
 import {Container, Graphics} from "pixi.js";
+import Transparency from '../imgs/Transparency.png';
 
 // 공격형 스킬 이미지
 import backgroundImage from '../imgs/Rectangle 12290.png';
@@ -75,9 +76,9 @@ const Battle = () => {
             message.y = y;
             app.stage.addChild(message);
         };
-        addRoundedText('공격형 스킬', app.renderer.width / 5.5, app.renderer.height / 9, 277, 70, 40, 0x0f1828);
-        addRoundedText('수비형 스킬', app.renderer.width / 1.99, app.renderer.height / 9, 277, 70, 40, 0x0f1828);
-        addRoundedText('유틸형 스킬', app.renderer.width / 1.215, app.renderer.height / 9, 277, 70, 40, 0x0f1828);
+        addRoundedText('공격형 스킬', app.renderer.width / 5.5, app.renderer.height / 9, 277, 70, 5, 0x0f1828);
+        addRoundedText('수비형 스킬', app.renderer.width / 1.99, app.renderer.height / 9, 277, 70, 5, 0x0f1828);
+        addRoundedText('유틸형 스킬', app.renderer.width / 1.215, app.renderer.height / 9, 277, 70, 5, 0x0f1828);
 
         // 공격형 스킬 큰 박스를 담을 컨테이너
         const bigBoxContainer = new PIXI.Container();
@@ -96,8 +97,8 @@ const Battle = () => {
         const bigBox = new PIXI.Graphics();
         bigBox.beginFill(0xffffff, 0.5);
         const bigBoxWidth = 277;
-        const bigBoxHeight = 480;
-        const cornerRadius = 30;
+        const bigBoxHeight = 490;
+        const cornerRadius = 5;
         bigBox.drawRoundedRect(34, 130, bigBoxWidth, bigBoxHeight, cornerRadius);
         bigBox.endFill();
         bigBoxContainer.addChild(bigBox);
@@ -107,8 +108,8 @@ const Battle = () => {
         const bigBox1 = new PIXI.Graphics();
         bigBox1.beginFill(0xffffff, 0.5);
         const bigBoxWidth1 = 277;
-        const bigBoxHeight1 = 480;
-        const cornerRadius1 = 30;
+        const bigBoxHeight1 = 490;
+        const cornerRadius1 = 5;
         bigBox1.drawRoundedRect(343, 130, bigBoxWidth1, bigBoxHeight1, cornerRadius1);
         bigBox1.endFill();
         bigBoxContainer1.addChild(bigBox1);
@@ -119,8 +120,8 @@ const Battle = () => {
         const bigBox2 = new PIXI.Graphics();
         bigBox2.beginFill(0xffffff, 0.5);
         const bigBoxWidth2 = 277;
-        const bigBoxHeight2 = 480;
-        const cornerRadius2 = 30;
+        const bigBoxHeight2 = 490;
+        const cornerRadius2 = 5;
         bigBox2.drawRoundedRect(653, 130, bigBoxWidth2, bigBoxHeight2, cornerRadius2);
         bigBox2.endFill();
         bigBoxContainer2.addChild(bigBox2);
@@ -134,7 +135,7 @@ const Battle = () => {
 
             // 공격형 스킬 박스 위치 및 크기
             const box = new PIXI.Graphics();
-            const cornerRadiusBox = 15; // 모서리 반경을 조정할 수 있습니다
+            const cornerRadiusBox = 5; // 모서리 반경을 조정할 수 있습니다
             box.beginFill(boxColor, alpha);
             box.drawRoundedRect(0, 13, 243, 95, cornerRadiusBox);
             box.endFill();
@@ -145,7 +146,7 @@ const Battle = () => {
                 console.log(`${skillName}이(가) 클릭되었습니다.`);
                 const boxColor = '#ffffff'; // 상자의 색상
                 const alpha = 30; // 투명도
-                const cornerRadiusBox = 15; // 모서리 반경
+                const cornerRadiusBox = 5; // 모서리 반경
 
                 if (clickedContainer && clickedContainer !== container) {
                     // 이전 클릭된 컨테이너가 있으면 테두리 색을 원래대로 되돌림
@@ -230,19 +231,18 @@ const Battle = () => {
             testArr.push(container);
 
         };
-
-        //////////////// 여기까지 공격형 스킬 범위/////////////////////
-
-        const addDefenseSkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha) => {
+        
+        // 수비형 스킬들 설정
+        const addDefenseSkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha, x, y) => {
             const container1 = new PIXI.Graphics();
             container1.interactive = true;
             container1.buttonMode = true;
 
             // 수비형 스킬 박스 위치 및 크기
             const box1 = new PIXI.Graphics();
-            const cornerRadiusBox1 = 15; // 모서리 반경을 조정할 수 있습니다
+            const cornerRadiusBox1 = 5; // 모서리 반경을 조정할 수 있습니다
             box1.beginFill(boxColor, alpha);
-            box1.drawRoundedRect(60,  13, 243, 95, cornerRadiusBox1);
+            box1.drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1);
             box1.endFill();
             container1.addChild(box1);
 
@@ -251,14 +251,14 @@ const Battle = () => {
                 console.log(`${skillName}이(가) 클릭되었습니다.`);
                 const boxColor1 = '#ffffff'; // 상자의 색상
                 const alpha1 = 30; // 투명도
-                const cornerRadiusBox1 = 15; // 모서리 반경
+                const cornerRadiusBox1 = 5; // 모서리 반경
 
                 if (clickedContainer1 && clickedContainer1 !== container1) {
                     // 이전 클릭된 컨테이너가 있으면 테두리 색을 원래대로 되돌림
                     clickedContainer1.children[0].clear();
                     clickedContainer1.children[0].lineStyle(0)
                         .beginFill(boxColor1, alpha1)
-                        .drawRoundedRect(60, 13, 243, 95, cornerRadiusBox1)
+                        .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
                         .endFill();
                 }
 
@@ -267,7 +267,7 @@ const Battle = () => {
                     container1.children[0].clear();
                     container1.children[0].lineStyle(0)
                         .beginFill(boxColor1, alpha1)
-                        .drawRoundedRect(60, 13, 243, 95, cornerRadiusBox1)
+                        .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
                         .endFill();
                     clickedContainer1 = null;
                 } else {
@@ -276,14 +276,14 @@ const Battle = () => {
                     container1.children[0].clear()
                         .lineStyle(4, borderColor1)
                         .beginFill(boxColor1, alpha1)
-                        .drawRoundedRect(60, 13, 243, 95, cornerRadiusBox1)
+                        .drawRoundedRect(3, 13, 243, 95, cornerRadiusBox1)
                         .endFill();
                     if (clickedContainer1) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer1.children[0].clear();
                         clickedContainer1.children[0].lineStyle(0)
                             .beginFill(boxColor1, alpha1)
-                            .drawRoundedRect(60, 13, 243, 95, cornerRadiusBox1)
+                            .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
                             .endFill();
                     }
                     clickedContainer1 = container1;
@@ -292,12 +292,13 @@ const Battle = () => {
 
             container1.on('click', handleClick1);
 
+
             // 수비형 스킬사진 크기 및 위치
             if (imageUrl) {
                 const image1 = PIXI.Sprite.from(imageUrl);
                 image1.width = 65;
                 image1.height = 65;
-                image1.x = 60;
+                image1.x = 4;
                 image1.y = 30;
                 box1.addChild(image1);
             }
@@ -311,7 +312,7 @@ const Battle = () => {
                 fontFamily: 'Arial'
             });
             nameText1.anchor.set(0, 0.5);
-            nameText1.x = 125;
+            nameText1.x = 70;
             nameText1.y = 44;
             box1.addChild(nameText1);
 
@@ -328,18 +329,118 @@ const Battle = () => {
                 lineHeight: 16
             });
             descriptionText1.anchor.set(0, 0.5);
-            descriptionText1.x = 125;
+            descriptionText1.x = 70;
             descriptionText1.y = 74;
             box1.addChild(descriptionText1);
 
             testArr1.push(container1);
 
-            bigBoxContainer1.addChild(container1);
-        }
+        };
 
-        //////여기까지 수비형 스킬///////////
+        // 유틸형 스킬들 설정
+        const addUtilitySkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha) => {
+            const container2 = new PIXI.Graphics();
+            container2.interactive = true;
+            container2.buttonMode = true;
 
-        
+            // 유틸형 스킬 박스 위치 및 크기
+            const box2 = new PIXI.Graphics();
+            const cornerRadiusBox2 = 5; // 모서리 반경을 조정할 수 있습니다
+            box2.beginFill(boxColor, alpha);
+            box2.drawRoundedRect(0, 13, 243, 95, cornerRadiusBox2);
+            box2.endFill();
+            container2.addChild(box2);
+
+            // 유틸형 스킬 클릭 이벤트 핸들링 함수
+            const handleClick2 = () => {
+                console.log(`${skillName}이(가) 클릭되었습니다.`);
+                const boxColor2 = '#ffffff'; // 상자의 색상
+                const alpha2 = 30; // 투명도
+                const cornerRadiusBox2 = 5; // 모서리 반경
+
+                if (clickedContainer2 && clickedContainer2 !== container2) {
+                    // 이전 클릭된 컨테이너가 있으면 테두리 색을 원래대로 되돌림
+                    clickedContainer2.children[0].clear();
+                    clickedContainer2.children[0].lineStyle(0)
+                        .beginFill(boxColor2, alpha2)
+                        .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                        .endFill();
+                }
+
+                if (clickedContainer2 === container2) {
+                    // 클릭된 컨테이너가 이미 저장된 컨테이너인 경우 클릭 해제
+                    container2.children[0].clear();
+                    container2.children[0].lineStyle(0)
+                        .beginFill(boxColor2, alpha2)
+                        .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                        .endFill();
+                    clickedContainer2 = null;
+                } else {
+                    // 클릭된 컨테이너의 테두리 색을 변경
+                    const borderColor2 = '#000000'; // 변경하고자 하는 테두리 색
+                    container2.children[0].clear()
+                        .lineStyle(4, borderColor2)
+                        .beginFill(boxColor2, alpha2)
+                        .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                        .endFill();
+                    if (clickedContainer2) {
+                        // 기존에 클릭된 다른 컨테이너의 클릭을 해제
+                        clickedContainer2.children[0].clear();
+                        clickedContainer2.children[0].lineStyle(0)
+                            .beginFill(boxColor2, alpha2)
+                            .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                            .endFill();
+                    }
+                    clickedContainer2 = container2;
+                }
+            };
+
+            container2.on('click', handleClick2);
+
+
+            // 유틸형 스킬사진 크기 및 위치
+            if (imageUrl) {
+                const image2 = PIXI.Sprite.from(imageUrl);
+                image2.width = 65;
+                image2.height = 65;
+                image2.x = 4;
+                image2.y = 30;
+                box2.addChild(image2);
+            }
+
+            // 유틸형 스킬 이름 크기 및 폰트
+            const nameText2 = new PIXI.Text(skillName, {
+                fontSize: 21,
+                fill: 0x0f1828,
+                align: 'justify',
+                fontWeight: 'bolder',
+                fontFamily: 'Arial'
+            });
+            nameText2.anchor.set(0, 0.5);
+            nameText2.x = 70;
+            nameText2.y = 44;
+            box2.addChild(nameText2);
+
+
+            // 유틸형 스킬 설명 조정
+            const descriptionText2 = new PIXI.Text(skillDescription, {
+                fontSize: 13,
+                fill: '#000000',
+                align: 'justify',
+                fontFamily: 'Arial',
+                fontWeight: 'bold',
+                wordWrap: true,
+                wordWrapWidth: 180,// 너비 조정을 위한 속성
+                lineHeight: 16
+            });
+            descriptionText2.anchor.set(0, 0.5);
+            descriptionText2.x = 70;
+            descriptionText2.y = 74;
+            box2.addChild(descriptionText2);
+
+            testArr2.push(container2);
+
+        };
         
         // 공격형 박스
         addAttackSkillBox(
@@ -357,28 +458,27 @@ const Battle = () => {
         addAttackSkillBox(
             ExecutionImage,
             '처형',
-            '5회의 공격이내 상대방이 10%의 체력 이하라면 처형',
+            '5회의 공격이내 상대방,       체력 10%이하라면 처형',
             '#FFFFFF'
         );
         addAttackSkillBox(
             hiddenAceImage,
             '비장의 한발',
-            '1회의 공격이 상대방보다 체력이 적다면 5배의 피해',
+            '상대방보다 체력이 적다면 기본공격 5배의 피해',
             '#FFFFFF'
         );
         addAttackSkillBox(
             poisonImage,
             '독약',
-            '상대방의 최대 체력의 5%에 해당하는 데미지',
+            '상대방 최대 체력의 5%에 해당하는 데미지를 가함',
             '#FFFFFF'
         );
         addAttackSkillBox(
             speedRunImage,
             '빨리감기',
-            '공격자, 수비자의 현재 체력      25% 감소',
+            '상대방과 나의 현재 체력을 각각 25% 감소',
             '#FFFFFF'
         );
-
         addAttackSkillBox(
             '',
             '',
@@ -390,67 +490,104 @@ const Battle = () => {
         
         
         // 수비형 박스
-
         addDefenseSkillBox(
             EmergencyFood,
             '비상식량',
-            '최대 체력의 20%를 회복',
+            '최대 체력의 20%에             해당하는 양을 회복',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             Heal,
             '회복',
-            '잃은 체력의 30%를 회복',
+            '잃은 체력의 30%에            해당하는 양을 회복',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             IronCladDefense,
             '철통방어',
-            '상대 공격을 3회 무효화',
+            '상대방의 기본공격을             3회 동안 무효화',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             LuckySeven,
             '럭키 7',
-            ' 현재 체력이 77% 이상일 때, 상대 공격을 7회 무효화',
+            '현재 체력이 77% 이상일 때, 상대 기본공격을 7회 무효화',
             '#FFFFFF'
         );
-
         addDefenseSkillBox(
             RustedSword,
             '녹슨 방패',
-            '(지속)모든 데미지 10% 데미지 감소',
+            '상대방의 모든 유형의        데미지를 10%만큼 감소',
             '#FFFFFF'
         );
 
         addDefenseSkillBox(
             Bandaging,
             '붕대 감기',
-            '(총 3턴)잃은체력 7%, 1턴씩 체력 회복',
+            '3턴 동안, 받은 데미지의         7% 만큼의 체력을 회복',
             '#FFFFFF'
         );
         addDefenseSkillBox(
-            '',
+            Transparency,
             '',
             '',
             null,
             0
         );
-        addDefenseSkillBox(
+
+
+        // 유틸형 스킬
+        addUtilitySkillBox(
+            BrokenSpear,
+            '부러진 창',
+            '상대방 공격형 스킬 금지',
+            '#FFFFFF'
+        );
+        addUtilitySkillBox(
+            BrokenShield,
+            '부러진 방패',
+            '상대방 방어형 스킬 금지',
+            '#FFFFFF'
+        );
+        addUtilitySkillBox(
+            DoItAgain,
+            '다시하기',
+            '공격자, 수비자',
+            '#FFFFFF'
+        );
+        addUtilitySkillBox(
+            OffenseDefenseShift,
+            '공수교대',
+            '공격자는 방어력으로,     수비자는 공격력으로 전투',
+            '#FFFFFF'
+        );
+        addUtilitySkillBox(
+            StrongAndWeak,
+            '강약약강',
+            '나체력>상대체력: 공방 10%↑\n' +
+            '나체력<상대체력: 공방 10%↓',
+            '#FFFFFF'
+        );
+        addUtilitySkillBox(
+            Swap,
+            '다시하기',
+            '상대방과 나의 체력 교체,     나의 현재 체력의 10% 감소',
+            '#FFFFFF'
+        );
+        addUtilitySkillBox(
             '',
-            '',
-            '',
-            '#FFFFFF',
+            '   ',
+            '   ',
+            null,
             0
         );
-
 
         // 공격형 스킬 스크롤
         const scBox = new ScrollBox({
             width: 254,
             height: 480,
             items: testArr,
-            radius : 30,
+            radius : 0,
             elementsMargin: 20,
         });
         scBox.x = 50; // x 좌표
@@ -462,15 +599,26 @@ const Battle = () => {
             width: 310,
             height: 480,
             items: testArr1,
-            radius : 20,
+            radius : 0,
             elementsMargin: 20
-
-
         });
         bigBoxContainer1.addChild(scBox1);
 
-        scBox1.x = 300; // x 좌표
-        scBox1.y = 134; // y 좌표
+        scBox1.x = 360 // x 좌표
+        scBox1.y = 140; // y 좌표
+
+
+        // 유틸형 스킬 스크롤
+        const scBox2 = new ScrollBox({
+            width: 254,
+            height: 480,
+            items: testArr2,
+            radius : 0,
+            elementsMargin: 20,
+        });
+        scBox2.x = 670; // x 좌표
+        scBox2.y = 134; // y 좌표
+        bigBoxContainer2.addChild(scBox2);
 
 
 
