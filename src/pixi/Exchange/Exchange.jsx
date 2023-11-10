@@ -313,6 +313,32 @@ const Exchange = React.memo(() => {
                     foodText.text = `잔여 식량 :${newFood}`;
                     goldText.text = `잔여 골드 : ${newGold}`;
 
+                    const starTexture = PIXI.Texture.from(goldImg); // 별 이미지의 경로를 넣어주세요
+                    const numberOfStars = 10;
+
+                    for (let i = 0; i < numberOfStars; i++) {
+                        const star = new PIXI.Sprite(starTexture);
+                        star.anchor.set(0.5); // 이미지의 중심을 기준으로 회전하도록 설정
+                        star.x = Math.random() * app.screen.width;
+                        star.y = Math.random() * app.screen.height;
+                        star.rotation = Math.random() * Math.PI * 2; // 랜덤한 각도로 초기 회전값 설정
+                        star.scale.set(0.5 + Math.random() * 0.5); // 랜덤한 크기로 초기화
+
+                        background.addChild(star);
+
+
+                        // 별이 아래로 떨어지는 애니메이션 설정
+                        const speed = 3 + Math.random() * 2; // 떨어지는 속도를 랜덤하게 설정
+                        app.ticker.add(() => {
+                            star.y += speed;
+                            star.rotation += 0.1;
+                            if (star.y > app.screen.height) {
+                                // 화면 아래로 벗어난 경우 다시 위로 올리기
+                                app.stage.removeChild(star);
+                            }
+                        });
+                    }
+
 
 
                     // const text2Style = new PIXI.TextStyle({
@@ -338,34 +364,11 @@ const Exchange = React.memo(() => {
                     toast.error("교환 실패 !!  자원이 없습니다");
                 }
 
-                const starTexture = PIXI.Texture.from(goldImg); // 별 이미지의 경로를 넣어주세요
-                const numberOfStars = 10;
 
-                for (let i = 0; i < numberOfStars; i++) {
-                    const star = new PIXI.Sprite(starTexture);
-                    star.anchor.set(0.5); // 이미지의 중심을 기준으로 회전하도록 설정
-                    star.x = Math.random() * app.screen.width;
-                    star.y = Math.random() * app.screen.height;
-                    star.rotation = Math.random() * Math.PI * 2; // 랜덤한 각도로 초기 회전값 설정
-                    star.scale.set(0.5 + Math.random() * 0.5); // 랜덤한 크기로 초기화
-
-                    background.addChild(star);
-
-
-                    // 별이 아래로 떨어지는 애니메이션 설정
-                    const speed = 3 + Math.random() * 2; // 떨어지는 속도를 랜덤하게 설정
-                    app.ticker.add(() => {
-                        star.y += speed;
-                        star.rotation += 0.1;
-                        if (star.y > app.screen.height) {
-                            // 화면 아래로 벗어난 경우 다시 위로 올리기
-                            app.stage.removeChild(star);
-                        }
-                    });
-                }
             }
 
             );
+
 
 
             //교환 시작 텍스트 스프라이트
@@ -379,6 +382,21 @@ const Exchange = React.memo(() => {
             text2.x = canvasWidth * 0.73;
             text2.y = canvasHeight * 0.83;
             app.stage.addChild(text2);
+
+
+
+            //교환 안내문 텍스트 스프라이트
+            const textStyle3 = new PIXI.TextStyle({
+                fill: 0x0F1828,
+                fontSize: 24, // 폰트 크기
+                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+            });
+            const text3 = new PIXI.Text("각 자원 2000개 = 1000골드", textStyle3);
+
+            text3.x = canvasWidth * 0.13;
+            text3.y = canvasHeight * 0.83;
+            app.stage.addChild(text3);
+
 
 
         }
