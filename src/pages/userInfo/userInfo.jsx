@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import './UserInfo.css';
 
 function UserInfo() {
-    // 초기 user 상태를 세션에서 가져오거나 없으면 null로 설정합니다.
     const [user, setUser] = useState(() => {
         const storedUser = sessionStorage.getItem('userInfo');
         return storedUser ? JSON.parse(storedUser) : null;
@@ -11,7 +10,6 @@ function UserInfo() {
     const location = useLocation();
 
     useEffect(() => {
-        // location.state.user가 있으면 사용하고, 없으면 세션에서 가져옵니다.
         const userFromLocation = location.state?.user;
         const userFromSearch = userFromLocation || user;
 
@@ -19,7 +17,7 @@ function UserInfo() {
             setUser(userFromSearch);
             sessionStorage.setItem('userInfo', JSON.stringify(userFromSearch));
         }
-    }, [location.state]); // location.state에 대한 의존성만 지정합니다.
+    }, [location.state]);
 
     if (user === undefined) {
         return <div className="user-info">해당하는 유저가 없습니다.</div>;

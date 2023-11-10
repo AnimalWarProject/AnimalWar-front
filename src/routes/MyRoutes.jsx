@@ -20,6 +20,7 @@ import UpGradePage from '../pixi/upGrade/components/UpGradePage';
 import UpGradeLoading from '../pixi/upGrade/components/UpGradeLoading';
 import UpGradeResult from '../pixi/upGrade/components/UpGradeResult';
 import UserInfo from '../pages/userInfo/UserInfo';
+import TerrainPage from '../pixi/terrain/TerrainPage';
 
 const MyRoutes = () => {
     return (
@@ -33,6 +34,7 @@ const MyRoutes = () => {
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
+                <Route path="/terrain" element={<TerrainPage />} />
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
