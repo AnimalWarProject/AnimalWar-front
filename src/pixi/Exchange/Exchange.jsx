@@ -303,6 +303,8 @@ const Exchange = React.memo(() => {
 
 
                     const newWood = wood - count * 2000;
+
+
                     const newIron = iron - count * 2000;
                     const newFood = food - count * 2000;
 

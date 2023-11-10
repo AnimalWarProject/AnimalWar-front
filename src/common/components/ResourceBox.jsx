@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
-
 import { api } from '../../network/api';
 import './ResourceBox.css';
 import GoldImage from '../imgs/Gold.webp';
 import FoodImage from '../imgs/Food.webp';
 import WoodImage from '../imgs/Wood.webp';
 import IronImage from '../imgs/Iron.webp';
-
 const ResourceBox = () => {
     const [profile, setProfile] = useState({});
-
     const icons = {
         Gold: GoldImage,
         Food: FoodImage,
         Wood: WoodImage,
         Iron: IronImage,
     };
-
     const getProfileData = async () => {
         try {
             const accessToken = localStorage.getItem('accessToken');
@@ -28,15 +24,9 @@ const ResourceBox = () => {
             console.error('Failed to fetch user profile:', error);
         }
     };
-
     useEffect(() => {
         getProfileData();
-        loadIcons();
     }, []);
-
-
-
-
     return (
         <div className="resource-box">
             <div className="resource-line">
@@ -62,5 +52,13 @@ const ResourceBox = () => {
         </div>
     );
 };
-
 export default ResourceBox;
+
+
+
+
+
+
+
+
+

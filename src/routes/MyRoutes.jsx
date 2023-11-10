@@ -48,7 +48,7 @@ const MyRoutes = () => {
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
                 <Route path="/battle" element={<Battle />}></Route>
-
+                <Route path="/exchange" element={<Exchange />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
