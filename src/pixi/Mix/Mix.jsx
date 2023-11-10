@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as PIXI from 'pixi.js';
+import {useHistory} from 'react-router-use-history';
+import {ButtonContainer, ScrollBox} from "@pixi/ui";
 import pig from './imgs/PIG 5.png';
 import bird from './imgs/Bird.png';
 import cat from './imgs/Cat.png';
@@ -29,9 +31,18 @@ const   Mix = () => {
     ]);
     const [count, setCount] = useState([0, 2, 5, 8, 13, 0, 2, 5, 8, 13, 0, 2, 5, 8, 13]);
 
+
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
+
+        // 글꼴
+        const textStyle = new PIXI.TextStyle({
+            fill: 0x0f1828,
+            fontSize: 18,
+            fontFamily: 'Arial',
+            fontWeight: "bold",
+        });
 
         const app = new PIXI.Application({
             background: '#1099bb',
@@ -43,146 +54,232 @@ const   Mix = () => {
             canvasRef.current.appendChild(app.view);
         }
 
-        const background = PIXI.Sprite.from(mixBackground);
+        const background = PIXI.Sprite.from(mixBackground); // 뒷 배경사진
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
 
-        const profileBox = new PIXI.Graphics();
+        const profileBox = new PIXI.Graphics(); // 큰 틀
         profileBox.beginFill(0xffffff, 0.5);
         const profileWidth = canvasWidth * 0.85;
         const profileHeight = canvasHeight * 0.85;
         profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
         app.stage.addChild(profileBox);
 
-        const textStyle = new PIXI.TextStyle({
-            fill: 0x0f1828,
-            fontSize: 18,
-            fontFamily: 'Arial',
-            fontWeight: 'bold',
-        });
+
+
+        const profileInnerBox = new PIXI.Graphics(); // 작은 틀
+
+        profileInnerBox.position.set(80, 120);
+
+
+
+        profileInnerBox.beginFill(0xffffff, 0.5);
+        const InnerBoxWidth = 377;
+        const InnerBoxHeight = 448;
+
+        profileBox.drawRoundedRect(80, 120, InnerBoxWidth, InnerBoxHeight, 40);
+
+
+
+        for (let i = 0; i < 5; i++) { // 등급 칸 & 텍스트
+            const inventory = new PIXI.Graphics();
+            inventory.beginFill(0xffffff, 0.5);
+            const InventoryWidth = 140;
+            const InventoryHeight = 55;
+            inventory.drawRoundedRect(100 + (i * 150), 50, InventoryWidth, InventoryHeight, 40);
+
+            const gradeText = new PIXI.Text(grade[i], textStyle);
+            inventory.addChild(gradeText);
+            gradeText.anchor.set(0.5); // 글자 중심
+            gradeText.x = 170 + ( i * 150 ); // X 위치 조정
+            gradeText.y = 80;  // Y 위치 조정
+            profileBox.addChild(inventory);
+            profileBox.addChild(gradeText);
+        }
 
         // 건물/동물 인벤토리
         // 동물
         const mixAnimalBtn = new PIXI.Graphics();
-        mixAnimalBtn.beginFill(0x6afff6, 0.7);
+        mixAnimalBtn.beginFill(0x6AFFF6, 0.7);
         const mixAnimalBtnWidth = 100;
-        const mixAnimalBtnHeight = 36;
-        mixAnimalBtn.drawRoundedRect(100, 2, mixAnimalBtnWidth, mixAnimalBtnHeight, 10);
+        const mixAnimalBtnHeight = 40;
+        mixAnimalBtn.drawRoundedRect(100, 0, mixAnimalBtnWidth, mixAnimalBtnHeight, 40);
 
         const animalMixText = new PIXI.Text('동물', textStyle);
         mixAnimalBtn.addChild(animalMixText);
-        animalMixText.x = 131;
+        animalMixText.x = 130;
         animalMixText.y = 10;
 
         profileBox.addChild(mixAnimalBtn);
 
         // 건물
         const mixBuildingBtn = new PIXI.Graphics();
-        mixBuildingBtn.beginFill(0xb6c1ea, 0.7);
+        mixBuildingBtn.beginFill(0xB6C1EA, 0.7);
         const mixBuildingBtnWidth = 100;
-        const mixBuildingBtnHeight = 36;
-        mixBuildingBtn.drawRoundedRect(210, 2, mixBuildingBtnWidth, mixBuildingBtnHeight, 10);
+        const mixBuildingBtnHeight = 40;
+        mixBuildingBtn.drawRoundedRect(210, 0, mixBuildingBtnWidth, mixBuildingBtnHeight, 40);
 
         const BuildingMixText = new PIXI.Text('건물', textStyle);
         mixBuildingBtn.addChild(BuildingMixText);
-        BuildingMixText.x = 241;
+        BuildingMixText.x = 240;
         BuildingMixText.y = 10;
 
         profileBox.addChild(mixBuildingBtn);
 
-        // ## 위에 등급 선택 메뉴
-        const textData = ['노말', '레어', '슈퍼레어', '유니크', '레전드'];
+        let testArr = [];
 
-        for (let i = 0; i < 5; i++) {
-            const gradeBox = new PIXI.Graphics();
-            gradeBox.beginFill(0xffffff, 0.5); // (채우기, 투명도)
-            const boxWidth = canvasWidth * 0.15;
-            const boxHeight = canvasHeight * 0.08;
-            // x좌표 계산
-            const xPosition = 80 + i * (boxWidth + 15);
-            // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-            gradeBox.drawRoundedRect(xPosition, 50, boxWidth, boxHeight, 40);
-            profileBox.addChild(gradeBox);
+        let clickNum = 0;
 
-            // 텍스트 생성 및 스타일 설정
-            const labelText = new PIXI.Text(textData[i], {
-                fontFamily: 'Arial',
-                fontSize: 20,
-                fill: 0x000000,
-            });
-
-            // 텍스트 위치 설정 (가운데 정렬)
-            labelText.x = xPosition + boxWidth / 2 - labelText.width / 2; // (네모의 가운데 - 텍스트 가운데) = 가운데 정렬
-            labelText.y = 50 + boxHeight / 2 - labelText.height / 2;
-
-            // 텍스트를 상자에 추가
-            gradeBox.addChild(labelText);
-        }
-
-        //  ## 인벤토리
-        const animalGroupBox = new PIXI.Graphics();
-        animalGroupBox.beginFill(0xffffff, 0.5); // (채우기, 투명도)
-        const boxWidth = canvasWidth * 0.4;
-        const boxHeight = canvasHeight * 0.7;
-        animalGroupBox.drawRoundedRect(80, 120, boxWidth, boxHeight, 35);
-        profileBox.addChild(animalGroupBox);
-
+        // TODO animal에 4개가 들어있으면 3개만 나옴.. 반올림처리가 잘못되었나봄..3의 나머지가 1일 때 나머지 1이 안나옴..
+        // 인벤토리
         for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                const animalBox = new PIXI.Graphics();
-                animalBox.beginFill(0xffffff, 0.5);
-                const boxWidth = canvasWidth * 0.12;
-                const boxHeight = canvasHeight * 0.21;
-                // x좌표 계산
-                const xPosition = 83 + i * (boxWidth + 15);
-                // y좌표 계산
-                const yPosition = 130 + j * (boxHeight + 15);
-                // x 좌표, y 좌표, 너비, 높이 및 둥근 모서리의 반지름
-                animalBox.drawRoundedRect(xPosition, yPosition, boxWidth, boxHeight, 40);
-                profileBox.addChild(animalBox);
+            for (let j = 0; j < Math.ceil(animal.length / 3); j++) {
+                // 인벤토리
+                const inventoryBtn = new ButtonContainer(
+                    new PIXI.Graphics()
+                        .beginFill(0xffffff, 0.5)
+                        .drawRoundedRect(10, 0, 105, 122, 40)
+                        // .drawRoundedRect(95 + (i * 120), 150 + (j * 135), 105, 122, 40)
+                );
 
-                // ## 인벤토리 안에 있는 동물
-                // setAnimal()
-                const animalList = animal;
-                const countList = count;
+                testArr.push(inventoryBtn)
+                profileBox.addChild(inventoryBtn)
+
+
                 // 인벤토리 index
-                const imageIndex = j * 3 + i;
-                if (imageIndex < animal.length) {
-                    // 이미지 텍스처 생성
-                    const imgInventoryTexture = PIXI.Texture.from(animal[imageIndex]);
-                }
+                const imageIndex =  i * Math.round(animal.length / 3) + j;
+
+
+                console.log(imageIndex)
                 // 이미지 텍스처 생성
                 if (imageIndex < animal.length) {
-                    const imgInventoryTexture = PIXI.Texture.from(animalList[imageIndex]);
+                    const imgInventoryTexture = PIXI.Texture.from(animal[imageIndex]);
 
                     // 스프라이트 생성
                     const imgInventorySprite = new PIXI.Sprite(imgInventoryTexture);
+
                     // Count 텍스트 생성 및 스타일 설정
-                    const countText = new PIXI.Text(countList[imageIndex], {
-                        fontFamily: 'Arial',
-                        fontSize: 20,
-                        fill: 0x000000,
-                    });
-                    imgInventorySprite.width = 80;
-                    imgInventorySprite.height = 110;
-                    imgInventorySprite.x = 120;
-                    imgInventorySprite.y = 80;
-                    profileBox.addChild(imgInventorySprite);
+
+                    const countText = new PIXI.Text(count[imageIndex], textStyle);
+
+                    imgInventorySprite.width = 69;
+                    imgInventorySprite.height = 99;
+
+                    // 인벤토리 칸의 가운데로 위치 조정
+                    const inventoryWidth = 105; // 인벤토리 칸의 가로 크기
+                    const inventoryHeight = 122; // 인벤토리 칸의 세로 크기
+
+                    const xPosition = 10; // 인벤토리 칸의 x 위치
+                    const yPosition = 0; // 인벤토리 칸의 y 위치
 
                     // image 가운데로 위치 조정
-                    imgInventorySprite.x = xPosition + (boxWidth - imgInventorySprite.width) / 2;
-                    imgInventorySprite.y = yPosition + (boxHeight - imgInventorySprite.height) / 2;
+                    imgInventorySprite.x = xPosition + (inventoryWidth - imgInventorySprite.width) / 2;
+                    imgInventorySprite.y = yPosition + (inventoryHeight - imgInventorySprite.height) / 2;
 
-                    // Count 텍스트 위치 설정 (가운데 정렬)
-                    countText.x = xPosition + (boxWidth - countText.width) / 2;
-                    countText.y = yPosition + countText.height - 15; // 이미지 위에 표시하도록 설정
-                    profileBox.addChild(countText);
+                    // Count 텍스트 위치 설정 (가운데 정렬 및 동물 이미지 머리 바로 위에 표시)
+                    countText.x = xPosition + (inventoryWidth - countText.width) / 2;
+                    countText.y = yPosition - countText.height + 25; // 동물 이미지 머리 바로 위에 표시
+
+
+                    inventoryBtn.addChild(imgInventorySprite); // inventoryBtn에 스프라이트 추가
+                    inventoryBtn.addChild(countText);
+
+                    // 인벤토리 안에 클릭하면
+                    inventoryBtn.onPress.connect(() => {
+                        if (clickNum > 3) {
+                            return;
+                        }
+                        const maxPotAnimals = 4; // 항아리에 추가할 수 있는 최대 동물 수
+
+                        if (potAnimals.length < maxPotAnimals) {
+
+                            // 클릭된 동물의 이미지를 새로 로드하고 새로운 스프라이트를 만듭니다.
+                            const selectedAnimalTexture = PIXI.Texture.from(animal[imageIndex]);
+                            const selectedAnimalSprite = new PIXI.Sprite(selectedAnimalTexture);
+
+                            // 이미지 크기를 100x100으로 변경
+                            selectedAnimalSprite.width = 45;
+                            selectedAnimalSprite.height = 78;
+                            let startPoint = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
+
+
+                            if (clickNum > 0) {
+                                selectedAnimalSprite.x = startPoint + (73 * clickNum); // 1~3부터는 x축 옆으로 이동(가로 나열)
+                            } else {
+                                selectedAnimalSprite.x = startPoint; // 0이면
+                            }
+
+                            selectedAnimalSprite.y = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) /2 + 60;
+                            clickNum++;
+
+                            profileBox.addChild(selectedAnimalSprite);
+
+
+
+                            // Feat : 클릭 시 count -1
+                            // "count" 배열을 복제하여 업데이트할 값을 변경한 다음 상태 업데이트
+                            const updatedCount = [...count];
+                            updatedCount[imageIndex]--;
+                            setCount(updatedCount);
+
+                            // "countText" 업데이트
+                            countText.text = updatedCount[imageIndex];
+
+
+
+
+
+                            // TODO 항아리에 들어가는 합성동물 배열로 변환 필요
+                            setPotAnimals(prevState =>  {
+                                return [...prevState, 1];
+                            })
+
+                            // 항아리에서 동물을 클릭하면
+                            mixPotSprite.interactive = true; //  mixPotSprite 객체를 상호작용, 클릭 이벤트를 감지
+                            mixPotSprite.on('pointertap', () => { // 항아리 (mixPotSprite)를 클릭할 때
+
+
+                            // 항아리에서 마지막으로 추가된 동물을 제거
+                            clickNum = 0;
+                            profileBox.removeChild(selectedAnimalSprite);
+
+
+                                // const lastAddedAnimal = profileBox.children[profileBox.children.length - 1]; // 항아리에 마지막으로 추가된 동물
+                                // if (lastAddedAnimal !== mixPotSprite) {
+                                //     profileBox.removeChild(lastAddedAnimal); // 4번 초과해서 클릭 했을 때, 4번째 mixPotSprite와 다를 경우에는 삭제
+                                // }
+
+
+                            });
+                        }
+                    });
                 }
             }
         }
 
-        // 항아리
+
+
+
+        // Feat : inventory scroll
+        console.log(testArr)
+        const scrollBox = new ScrollBox({
+            width: 377,
+            height: 448,
+            radius : 40,
+            items: testArr,
+            elementsMargin : 10,
+            vertPadding : 20,
+            horPadding : 10
+        });
+
+        scrollBox.x = 80; // x 좌표
+        scrollBox.y = 120; // y 좌표
+
+        profileBox.addChild(scrollBox);
+
+        // Feat : 항아리
+
         const mixPotTexture = PIXI.Texture.from(mixPot);
         const mixPotSprite = new PIXI.Sprite(mixPotTexture);
         mixPotSprite.width = canvasWidth * 0.4;
@@ -191,58 +288,29 @@ const   Mix = () => {
         mixPotSprite.y = 130;
         profileBox.addChild(mixPotSprite);
 
-        // 1. animal을 4개 선택하고
-        // 2. 합성하기 버튼을 누르면
-        // 3. 항아리가 움직이고
-        // 4. 3초 뒤에 새로운 동물(성공) or 실패가 떠야 함..
-        // 항아리 움직이기
-        // const container = new PIXI.Container();
-        // container.x = 670;
-        // container.y = 350;
-        // // add a bunch of sprites
-        // const pot = PIXI.Sprite.from(mixPot);
-        // pot.anchor.set(0.5);
-        // container.addChild(pot);
-        // app.stage.addChild(container);
-        //
-        // // let's create a moving shape
-        // const thing = new PIXI.Graphics();
-        // app.stage.addChild(thing);
-        // thing.x = app.screen.width / 2;
-        // thing.y = app.screen.height / 2;
-        // thing.lineStyle(0);
-        //
-        // container.mask = null; // 'container'를 'thing'으로 마스킹
-        //
-        // let movingCount = 0;
-        //
-        // app.ticker.add(()=>{
-        //     pot.scale.x = 1 + Math.sin(movingCount) * 0.04;
-        //     pot.scale.y = 1 + Math.cos(movingCount) * 0.04;
-        //     movingCount += 0.1;
-        //     thing.clear();
-        //     thing.moveTo(-120 + Math.sin(movingCount) * 20, -100 + Math.cos(movingCount) * 20);
-        //     thing.lineTo(120 + Math.cos(movingCount) * 20, -100 + Math.sin(movingCount) * 20);
-        //     thing.lineTo(120 + Math.sin(movingCount) * 20, 100 + Math.cos(movingCount) * 20);
-        //     thing.lineTo(-120 + Math.cos(movingCount) * 20, 100 + Math.sin(movingCount) * 20);
-        //     thing.rotation = movingCount * 0.1;
-        // });
 
-        // 합성하기 버튼
-        const mixStartBtn = new PIXI.Graphics();
-        mixStartBtn.beginFill(0x00ffff, 0.8);
-        const mixStartBtnWidth = 150;
-        const mixStartBtnHeight = 40;
-        mixStartBtn.drawRoundedRect(730, 590, mixStartBtnWidth, mixStartBtnHeight, 40);
+
+        // Feat 합성하기 버튼
+        const mixStartBtn = new ButtonContainer(
+            new PIXI.Graphics()
+                .beginFill(0x00ffff, 0.8)
+                .drawRoundedRect(720, 590, 150, 40, 40))
+
 
         const mixStartText = new PIXI.Text('합성하기', textStyle);
         mixStartBtn.addChild(mixStartText);
 
         // 가운데 정렬을 위해 텍스트의 x, y 좌표를 조정
-        mixStartText.x = 730 + (mixStartBtnWidth - mixStartText.width) / 2;
-        mixStartText.y = 590 + (mixStartBtnHeight - mixStartText.height) / 2;
 
-        profileBox.addChild(mixStartBtn);
+        mixStartText.x = 760
+        mixStartText.y = 600
+
+        mixStartBtn.onPress.connect(() => {
+            history.push("/mix2");
+        });
+
+        background.addChild(mixStartBtn); // profileBox.addChild(mixStartBtn);이었는데  profileBox.removeChild(lastAddedAnimal);항아리 클릭하면 제거하는 함수와 profileBox가 겹쳐서 그런지 합성하기 버튼도 삭제되길래 -> background로 바꿈..
+
 
         // Cleanup on component unmount
         return () => {
@@ -250,7 +318,13 @@ const   Mix = () => {
         };
     }, []);
 
-    return <div ref={canvasRef} className="outlet-container"></div>;
+
+
+
+    return (
+        <div ref={canvasRef} className="outlet-container">
+        </div>
+    );
 };
 
 export default Mix;

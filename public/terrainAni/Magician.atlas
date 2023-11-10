@@ -1,0 +1,69 @@
+
+Magician.png
+size: 1056,568
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Body
+  rotate: true
+  xy: 812, 48
+  size: 266, 242
+  orig: 270, 246
+  offset: 2, 2
+  index: -1
+Head
+  rotate: true
+  xy: 2, 186
+  size: 380, 361
+  orig: 382, 364
+  offset: 1, 2
+  index: -1
+LeftArm
+  rotate: true
+  xy: 2, 38
+  size: 80, 190
+  orig: 84, 194
+  offset: 2, 2
+  index: -1
+Light
+  rotate: true
+  xy: 755, 316
+  size: 250, 289
+  orig: 252, 292
+  offset: 1, 1
+  index: -1
+Mal1
+  rotate: false
+  xy: 365, 285
+  size: 388, 281
+  orig: 392, 284
+  offset: 2, 2
+  index: -1
+Mal2
+  rotate: false
+  xy: 422, 2
+  size: 388, 281
+  orig: 392, 284
+  offset: 2, 2
+  index: -1
+RightArm
+  rotate: false
+  xy: 348, 59
+  size: 72, 125
+  orig: 76, 127
+  offset: 2, 1
+  index: -1
+RightHand
+  rotate: false
+  xy: 194, 42
+  size: 152, 76
+  orig: 155, 80
+  offset: 1, 2
+  index: -1
+Stick
+  rotate: true
+  xy: 2, 120
+  size: 64, 325
+  orig: 66, 327
+  offset: 1, 1
+  index: -1

@@ -1,3 +1,4 @@
+
 import { Route, Routes } from 'react-router-dom';
 import BattlePage from '../pages/battle/BattlePage';
 import GameTemplate from '../template/GameTemplate';
@@ -25,6 +26,7 @@ import UpGradeResult from '../pixi/upGrade/components/UpGradeResult';
 import UserInfo from '../pages/userInfo/UserInfo';
 import TerrainPage from '../pixi/terrain/TerrainPage';
 import Exchange from '../pixi/Exchange/Exchange';
+
 const MyRoutes = () => {
     return (
         <Routes>
@@ -46,6 +48,7 @@ const MyRoutes = () => {
                 <Route path="/match" element={<Match />} />
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
+
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />

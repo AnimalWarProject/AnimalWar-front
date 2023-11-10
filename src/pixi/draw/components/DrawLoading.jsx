@@ -72,7 +72,7 @@ const DrawLoading = () => {
         randomEggSprite.interactive = true;
         randomEggSprite.buttonMode = true;
         randomEggSprite.on('pointertap', () => {
-            axios.post("http://localhost:8083/api/v1/draw/animal", drawRequest)
+            axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest)
                 .then((response) => {
                     // 결과가 빈 객체로 오는 경우, response.data를 살펴봐야 할 수 있음
                     console.log("loading data : ", response.data);

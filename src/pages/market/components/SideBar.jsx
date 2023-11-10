@@ -37,7 +37,7 @@ const SideBar = () => {
                             <a
                                 href="#"
                                 onClick={toggleNormalClicked}
-                                className={`sidebar-grade-contentBtn${
+                                    className={`sidebar-grade-contentBtn${
                                     normalClicked ? " clicked" : ""
                                 }`}
                             >
