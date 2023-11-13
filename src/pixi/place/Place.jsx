@@ -109,19 +109,14 @@ const Place = ({ userUUID }) => {
     const createTile = (tileData, container, textures, tileSize) => {
         const texture = textures[tileData.landForm];
         const sprite = new PIXI.Sprite(texture);
+        sprite.anchor.set(0.5);
+        const isoX = ((tileData.x - tileData.y) * tileSize.width) / 2;
+        const isoY = ((tileData.x + tileData.y) * tileSize.height) / 4;
+        sprite.x = isoX + container.width / 2;
+        sprite.y = isoY;
 
-        // 45도 기울어진 격자 좌표를 계산합니다.
-        const baseX = tileData.x * tileSize.width;
-        const baseY = tileData.y * tileSize.height;
-        const rotatedX = baseX - baseY;
-        const rotatedY = (baseX + baseY) / 2;
-
-        // 스프라이트 위치를 설정합니다.
-        sprite.x = rotatedX + container.width / 2; // 컨테이너의 중앙을 기준으로 X 위치를 조정합니다.
-        sprite.y = rotatedY; // Y 위치는 수정하지 않습니다.
-
-        // zIndex 설정으로 타일 겹침 순서를 제어합니다.
-        sprite.zIndex = tileData.y; // 더 높은 Y 값이 더 위에 오도록 설정합니다.
+        // 모든 타일에 동일한 zIndex를 설정하여 같은 레벨에 렌더링되도록 함
+        sprite.zIndex = 0; // 이전에는 sprite.zIndex = tileData.y; 였음
 
         container.addChild(sprite);
     };
