@@ -51,7 +51,7 @@
 .search-box {
     display: flex;
     align-items: center;
-    width: 15rem;
+    width: 12rem;
     height: 2rem;
     border: 0.0625rem solid #000;
     border-radius: 0.25rem;

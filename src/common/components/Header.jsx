@@ -64,7 +64,7 @@ function Header() {
             <img className="logo" src={logoImage} alt="Logo" />
             <div className="header-middle">
                 <div className="menu-buttons">
-                    <NavLink to="/main" activeClassName="active">
+                    <NavLink to="/place" activeClassName="active">
                         홈
                     </NavLink>
                     <NavLink to="/battle" activeClassName="active">
@@ -78,9 +78,6 @@ function Header() {
                     </NavLink>
                     <NavLink to="/upgrade" activeClassName="active">
                         강화
-                    </NavLink>
-                    <NavLink to="/place" activeClassName="active">
-                        배치
                     </NavLink>
                     <NavLink to="/terrain" activeClassName="active">
                         이사
@@ -96,6 +93,9 @@ function Header() {
                     </NavLink>
                     <NavLink to="/board" activeClassName="active">
                         게시판
+                    </NavLink>
+                    <NavLink to="/board" activeClassName="active">
+                        게임소개
                     </NavLink>
                 </div>
 

@@ -11,8 +11,6 @@ import { Assets } from '@pixi/assets';
 import { Spine } from 'pixi-spine';
 import '@pixi-spine/loader-3.8';
 
-import './css/Terrain.css';
-
 const Terrain = () => {
     const canvasRef = useRef(null);
     const magicianRef = useRef(null);

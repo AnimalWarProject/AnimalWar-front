@@ -23,7 +23,7 @@ const LoginPage = () => {
             });
             if (response.data && response.data.accessToken && response.data.refreshToken) {
                 localStorage.setItem('accessToken', response.data.accessToken);
-                navigate('/home');
+                navigate('/place');
             } else {
                 toast.error('아이디 또는 비밀번호를 다시 확인해주세요');
             }

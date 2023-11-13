@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import * as PIXI from "pixi.js";
-import {ScrollBox} from "@pixi/ui";
-import {Container, Graphics} from "pixi.js";
+import * as PIXI from 'pixi.js';
+import { ScrollBox } from '@pixi/ui';
+import { Container, Graphics } from 'pixi.js';
 import Transparency from '../imgs/Transparency.png';
 
 // 공격형 스킬 이미지
@@ -38,13 +38,12 @@ const Battle = () => {
     let testArr1 = [];
     let testArr2 = [];
 
-
     // 기본 배경크기 설정
     useEffect(() => {
         const app = new PIXI.Application({
             width: 960,
             height: 640,
-            transparent: true
+            transparent: true,
         });
         pixiContainer.current.appendChild(app.view);
 
@@ -69,7 +68,7 @@ const Battle = () => {
                 fill: 0x0f1828,
                 align: 'center',
                 fontWeight: 'normal',
-                fontFamily: 'Arial'
+                fontFamily: 'Arial',
             });
             message.anchor.set(0.5);
             message.x = x;
@@ -92,7 +91,6 @@ const Battle = () => {
         const bigBoxContainer2 = new PIXI.Container();
         app.stage.addChild(bigBoxContainer2);
 
-
         // 공격형 스킬 큰박스
         const bigBox = new PIXI.Graphics();
         bigBox.beginFill(0xffffff, 0.5);
@@ -102,7 +100,6 @@ const Battle = () => {
         bigBox.drawRoundedRect(34, 130, bigBoxWidth, bigBoxHeight, cornerRadius);
         bigBox.endFill();
         bigBoxContainer.addChild(bigBox);
-
 
         // 수비형 스킬 큰박스
         const bigBox1 = new PIXI.Graphics();
@@ -114,8 +111,6 @@ const Battle = () => {
         bigBox1.endFill();
         bigBoxContainer1.addChild(bigBox1);
 
-
-
         // 유틸형 스킬 큰박스
         const bigBox2 = new PIXI.Graphics();
         bigBox2.beginFill(0xffffff, 0.5);
@@ -125,7 +120,6 @@ const Battle = () => {
         bigBox2.drawRoundedRect(653, 130, bigBoxWidth2, bigBoxHeight2, cornerRadius2);
         bigBox2.endFill();
         bigBoxContainer2.addChild(bigBox2);
-
 
         // 공격형 스킬들 설정
         const addAttackSkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha) => {
@@ -151,7 +145,8 @@ const Battle = () => {
                 if (clickedContainer && clickedContainer !== container) {
                     // 이전 클릭된 컨테이너가 있으면 테두리 색을 원래대로 되돌림
                     clickedContainer.children[0].clear();
-                    clickedContainer.children[0].lineStyle(0)
+                    clickedContainer.children[0]
+                        .lineStyle(0)
                         .beginFill(boxColor, alpha)
                         .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox)
                         .endFill();
@@ -160,7 +155,8 @@ const Battle = () => {
                 if (clickedContainer === container) {
                     // 클릭된 컨테이너가 이미 저장된 컨테이너인 경우 클릭 해제
                     container.children[0].clear();
-                    container.children[0].lineStyle(0)
+                    container.children[0]
+                        .lineStyle(0)
                         .beginFill(boxColor, alpha)
                         .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox)
                         .endFill();
@@ -168,7 +164,8 @@ const Battle = () => {
                 } else {
                     // 클릭된 컨테이너의 테두리 색을 변경
                     const borderColor = '#000000'; // 변경하고자 하는 테두리 색
-                    container.children[0].clear()
+                    container.children[0]
+                        .clear()
                         .lineStyle(4, borderColor)
                         .beginFill(boxColor, alpha)
                         .drawRoundedRect(3, 13, 243, 95, cornerRadiusBox)
@@ -176,7 +173,8 @@ const Battle = () => {
                     if (clickedContainer) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer.children[0].clear();
-                        clickedContainer.children[0].lineStyle(0)
+                        clickedContainer.children[0]
+                            .lineStyle(0)
                             .beginFill(boxColor, alpha)
                             .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox)
                             .endFill();
@@ -186,7 +184,6 @@ const Battle = () => {
             };
 
             container.on('click', handleClick);
-
 
             // 공격형 스킬사진 크기 및 위치
             if (imageUrl) {
@@ -204,13 +201,12 @@ const Battle = () => {
                 fill: 0x0f1828,
                 align: 'justify',
                 fontWeight: 'bolder',
-                fontFamily: 'Arial'
+                fontFamily: 'Arial',
             });
             nameText.anchor.set(0, 0.5);
             nameText.x = 70;
             nameText.y = 44;
             box.addChild(nameText);
-
 
             // 공격형 스킬 설명 조정
             const descriptionText = new PIXI.Text(skillDescription, {
@@ -220,8 +216,8 @@ const Battle = () => {
                 fontFamily: 'Arial',
                 fontWeight: 'bold',
                 wordWrap: true,
-                wordWrapWidth: 180,// 너비 조정을 위한 속성
-                lineHeight: 16
+                wordWrapWidth: 180, // 너비 조정을 위한 속성
+                lineHeight: 16,
             });
             descriptionText.anchor.set(0, 0.5);
             descriptionText.x = 70;
@@ -229,9 +225,8 @@ const Battle = () => {
             box.addChild(descriptionText);
 
             testArr.push(container);
-
         };
-        
+
         // 수비형 스킬들 설정
         const addDefenseSkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha, x, y) => {
             const container1 = new PIXI.Graphics();
@@ -256,7 +251,8 @@ const Battle = () => {
                 if (clickedContainer1 && clickedContainer1 !== container1) {
                     // 이전 클릭된 컨테이너가 있으면 테두리 색을 원래대로 되돌림
                     clickedContainer1.children[0].clear();
-                    clickedContainer1.children[0].lineStyle(0)
+                    clickedContainer1.children[0]
+                        .lineStyle(0)
                         .beginFill(boxColor1, alpha1)
                         .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
                         .endFill();
@@ -265,7 +261,8 @@ const Battle = () => {
                 if (clickedContainer1 === container1) {
                     // 클릭된 컨테이너가 이미 저장된 컨테이너인 경우 클릭 해제
                     container1.children[0].clear();
-                    container1.children[0].lineStyle(0)
+                    container1.children[0]
+                        .lineStyle(0)
                         .beginFill(boxColor1, alpha1)
                         .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
                         .endFill();
@@ -273,7 +270,8 @@ const Battle = () => {
                 } else {
                     // 클릭된 컨테이너의 테두리 색을 변경
                     const borderColor1 = '#000000'; // 변경하고자 하는 테두리 색
-                    container1.children[0].clear()
+                    container1.children[0]
+                        .clear()
                         .lineStyle(4, borderColor1)
                         .beginFill(boxColor1, alpha1)
                         .drawRoundedRect(3, 13, 243, 95, cornerRadiusBox1)
@@ -281,7 +279,8 @@ const Battle = () => {
                     if (clickedContainer1) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer1.children[0].clear();
-                        clickedContainer1.children[0].lineStyle(0)
+                        clickedContainer1.children[0]
+                            .lineStyle(0)
                             .beginFill(boxColor1, alpha1)
                             .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
                             .endFill();
@@ -291,7 +290,6 @@ const Battle = () => {
             };
 
             container1.on('click', handleClick1);
-
 
             // 수비형 스킬사진 크기 및 위치
             if (imageUrl) {
@@ -309,13 +307,12 @@ const Battle = () => {
                 fill: 0x0f1828,
                 align: 'justify',
                 fontWeight: 'bolder',
-                fontFamily: 'Arial'
+                fontFamily: 'Arial',
             });
             nameText1.anchor.set(0, 0.5);
             nameText1.x = 70;
             nameText1.y = 44;
             box1.addChild(nameText1);
-
 
             // 수비형 스킬 설명 조정
             const descriptionText1 = new PIXI.Text(skillDescription, {
@@ -325,8 +322,8 @@ const Battle = () => {
                 fontFamily: 'Arial',
                 fontWeight: 'bold',
                 wordWrap: true,
-                wordWrapWidth: 180,// 너비 조정을 위한 속성
-                lineHeight: 16
+                wordWrapWidth: 180, // 너비 조정을 위한 속성
+                lineHeight: 16,
             });
             descriptionText1.anchor.set(0, 0.5);
             descriptionText1.x = 70;
@@ -334,7 +331,6 @@ const Battle = () => {
             box1.addChild(descriptionText1);
 
             testArr1.push(container1);
-
         };
 
         // 유틸형 스킬들 설정
@@ -361,7 +357,8 @@ const Battle = () => {
                 if (clickedContainer2 && clickedContainer2 !== container2) {
                     // 이전 클릭된 컨테이너가 있으면 테두리 색을 원래대로 되돌림
                     clickedContainer2.children[0].clear();
-                    clickedContainer2.children[0].lineStyle(0)
+                    clickedContainer2.children[0]
+                        .lineStyle(0)
                         .beginFill(boxColor2, alpha2)
                         .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
                         .endFill();
@@ -370,7 +367,8 @@ const Battle = () => {
                 if (clickedContainer2 === container2) {
                     // 클릭된 컨테이너가 이미 저장된 컨테이너인 경우 클릭 해제
                     container2.children[0].clear();
-                    container2.children[0].lineStyle(0)
+                    container2.children[0]
+                        .lineStyle(0)
                         .beginFill(boxColor2, alpha2)
                         .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
                         .endFill();
@@ -378,7 +376,8 @@ const Battle = () => {
                 } else {
                     // 클릭된 컨테이너의 테두리 색을 변경
                     const borderColor2 = '#000000'; // 변경하고자 하는 테두리 색
-                    container2.children[0].clear()
+                    container2.children[0]
+                        .clear()
                         .lineStyle(4, borderColor2)
                         .beginFill(boxColor2, alpha2)
                         .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
@@ -386,7 +385,8 @@ const Battle = () => {
                     if (clickedContainer2) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer2.children[0].clear();
-                        clickedContainer2.children[0].lineStyle(0)
+                        clickedContainer2.children[0]
+                            .lineStyle(0)
                             .beginFill(boxColor2, alpha2)
                             .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
                             .endFill();
@@ -396,7 +396,6 @@ const Battle = () => {
             };
 
             container2.on('click', handleClick2);
-
 
             // 유틸형 스킬사진 크기 및 위치
             if (imageUrl) {
@@ -414,13 +413,12 @@ const Battle = () => {
                 fill: 0x0f1828,
                 align: 'justify',
                 fontWeight: 'bolder',
-                fontFamily: 'Arial'
+                fontFamily: 'Arial',
             });
             nameText2.anchor.set(0, 0.5);
             nameText2.x = 70;
             nameText2.y = 44;
             box2.addChild(nameText2);
-
 
             // 유틸형 스킬 설명 조정
             const descriptionText2 = new PIXI.Text(skillDescription, {
@@ -430,8 +428,8 @@ const Battle = () => {
                 fontFamily: 'Arial',
                 fontWeight: 'bold',
                 wordWrap: true,
-                wordWrapWidth: 180,// 너비 조정을 위한 속성
-                lineHeight: 16
+                wordWrapWidth: 180, // 너비 조정을 위한 속성
+                lineHeight: 16,
             });
             descriptionText2.anchor.set(0, 0.5);
             descriptionText2.x = 70;
@@ -439,122 +437,31 @@ const Battle = () => {
             box2.addChild(descriptionText2);
 
             testArr2.push(container2);
-
         };
-        
+
         // 공격형 박스
-        addAttackSkillBox(
-            berserkerImage,
-            '버서커',
-            '자신의 체력이 20% 이하, 기본공격 3.5배 데미지 변경',
-            '#FFFFFF'
-        );
-        addAttackSkillBox(
-            bombDropImage,
-            '폭탄 투하',
-            '상대방 현재 체력의 20%에 해당하는 데미지',
-            '#FFFFFF'
-        );
-        addAttackSkillBox(
-            ExecutionImage,
-            '처형',
-            '5회의 공격이내 상대방,       체력 10%이하라면 처형',
-            '#FFFFFF'
-        );
-        addAttackSkillBox(
-            hiddenAceImage,
-            '비장의 한발',
-            '상대방보다 체력이 적다면 기본공격 5배의 피해',
-            '#FFFFFF'
-        );
-        addAttackSkillBox(
-            poisonImage,
-            '독약',
-            '상대방 최대 체력의 5%에 해당하는 데미지를 가함',
-            '#FFFFFF'
-        );
-        addAttackSkillBox(
-            speedRunImage,
-            '빨리감기',
-            '상대방과 나의 현재 체력을 각각 25% 감소',
-            '#FFFFFF'
-        );
-        addAttackSkillBox(
-            '',
-            '',
-            '',
-            null,
-            0
-        );
+        addAttackSkillBox(berserkerImage, '버서커', '자신의 체력이 20% 이하, 기본공격 3.5배 데미지 변경', '#FFFFFF');
+        addAttackSkillBox(bombDropImage, '폭탄 투하', '상대방 현재 체력의 20%에 해당하는 데미지', '#FFFFFF');
+        addAttackSkillBox(ExecutionImage, '처형', '5회의 공격이내 상대방,       체력 10%이하라면 처형', '#FFFFFF');
+        addAttackSkillBox(hiddenAceImage, '비장의 한발', '상대방보다 체력이 적다면 기본공격 5배의 피해', '#FFFFFF');
+        addAttackSkillBox(poisonImage, '독약', '상대방 최대 체력의 5%에 해당하는 데미지를 가함', '#FFFFFF');
+        addAttackSkillBox(speedRunImage, '빨리감기', '상대방과 나의 현재 체력을 각각 25% 감소', '#FFFFFF');
+        addAttackSkillBox('', '', '', null, 0);
 
-        
-        
         // 수비형 박스
-        addDefenseSkillBox(
-            EmergencyFood,
-            '비상식량',
-            '최대 체력의 20%에             해당하는 양을 회복',
-            '#FFFFFF'
-        );
-        addDefenseSkillBox(
-            Heal,
-            '회복',
-            '잃은 체력의 30%에            해당하는 양을 회복',
-            '#FFFFFF'
-        );
-        addDefenseSkillBox(
-            IronCladDefense,
-            '철통방어',
-            '상대방의 기본공격을             3회 동안 무효화',
-            '#FFFFFF'
-        );
-        addDefenseSkillBox(
-            LuckySeven,
-            '럭키 7',
-            '현재 체력이 77% 이상일 때, 상대 기본공격을 7회 무효화',
-            '#FFFFFF'
-        );
-        addDefenseSkillBox(
-            RustedSword,
-            '녹슨 방패',
-            '상대방의 모든 유형의        데미지를 10%만큼 감소',
-            '#FFFFFF'
-        );
+        addDefenseSkillBox(EmergencyFood, '비상식량', '최대 체력의 20%에             해당하는 양을 회복', '#FFFFFF');
+        addDefenseSkillBox(Heal, '회복', '잃은 체력의 30%에            해당하는 양을 회복', '#FFFFFF');
+        addDefenseSkillBox(IronCladDefense, '철통방어', '상대방의 기본공격을             3회 동안 무효화', '#FFFFFF');
+        addDefenseSkillBox(LuckySeven, '럭키 7', '현재 체력이 77% 이상일 때, 상대 기본공격을 7회 무효화', '#FFFFFF');
+        addDefenseSkillBox(RustedSword, '녹슨 방패', '상대방의 모든 유형의        데미지를 10%만큼 감소', '#FFFFFF');
 
-        addDefenseSkillBox(
-            Bandaging,
-            '붕대 감기',
-            '3턴 동안, 받은 데미지의         7% 만큼의 체력을 회복',
-            '#FFFFFF'
-        );
-        addDefenseSkillBox(
-            Transparency,
-            '',
-            '',
-            null,
-            0
-        );
-
+        addDefenseSkillBox(Bandaging, '붕대 감기', '3턴 동안, 받은 데미지의         7% 만큼의 체력을 회복', '#FFFFFF');
+        addDefenseSkillBox(Transparency, '', '', null, 0);
 
         // 유틸형 스킬
-        addUtilitySkillBox(
-            BrokenSpear,
-            '부러진 창',
-            '상대방 공격형 스킬 금지',
-            '#FFFFFF'
-        );
-        addUtilitySkillBox(
-            BrokenShield,
-            '부러진 방패',
-            '상대방 방어형 스킬 금지',
-            '#FFFFFF'
-        );
-        addUtilitySkillBox(
-            DoItAgain,
-            '다시하기',
-            '공격자, 수비자',
-            '#FFFFFF'
-        );
+        addUtilitySkillBox(BrokenSpear, '부러진 창', '상대방 공격형 스킬 금지', '#FFFFFF');
+        addUtilitySkillBox(BrokenShield, '부러진 방패', '상대방 방어형 스킬 금지', '#FFFFFF');
+        addUtilitySkillBox(DoItAgain, '다시하기', '공격자, 수비자', '#FFFFFF');
         addUtilitySkillBox(
             OffenseDefenseShift,
             '공수교대',
@@ -564,30 +471,18 @@ const Battle = () => {
         addUtilitySkillBox(
             StrongAndWeak,
             '강약약강',
-            '나체력>상대체력: 공방 10%↑\n' +
-            '나체력<상대체력: 공방 10%↓',
+            '나체력>상대체력: 공방 10%↑\n' + '나체력<상대체력: 공방 10%↓',
             '#FFFFFF'
         );
-        addUtilitySkillBox(
-            Swap,
-            '다시하기',
-            '상대방과 나의 체력 교체,     나의 현재 체력의 10% 감소',
-            '#FFFFFF'
-        );
-        addUtilitySkillBox(
-            '',
-            '   ',
-            '   ',
-            null,
-            0
-        );
+        addUtilitySkillBox(Swap, '다시하기', '상대방과 나의 체력 교체,     나의 현재 체력의 10% 감소', '#FFFFFF');
+        addUtilitySkillBox('', '   ', '   ', null, 0);
 
         // 공격형 스킬 스크롤
         const scBox = new ScrollBox({
             width: 254,
             height: 480,
             items: testArr,
-            radius : 0,
+            radius: 0,
             elementsMargin: 20,
         });
         scBox.x = 50; // x 좌표
@@ -599,34 +494,28 @@ const Battle = () => {
             width: 310,
             height: 480,
             items: testArr1,
-            radius : 0,
-            elementsMargin: 20
+            radius: 0,
+            elementsMargin: 20,
         });
         bigBoxContainer1.addChild(scBox1);
 
-        scBox1.x = 360 // x 좌표
+        scBox1.x = 360; // x 좌표
         scBox1.y = 140; // y 좌표
-
 
         // 유틸형 스킬 스크롤
         const scBox2 = new ScrollBox({
             width: 254,
             height: 480,
             items: testArr2,
-            radius : 0,
+            radius: 0,
             elementsMargin: 20,
         });
         scBox2.x = 670; // x 좌표
         scBox2.y = 134; // y 좌표
         bigBoxContainer2.addChild(scBox2);
-
-
-
-
-
     }, []);
 
-    return <div ref={pixiContainer} />;
+    return <div ref={pixiContainer} className="outlet-container"></div>;
 };
 
 export default Battle;

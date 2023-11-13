@@ -19,6 +19,7 @@ const Chatting = () => {
     const [stompClient, setStompClient] = useState(null);
     const [greetings, setGreetings] = useState([]);
     const [userColor, serUserColor] = useState('yellow');
+    const scrollRef = useRef();
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
@@ -112,6 +113,10 @@ const Chatting = () => {
         if (e.key === 'Enter') {
             sendName();
             setInputText('');
+            // scrollRef.current가 현재 컨테이너의 DOM 요소를 가리키고 있다고 가정합니다.
+            const container = scrollRef.current;
+            // 스크롤을 가장 아래로 내리기
+            container.scrollTop = container.scrollHeight;
         }
     };
 
@@ -119,15 +124,17 @@ const Chatting = () => {
         <section className={classes.Wrap} ref={wrapRef}>
             <div className={classes.box}>
                 <div className={classes.title}>CHATTING</div>
-                <div className={classes.message} style={messageStyle}>
+                <div ref={scrollRef} className={classes.message} style={messageStyle}>
                     <div className={classes.message_title}>GOOD CHATTING PLZ!</div>
 
                     {greetings.map((item, idx) => (
                         <div key={idx} className={classes.message_container}>
-                            <img className={classes.profileImg} src={profileImage} />
-                            <div className={classes.profileNickname} style={{ color: getRandomColor(nickName) }}>
-                                {item.nickname}
-                            </div>
+                            <img
+                                style={{ width: '50px', height: '50px' }}
+                                className={classes.profileImg}
+                                src={profileImage}
+                            />
+                            <div className={classes.profileNickname}>{item.nickname}</div>
                             <div className={classes.messageRecord}>{item.message}</div>
                         </div>
                     ))}
