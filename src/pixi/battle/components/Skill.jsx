@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import * as PIXI from "pixi.js";
 import Transparency from '../imgs/Transparency.png';
 import backgroundImage from '../imgs/Rectangle 12290.png';
+import {CustomScrollBox} from "./CustomScollBox";
 
 // 공격형 스킬 이미지
 import berserkerImage from '../imgs/Berserker.png';
@@ -26,7 +27,6 @@ import DoItAgain from '../imgs/DoItAgain.webp';
 import OffenseDefenseShift from '../imgs/OffenseDefenseShift.webp';
 import StrongAndWeak from '../imgs/StrongAndWeak.webp';
 import Swap from '../imgs/Swap.webp';
-import {CustomScrollBox} from "./CustomScollBox";
 
 
 const Skill = () => {
