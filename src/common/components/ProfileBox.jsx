@@ -102,9 +102,9 @@ const ProfileBox = () => {
             <div className="rate-item">
                 <img src={icons.Rate} alt="ratePerHour" />
                 <span>시간당 자원생산량</span>
-                <span>식량: {profile.food}</span>
-                <span>철: {profile.iron}</span>
-                <span>나무: {profile.wood}</span>
+                <span>식량: {profile.totalFoodRate}</span>
+                <span>철: {profile.totalIronRate}</span>
+                <span>나무: {profile.totalWoodRate}</span>
             </div>
         </div>
     );
