@@ -19,9 +19,6 @@ const Exchange = () => {
     const canvasWidth = 960;
     const canvasHeight = 640;
 
-    //데이터 받아오기
-    const [userData, setUserData] = useState([]);
-
     const [wood, setWood] = useState();
     const [iron, setIron] = useState();
     const [food, setFood] = useState();
@@ -48,18 +45,16 @@ const Exchange = () => {
         }
     };
 
-    const postExchange = async () =>
-        await axios
-            .post(
-                `http://localhost:8000/api/v1/exchange`,
-                {},
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                }
-            )
-            .then((response) => {});
+    const postExchange = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: user } = await api('/api/v1/exchange', 'POST', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+        }
+    }
 
     useEffect(() => {
         if (!isDataLoaded) {
@@ -68,7 +63,7 @@ const Exchange = () => {
     }, [isDataLoaded]);
 
     useEffect(() => {
-        if (isDataLoaded && canvasRef.current) {
+        if (isDataLoaded) {
             const app = new PIXI.Application({
                 width: canvasWidth,
                 height: canvasHeight,
@@ -268,6 +263,9 @@ const Exchange = () => {
                     // postExchange 요청이 성공적으로 완료된 후에 실행할 로직을 여기에 추가합니다.
                     console.log('postExchange 요청이 완료되었습니다.');
 
+
+
+
                     count++;
 
                     const newWood = wood - count * 2000;
@@ -277,10 +275,17 @@ const Exchange = () => {
 
                     const newGold = gold + count * 1000;
 
+
+                    if (newWood < 0 || newIron < 0 || newFood < 0) {
+                        throw new Error('에러');
+                    }
+
                     woodText.text = `잔여 목재 :${newWood}`;
                     ironText.text = `잔여 철 :${newIron}`;
                     foodText.text = `잔여 식량 :${newFood}`;
                     goldText.text = `잔여 골드 : ${newGold}`;
+
+
 
                     const starTexture = PIXI.Texture.from(goldImg); // 별 이미지의 경로를 넣어주세요
                     const numberOfStars = 10;
@@ -307,26 +312,16 @@ const Exchange = () => {
                         });
                     }
 
-                    // const text2Style = new PIXI.TextStyle({
-                    //     fill: 0x0F1828,
-                    //     fontSize: 15, // 폰트 크기
-                    //     fontWeight: 'bold',
-                    //     fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
-                    // });
-
-                    // const text2 = new PIXI.Text(`잔여 목재: ${newWood}`, text2Style);
-
-                    // text2.x = 220;
-                    // text2.y = 180;
-                    // app.stage.addChild(text2);
-
-                    // 페이지를 새로 고침할 경우
-
-                    // window.location.reload();
                 } catch (error) {
                     // 요청이 실패한 경우 에러 처리
-                    console.error('postExchange 요청이 실패했습니다.', error);
-                    toast.error('교환 실패 !!  자원이 없습니다');
+                    if (error.response && error.response.status === 400) {
+                        // 400 에러 처리
+                        console.error('postExchange 요청이 실패했습니다. 400 에러 발생', error);
+                        toast.error('교환 실패 !!  자원이 없습니다');
+                    } else {
+                        console.error('postExchange 요청이 실패했습니다.', error);
+                        toast.error('교환 실패 !!  자원이 없습니다');
+                    }
                 }
             });
 
