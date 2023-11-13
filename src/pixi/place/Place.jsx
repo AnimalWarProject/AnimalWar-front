@@ -14,11 +14,9 @@ const Place = ({ userUUID }) => {
         const keys = Object.keys(imagePaths);
 
         const onImageLoaded = (key, texture) => {
-            console.log(`${key} image loaded`); // 로드된 이미지의 로그를 출력합니다.
             textures[key] = texture;
             loadedImages++;
             if (loadedImages === keys.length) {
-                console.log('All images loaded.');
                 callback(textures);
             }
         };
@@ -27,7 +25,6 @@ const Place = ({ userUUID }) => {
             const image = new Image();
             image.src = imagePaths[key];
             image.onload = () => onImageLoaded(key, PIXI.Texture.from(image));
-            console.log(`Loading ${key} image...`); // 이미지 로드가 시작됨을 알리는 로그를 출력합니다.
         });
     };
 
@@ -95,10 +92,6 @@ const Place = ({ userUUID }) => {
                     const newScale = container.scale.x + factor * direction;
                     container.scale.set(newScale, newScale);
                 });
-
-                console.log(`Container position - x: ${container.x}, y: ${container.y}`);
-                console.log(container.getBounds());
-
                 return () => {
                     if (app) app.destroy(true, true);
                 };
