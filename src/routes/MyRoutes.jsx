@@ -26,6 +26,7 @@ import TerrainPage from '../pixi/terrain/TerrainPage';
 import Exchange from '../pixi/Exchange/Exchange';
 import Battle from '../pixi/battle/components/Battle';
 import Place from '../pixi/place/Place';
+import MixTest from "../pixi/Mix/MixTest";
 
 const MyRoutes = () => {
     return (
@@ -42,6 +43,7 @@ const MyRoutes = () => {
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
+                <Route path="/mixTest" element={<MixTest />}></Route>
                 <Route path="/terrain" element={<TerrainPage />} />
                 <Route Path="/exchange" element={<Exchange />} />
                 <Route path="/match" element={<Match />} />
