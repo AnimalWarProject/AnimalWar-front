@@ -26,7 +26,7 @@ import TerrainPage from '../pixi/terrain/TerrainPage';
 import Exchange from '../pixi/Exchange/Exchange';
 import Battle from '../pixi/battle/components/Battle';
 import Place from '../pixi/place/Place';
-import Board from '../pages/board/Board';
+import Board from '../pages/board/components/Board';
 
 const MyRoutes = () => {
     return (
