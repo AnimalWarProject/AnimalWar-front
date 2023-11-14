@@ -11,12 +11,26 @@ import { useHistory } from 'react-router-use-history';
 import { ButtonContainer, ScrollBox } from "@pixi/ui";
 import axios from "axios";
 import {api} from "../../network/api";
+
+import cloudLeopard from './imgs/cloudLeopard.webp'
+import hanbokCat from './imgs/hanbokCat.webp'
+import happyCat from './imgs/happyCat.webp'
+import militaCat from './imgs/militaCat.webp'
+import punchCat from './imgs/punchCat.webp'
+import smokingTiger from './imgs/smokingTiger.webp'
+import whiteTiger from './imgs/whiteTiger.webp'
+
+
 const Mix = () => {
     const canvasRef = useRef(null);
-    const initialAnimal = useState([pig, bird, cat, pig, bird, cat]);
-    const initialCount = useState([1, 2, 3, 1, 2, 3]);
+    const initialAnimal = useState([]);
+    const initialCount = useState([]);
     const [animal, setAnimal] = useState(initialAnimal);
     const [count, setCount] = useState(initialCount);
+
+    // const [animal, setAnimal] = useState([pig, bird, fish, cat]);
+    // const [count, setCount] = useState([1, 2, 3, 4]);
+
     const history = useHistory();
     const grade = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
 
@@ -36,21 +50,22 @@ const Mix = () => {
         //         console.log(err);
         //     });
 
-        // const getAnimalINV = async () => {
-        //     try {
-        //         const accessToken = localStorage.getItem('accessToken');
-        //         const { data: INVData } = await api('/api/v1/inventory/animals', 'GET', null, {
-        //             headers: { Authorization: `Bearer ${accessToken}` },
-        //         });
-        //         console.log(INVData)
-        //         initialAnimal : setAnimal();
-        //         // initialCount :
-        //     } catch (error) {
-        //         console.error('Failed: ', error);
-        //     }
-        // };
-        //
-        // getAnimalINV();
+        const getAnimalINV = async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const { data: INVData } = await api('/api/v1/inventory/animals', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                console.log(INVData)
+                // TODO 인벤토리를 받아와야하는데 imagePath가 없음.. image를 어떻게 받아와야 하나..
+                // initialAnimal : setAnimal();
+                // initialCount :
+            } catch (error) {
+                console.error('Failed: ', error);
+            }
+        };
+
+        getAnimalINV();
 
 
 
@@ -184,12 +199,16 @@ const Mix = () => {
             box.interactive = true;
 
             const clickEventFunction = (e) => {
+                // TODO 없애기
                 if (clickNum > 3) { // 항아리 4개가 선택됐으면 인벤토리의 count가 -1이 되면 안됨.. 그래서 clickNum가 맨 위에 있는 거임
                     return;
                 }
-
-                setCount(prevCount => { // setCount(prevCount=>{prevCount}) 무조건 이전 count를 가져오겠다.
-                    const newCount = [...prevCount];
+                // TODO count로만.. newCount 없애기
+                // TODO i를 사용해서..       count[i] 이부분의 값을 사용하고 변경하고.. 값이 0이면 사용 X
+                //  count는 0보다 작으면 눌리면 안됨
+                // TODO 항아리에 4개가 들어가 있는지 길이를 확인해서 -> poxBox를 만들어서 선택한거 넣어야 할 듯..
+                setCount(count => { // setCount(prevCount=>{prevCount}) 무조건 이전 count를 가져오겠다.
+                    const newCount = [...count]; // TODO 리스트에서 뺴기
 
                     if (newCount[i] > 0) {
                         newCount[i] -= 1;
@@ -241,13 +260,16 @@ const Mix = () => {
                 // TODO: 항아리에 이미지가 제곱으로 늘어남..
                 // profileBox.addChild(selectedAnimalSprite);
 
+
                 // Feat : 항아리에서 동물을 클릭하면
                 mixPotSprite.interactive = true; //  mixPotSprite 객체를 상호작용, 클릭 이벤트를 감지
 
                 mixPotSprite.on('pointertap', () => { // 항아리 (mixPotSprite)를 클릭할 때
                 setAnimal(initialAnimal);
                 setCount(initialCount);
+                console.log(i)
                 countText.text = count[i]; // 초기 count값으로 다시 반영
+
                 clickNum = 0;
                 console.log("-----------------------삭제 전 : " + selectedAnimalSprite)
                 profileBox.removeChild(selectedAnimalSprite);
