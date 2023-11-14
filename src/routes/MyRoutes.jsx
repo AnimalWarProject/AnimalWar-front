@@ -26,6 +26,7 @@ import TerrainPage from '../pixi/terrain/TerrainPage';
 import Exchange from '../pixi/Exchange/Exchange';
 import Skill from "../pixi/battle/components/Skill";
 import Battle from "../pixi/battle/components/Battle";
+import GameResult from "../pixi/battle/components/GameResult";
 
 const MyRoutes = () => {
     return (
@@ -49,6 +50,7 @@ const MyRoutes = () => {
                 <Route path="/match3" element={<MatchComplete />} />
                 <Route path="/battle" element={<Skill />}></Route>
                 <Route path="/battle1" element={<Battle />}></Route>
+                <Route path="/battle2" element={<GameResult />}></Route>
                 <Route path="/exchange" element={<Exchange />}></Route>
             </Route>
             <Route element={<BasicTemplate />}>

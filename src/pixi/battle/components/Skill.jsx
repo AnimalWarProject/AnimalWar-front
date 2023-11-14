@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import Transparency from '../imgs/Transparency.png';
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import {CustomScrollBox} from "./CustomScollBox";
+import { gsap } from 'gsap';  // GSAP import 추가
 
 // 공격형 스킬 이미지
 import berserkerImage from '../imgs/Berserker.png';
@@ -54,31 +55,53 @@ const Skill = () => {
         background.height = app.screen.height;
         app.stage.addChild(background);
 
+
+
         // 유형별 스킬 크기 및 위치 조정
-        const addRoundedText = (text, x, y, width, height, cornerRadius, color) => {
+        const addRoundedText = (text, x, y, width, height, cornerRadius, fontSize, fontWeight) => {
             const graphics = new PIXI.Graphics();
             graphics.lineStyle(0);
             graphics.beginFill('#FFC000');
-            graphics.drawRoundedRect(x - width / 2, y - height / 2, width, height, cornerRadius);
+            graphics.drawRoundedRect(x , y, width, height, cornerRadius);
             graphics.endFill();
             app.stage.addChild(graphics);
 
             // 글꼴
             const message = new PIXI.Text(text, {
-                fontSize: 27,
+                fontSize: fontSize || 27,
+                fontWeight: fontWeight || 'normal',
                 fill: 0x0f1828,
                 align: 'center',
-                fontWeight: 'normal',
                 fontFamily: 'Arial'
             });
             message.anchor.set(0.5);
-            message.x = x;
-            message.y = y;
+            message.x = x + width / 2;
+            message.y = y + height/ 2;
             app.stage.addChild(message);
+
+
+            const handleClick0 = () => {
+                console.log(`${text}이(가) 클릭되었습니다.`);
+
+                if (text === '전투 시작') {
+                    // '전투 시작'이 클릭된 경우 리다이렉션 수행
+                    gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
+                            window.location.href = 'http://localhost:3000/battle1';
+                        } });
+                }
+            };
+            graphics.interactive = true;
+            graphics.buttonMode = true;
+            graphics.on('click', handleClick0);
+
         };
-        addRoundedText('공격형 스킬', app.renderer.width / 5.5, app.renderer.height / 9, 277, 70, 5, 0x0f1828);
-        addRoundedText('수비형 스킬', app.renderer.width / 1.99, app.renderer.height / 9, 277, 70, 5, 0x0f1828);
-        addRoundedText('유틸형 스킬', app.renderer.width / 1.215, app.renderer.height / 9, 277, 70, 5, 0x0f1828);
+        addRoundedText('공격형 스킬', 34, 15, 277, 65, 5);
+        addRoundedText('수비형 스킬',  340, 15, 277, 65, 5);
+        addRoundedText('유틸형 스킬', 653, 15, 277, 65, 5);
+        addRoundedText('전투 시작',  800, 590, 126, 39, 20, 18, 'bold');
+
+
+
 
         // 공격형 스킬 큰 박스를 담을 컨테이너
         const bigBoxContainer = new PIXI.Container();
@@ -99,7 +122,7 @@ const Skill = () => {
         const bigBoxWidth = 277;
         const bigBoxHeight = 490;
         const cornerRadius = 5;
-        bigBox.drawRoundedRect(34, 130, bigBoxWidth, bigBoxHeight, cornerRadius);
+        bigBox.drawRoundedRect(34, 90, bigBoxWidth, bigBoxHeight, cornerRadius);
         bigBox.endFill();
         bigBoxContainer.addChild(bigBox);
 
@@ -110,10 +133,9 @@ const Skill = () => {
         const bigBoxWidth1 = 277;
         const bigBoxHeight1 = 490;
         const cornerRadius1 = 5;
-        bigBox1.drawRoundedRect(343, 130, bigBoxWidth1, bigBoxHeight1, cornerRadius1);
+        bigBox1.drawRoundedRect(343, 90, bigBoxWidth1, bigBoxHeight1, cornerRadius1);
         bigBox1.endFill();
         bigBoxContainer1.addChild(bigBox1);
-
 
 
         // 유틸형 스킬 큰박스
@@ -122,7 +144,7 @@ const Skill = () => {
         const bigBoxWidth2 = 277;
         const bigBoxHeight2 = 490;
         const cornerRadius2 = 5;
-        bigBox2.drawRoundedRect(653, 130, bigBoxWidth2, bigBoxHeight2, cornerRadius2);
+        bigBox2.drawRoundedRect(653, 90, bigBoxWidth2, bigBoxHeight2, cornerRadius2);
         bigBox2.endFill();
         bigBoxContainer2.addChild(bigBox2);
 
@@ -135,9 +157,9 @@ const Skill = () => {
 
             // 공격형 스킬 박스 위치 및 크기
             const box = new PIXI.Graphics();
-            const cornerRadiusBox = 5; // 모서리 반경을 조정할 수 있습니다
+            const cornerRadiusBox = 5;
             box.beginFill(boxColor, alpha);
-            box.drawRoundedRect(0, 13, 243, 95, cornerRadiusBox);
+            box.drawRoundedRect(0, 10, 243, 95, cornerRadiusBox);
             box.endFill();
             container.addChild(box);
 
@@ -153,7 +175,7 @@ const Skill = () => {
                     clickedContainer.children[0].clear();
                     clickedContainer.children[0].lineStyle(0)
                         .beginFill(boxColor, alpha)
-                        .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox)
+                        .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
                         .endFill();
                 }
 
@@ -162,7 +184,7 @@ const Skill = () => {
                     container.children[0].clear();
                     container.children[0].lineStyle(0)
                         .beginFill(boxColor, alpha)
-                        .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox)
+                        .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
                         .endFill();
                     clickedContainer = null;
                 } else {
@@ -171,14 +193,14 @@ const Skill = () => {
                     container.children[0].clear()
                         .lineStyle(4, borderColor)
                         .beginFill(boxColor, alpha)
-                        .drawRoundedRect(3, 13, 243, 95, cornerRadiusBox)
+                        .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
                         .endFill();
                     if (clickedContainer) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer.children[0].clear();
                         clickedContainer.children[0].lineStyle(0)
                             .beginFill(boxColor, alpha)
-                            .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox)
+                            .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
                             .endFill();
                     }
                     clickedContainer = container;
@@ -194,7 +216,7 @@ const Skill = () => {
                 image.width = 65;
                 image.height = 65;
                 image.x = 4;
-                image.y = 30;
+                image.y = 25;
                 box.addChild(image);
             }
 
@@ -208,7 +230,7 @@ const Skill = () => {
             });
             nameText.anchor.set(0, 0.5);
             nameText.x = 70;
-            nameText.y = 44;
+            nameText.y = 40;
             box.addChild(nameText);
 
 
@@ -225,7 +247,7 @@ const Skill = () => {
             });
             descriptionText.anchor.set(0, 0.5);
             descriptionText.x = 70;
-            descriptionText.y = 74;
+            descriptionText.y = 70;
             box.addChild(descriptionText);
 
             testArr.push(container);
@@ -242,9 +264,19 @@ const Skill = () => {
             const box1 = new PIXI.Graphics();
             const cornerRadiusBox1 = 5; // 모서리 반경을 조정할 수 있습니다
             box1.beginFill(boxColor, alpha);
-            box1.drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1);
+            box1.drawRoundedRect(0, 10, 243, 95, cornerRadiusBox1);
             box1.endFill();
             container1.addChild(box1);
+
+            // 마스크 생성
+            const mask1 = new PIXI.Graphics();
+            mask1.beginFill(0xffffff); // 마스크 색상은 투명하게
+            mask1.drawRect(0, 0, 244, 120);
+            mask1.endFill();
+            container1.addChild(mask1);
+
+            // 마스크 설정
+            container1.mask = mask1;
 
             // 수비형 스킬 클릭 이벤트 핸들링 함수
             const handleClick1 = () => {
@@ -258,7 +290,7 @@ const Skill = () => {
                     clickedContainer1.children[0].clear();
                     clickedContainer1.children[0].lineStyle(0)
                         .beginFill(boxColor1, alpha1)
-                        .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
+                        .drawRoundedRect(0, 6, 243, 95, cornerRadiusBox1)
                         .endFill();
                 }
 
@@ -267,7 +299,7 @@ const Skill = () => {
                     container1.children[0].clear();
                     container1.children[0].lineStyle(0)
                         .beginFill(boxColor1, alpha1)
-                        .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
+                        .drawRoundedRect(0, 6, 243, 95, cornerRadiusBox1)
                         .endFill();
                     clickedContainer1 = null;
                 } else {
@@ -276,14 +308,14 @@ const Skill = () => {
                     container1.children[0].clear()
                         .lineStyle(4, borderColor1)
                         .beginFill(boxColor1, alpha1)
-                        .drawRoundedRect(3, 13, 243, 95, cornerRadiusBox1)
+                        .drawRoundedRect(0, 6, 243, 95, cornerRadiusBox1)
                         .endFill();
                     if (clickedContainer1) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer1.children[0].clear();
                         clickedContainer1.children[0].lineStyle(0)
                             .beginFill(boxColor1, alpha1)
-                            .drawRoundedRect(0, 13, 243, 95, cornerRadiusBox1)
+                            .drawRoundedRect(0, 6, 243, 95, cornerRadiusBox1)
                             .endFill();
                     }
                     clickedContainer1 = container1;
@@ -299,7 +331,7 @@ const Skill = () => {
                 image1.width = 65;
                 image1.height = 65;
                 image1.x = 4;
-                image1.y = 30;
+                image1.y = 25;
                 box1.addChild(image1);
             }
 
@@ -313,7 +345,7 @@ const Skill = () => {
             });
             nameText1.anchor.set(0, 0.5);
             nameText1.x = 70;
-            nameText1.y = 44;
+            nameText1.y = 40;
             box1.addChild(nameText1);
 
 
@@ -330,7 +362,7 @@ const Skill = () => {
             });
             descriptionText1.anchor.set(0, 0.5);
             descriptionText1.x = 70;
-            descriptionText1.y = 74;
+            descriptionText1.y = 70;
             box1.addChild(descriptionText1);
 
             testArr1.push(container1);
@@ -347,7 +379,7 @@ const Skill = () => {
             const box2 = new PIXI.Graphics();
             const cornerRadiusBox2 = 5; // 모서리 반경을 조정할 수 있습니다
             box2.beginFill(boxColor, alpha);
-            box2.drawRoundedRect(0, 13, 243, 95, cornerRadiusBox2);
+            box2.drawRoundedRect(0, 10, 243, 95, cornerRadiusBox2);
             box2.endFill();
             container2.addChild(box2);
 
@@ -363,7 +395,7 @@ const Skill = () => {
                     clickedContainer2.children[0].clear();
                     clickedContainer2.children[0].lineStyle(0)
                         .beginFill(boxColor2, alpha2)
-                        .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                        .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox2)
                         .endFill();
                 }
 
@@ -372,7 +404,7 @@ const Skill = () => {
                     container2.children[0].clear();
                     container2.children[0].lineStyle(0)
                         .beginFill(boxColor2, alpha2)
-                        .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                        .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox2)
                         .endFill();
                     clickedContainer2 = null;
                 } else {
@@ -381,14 +413,14 @@ const Skill = () => {
                     container2.children[0].clear()
                         .lineStyle(4, borderColor2)
                         .beginFill(boxColor2, alpha2)
-                        .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                        .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox2)
                         .endFill();
                     if (clickedContainer2) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer2.children[0].clear();
                         clickedContainer2.children[0].lineStyle(0)
                             .beginFill(boxColor2, alpha2)
-                            .drawRoundedRect(1.7, 13, 243, 95, cornerRadiusBox2)
+                            .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox2)
                             .endFill();
                     }
                     clickedContainer2 = container2;
@@ -404,7 +436,7 @@ const Skill = () => {
                 image2.width = 65;
                 image2.height = 65;
                 image2.x = 4;
-                image2.y = 30;
+                image2.y = 25;
                 box2.addChild(image2);
             }
 
@@ -418,7 +450,7 @@ const Skill = () => {
             });
             nameText2.anchor.set(0, 0.5);
             nameText2.x = 70;
-            nameText2.y = 44;
+            nameText2.y = 40;
             box2.addChild(nameText2);
 
 
@@ -435,7 +467,7 @@ const Skill = () => {
             });
             descriptionText2.anchor.set(0, 0.5);
             descriptionText2.x = 70;
-            descriptionText2.y = 74;
+            descriptionText2.y = 70;
             box2.addChild(descriptionText2);
 
             testArr2.push(container2);
@@ -591,7 +623,7 @@ const Skill = () => {
             drag: true,
         }, true);
         scBox.x = 50; // x 좌표
-        scBox.y = 134; // y 좌표
+        scBox.y = 100; // y 좌표
         bigBoxContainer.addChild(scBox);
 
 
@@ -605,7 +637,7 @@ const Skill = () => {
         }, true);
         bigBoxContainer1.addChild(scBox1);
         scBox1.x = 360 // x 좌표
-        scBox1.y = 140; // y 좌표
+        scBox1.y = 100; // y 좌표
 
 
         // 유틸형 스킬 스크롤
@@ -617,10 +649,8 @@ const Skill = () => {
             elementsMargin: 20,
             // disableScrolling: true
         }, true);
-
-
         scBox2.x = 670; // x 좌표
-        scBox2.y = 134; // y 좌표
+        scBox2.y = 100; // y 좌표
         bigBoxContainer2.addChild(scBox2);
 
     }, []);
