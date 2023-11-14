@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 
-axios.defaults.baseURL = 'http://localhost:8000';
+// axios.defaults.baseURL = 'http://192.168.0.44:8000';
+axios.defaults.baseURL = 'http://localhost:8000/';
+
 
 export const apiNoToken = async (url, method, data) => {
     try {
