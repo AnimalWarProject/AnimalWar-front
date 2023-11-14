@@ -33,6 +33,7 @@ const MyRoutes = () => {
             <Route element={<GameTemplate />}>
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
+                <Route path="/draw/loading" element={<DrawLoading />} />
                 <Route path="/draw/result" element={<DrawResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
                 <Route path="/mix2" element={<MixStart />}></Route>
