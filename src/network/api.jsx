@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-axios.defaults.baseURL = 'http://192.168.0.44:8000';
-
+// axios.defaults.baseURL = 'http://192.168.0.44:8000';
+axios.defaults.baseURL = 'http://localhost:8000';
 export const apiNoToken = async (url, method, data) => {
     try {
         const body = await axios({
@@ -15,7 +14,6 @@ export const apiNoToken = async (url, method, data) => {
         throw error;
     }
 };
-
 export const api = async (url, method, data) => {
     const accessToken = localStorage.getItem('accessToken');
     try {
@@ -31,11 +29,9 @@ export const api = async (url, method, data) => {
         throw error;
     }
 };
-
 function storeAccessToken(accessToken) {
     localStorage.setItem('accessToken', accessToken);
 }
-
 async function storeNewAccessToken(refreshFunc) {
     const newAccessToken = await refreshFunc();
     if (newAccessToken && newAccessToken.accessToken) {
@@ -44,7 +40,6 @@ async function storeNewAccessToken(refreshFunc) {
         console.error('Failed to refresh the access token');
     }
 }
-
 export async function requestWithAutoRefresh(endpoint, method, data) {
     try {
         const response = await api(endpoint, method, data);
@@ -60,12 +55,10 @@ export async function requestWithAutoRefresh(endpoint, method, data) {
         throw error;
     }
 }
-
 export async function getRefreshTokenFromDB() {
     const response = await api('/api/v1/auth/getRefreshToken', 'GET');
     return response.data.refreshToken;
 }
-
 export async function refreshAccessToken() {
     const refreshToken = await getRefreshTokenFromDB();
     try {
