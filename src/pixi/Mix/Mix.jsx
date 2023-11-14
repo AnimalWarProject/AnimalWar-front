@@ -9,10 +9,12 @@ import mixPot from './imgs/MIXPOT 1.png'
 import mixBackground from './imgs/Rectangle 12348.png'
 import { useHistory } from 'react-router-use-history';
 import { ButtonContainer, ScrollBox } from "@pixi/ui";
+import axios from "axios";
+import {api} from "../../network/api";
 const Mix = () => {
     const canvasRef = useRef(null);
-    const initialAnimal = [pig, bird, fish, cat, pig, bird, fish, cat, pig, bird, fish, cat, pig, bird, fish, cat];
-    const initialCount = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4];
+    const initialAnimal = useState([]);
+    const initialCount = useState([]);
     const [animal, setAnimal] = useState(initialAnimal);
     const [count, setCount] = useState(initialCount);
     const history = useHistory();
@@ -20,6 +22,43 @@ const Mix = () => {
 
 
     useEffect(() => {
+        // axios
+        //     .get('http://localhost:8000/api/v1/inventory/animals', {
+        //         headers: {
+        //             ContentType: 'application/json',
+        //             Authorization: `Bearer ${accessToken}`,
+        //         },
+        //     })
+        //     .then((res) => {
+        //         console.log(res)
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
+
+        // const getAnimalINV = async () => {
+        //     try {
+        //         const accessToken = localStorage.getItem('accessToken');
+        //         const { data: INVData } = await api('/api/v1/inventory/animals', 'GET', null, {
+        //             headers: { Authorization: `Bearer ${accessToken}` },
+        //         });
+        //         console.log(INVData)
+        //         initialAnimal : setAnimal();
+        //         // initialCount :
+        //     } catch (error) {
+        //         console.error('Failed: ', error);
+        //     }
+        // };
+        //
+        // getAnimalINV();
+
+
+
+
+
+
+
+
         const canvasWidth = 960;
         const canvasHeight = 640;
         // 글꼴
@@ -64,6 +103,8 @@ const Mix = () => {
             profileBox.addChild(inventory);
             profileBox.addChild(gradeText);
         }
+
+
 
 
         // 건물/동물 인벤토리
@@ -271,6 +312,9 @@ const Mix = () => {
             app.destroy();
         };
     }, []);
+
+
+
     return (
         <div ref={canvasRef} className="outlet-container">
         </div>

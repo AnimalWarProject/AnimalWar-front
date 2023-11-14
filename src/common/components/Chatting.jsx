@@ -72,7 +72,7 @@ const Chatting = () => {
     // Feat : 메시지 보내기
     const sendName = () => {
         const obj = {
-            nickname: nickName || 'GUEST',
+            nickname: nickName,
             content: inputText,
         };
         stompClient.send('/app/hello', {}, JSON.stringify(obj));
@@ -135,7 +135,7 @@ const Chatting = () => {
                                 src={profileImage}
                             />
                             <div className={classes.profileNickname}>{item.nickname}</div>
-                            <div className={classes.messageRecord} style={{width : '24rem'}}>{item.message}</div>
+                            <div className={classes.messageRecord}>{item.message}</div>
                         </div>
                     ))}
                 </div>
