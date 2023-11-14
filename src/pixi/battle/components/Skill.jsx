@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import Transparency from '../imgs/Transparency.png';
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import {CustomScrollBox} from "./CustomScollBox";
-import { gsap } from 'gsap';  // GSAP import 추가
+import { gsap } from 'gsap';
 
 // 공격형 스킬 이미지
 import berserkerImage from '../imgs/Berserker.png';
@@ -86,7 +86,7 @@ const Skill = () => {
                 if (text === '전투 시작') {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location.href = 'http://localhost:3000/battle1';
+                            window.location = 'http://localhost:3000/battle1';
                         } });
                 }
             };
