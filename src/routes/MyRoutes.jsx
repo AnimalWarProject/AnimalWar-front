@@ -7,7 +7,7 @@ import Match from '../pixi/Match/Match';
 import DrawPage from '../pixi/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
-import Mix from '../pixi/Mix/Mix';
+import MixTest from '../pixi/Mix/MixTest';
 import DrawResult from '../pixi/draw/components/DrawResult';
 import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
@@ -26,6 +26,7 @@ import TerrainPage from '../pixi/terrain/TerrainPage';
 import Exchange from '../pixi/Exchange/Exchange';
 import Battle from '../pixi/battle/components/Battle';
 import Place from '../pixi/place/Place';
+import Mix from "../pixi/Mix/Mix";
 
 const MyRoutes = () => {
     return (
@@ -43,6 +44,7 @@ const MyRoutes = () => {
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />
                 <Route path="/mix" element={<Mix />}></Route>
+                <Route path="/mixTest" element={<Mix />}></Route>
                 <Route path="/terrain" element={<TerrainPage />} />
                 <Route Path="/exchange" element={<Exchange />} />
                 <Route path="/match" element={<Match />} />
