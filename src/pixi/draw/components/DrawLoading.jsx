@@ -95,17 +95,29 @@ const DrawLoading = () => {
             randomEggSprite.y = 300; // 초기 y 위치
             randomEggSprite.interactive = true;
             randomEggSprite.buttonMode = true;
-            randomEggSprite.on('pointertap', () => {
-                // 이 부분에서 drawRequest를 사용하도록 수정합니다.
-                axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest)
-                    .then((response) => {
-                        console.log("loading data : ", response.data);
-                        nav('/draw/result', {state: response.data});
-                    })
-                    .catch((error) => {
-                        console.error("데이터 가져오기 실패: ", error);
-                    });
-            });
+            if (type ==='animal'){
+                randomEggSprite.on('pointertap', () => {
+                    axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest)
+                        .then((response) => {
+                            console.log("loading data : ", response.data);
+                            nav('/draw/result', {state: response.data});
+                        })
+                        .catch((error) => {
+                            console.error("데이터 가져오기 실패: ", error);
+                        });
+                });
+            }else {
+                randomEggSprite.on('pointertap', () => {
+                    axios.post("http://localhost:8000/api/v1/draw/building", drawRequest)
+                        .then((response) => {
+                            console.log("loading data : ", response.data);
+                            nav('/draw/result', {state: response.data});
+                        })
+                        .catch((error) => {
+                            console.error("데이터 가져오기 실패: ", error);
+                        });
+                });
+            }
 
             if (type === 'animal') {
                 randomEggSprite.texture = PIXI.Texture.from(randomEgg);
