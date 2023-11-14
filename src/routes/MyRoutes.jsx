@@ -26,6 +26,7 @@ import TerrainPage from '../pixi/terrain/TerrainPage';
 import Exchange from '../pixi/Exchange/Exchange';
 import Battle from '../pixi/battle/components/Battle';
 import Place from '../pixi/place/Place';
+import Board from '../pages/board/Board';
 
 const MyRoutes = () => {
     return (
@@ -57,6 +58,7 @@ const MyRoutes = () => {
 
                 <Route path="/my" element={<MyPage />} />
                 <Route path="/userInfo" element={<UserInfo />} />
+                <Route path="/board" element={<Board />} />
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/" element={<LoginPage />} />

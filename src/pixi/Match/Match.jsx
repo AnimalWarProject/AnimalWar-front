@@ -7,6 +7,7 @@ import { ButtonContainer } from '@pixi/ui';
 import { Link, NavLink } from 'react-router-dom';
 import MatchProcess from './MatchProcess';
 import { useHistory } from 'react-router-use-history';
+import { api } from '../../network/api';
 
 const Match = () => {
     const canvasRef = useRef(null);
@@ -21,19 +22,20 @@ const Match = () => {
 
     useEffect(() => {
 
-        const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6IuygleykgOq4sCIsInVzZXJVVUlEIjoiZDMzM2JmNmQtZGEzNS00ZGFhLWIxZTYtMTg2OTllYzQxOWVlIiwiaWQiOiJ0aGtpbTIiLCJzdWIiOiJ0aGtpbTIiLCJleHAiOjE3MDYwMDg3MjV9.nK449IpFyRtKlnRGgBS6b6i02P2DUvPjjPc5qw2xzng'
-        const getTokenData = () =>
-            axios
-                .get(`http://localhost:8000/api/v1/user`, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then((response) => {
-                    setUserData(response.data);
-                    setIsDataLoaded(true);
-                    console.log(response.data);
+        const getTokenData = async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const { data: user } = await api('/api/v1/user', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
                 });
+
+                setUserData(user);
+                setIsDataLoaded(true);
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
+            }
+        };
+
 
 
         if (!isDataLoaded) {

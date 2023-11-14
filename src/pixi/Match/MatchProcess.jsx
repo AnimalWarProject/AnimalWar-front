@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import clockImg from './imgs/Rectangle 12282.png';
 import axios from 'axios';
 import { useHistory } from 'react-router-use-history';
+import { api } from '../../network/api';
 
 
 const MatchProcess = () => {
@@ -20,23 +21,39 @@ const MatchProcess = () => {
 
 
 
-    const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6IuygleykgOq4sCIsInVzZXJVVUlEIjoiZDMzM2JmNmQtZGEzNS00ZGFhLWIxZTYtMTg2OTllYzQxOWVlIiwiaWQiOiJ0aGtpbTIiLCJzdWIiOiJ0aGtpbTIiLCJleHAiOjE3MDYwMDg3MjV9.nK449IpFyRtKlnRGgBS6b6i02P2DUvPjjPc5qw2xzng'
-    const getTokenData = async () =>
-        await axios
-            .post(`http://localhost:8000/api/v1/match`, {}, {
-                headers: {
-                    Authorization: token,
-                }
-            })
-            .then((response) => {
-                setUserData(response.data);
-                setIsDataLoaded(true);
-                console.log(response.data);
+    // const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6IuygleykgOq4sCIsInVzZXJVVUlEIjoiZDMzM2JmNmQtZGEzNS00ZGFhLWIxZTYtMTg2OTllYzQxOWVlIiwiaWQiOiJ0aGtpbTIiLCJzdWIiOiJ0aGtpbTIiLCJleHAiOjE3MDYwMDg3MjV9.nK449IpFyRtKlnRGgBS6b6i02P2DUvPjjPc5qw2xzng'
+    // const getTokenData = async () =>
+    //     await axios
+    //         .post(`http://localhost:8000/api/v1/match`, {}, {
+    //             headers: {
+    //                 Authorization: token,
+    //             }
+    //         })
+    //         .then((response) => {
+    //             setUserData(response.data);
+    //             setIsDataLoaded(true);
+    //             console.log(response.data);
+    //         });
+
+    const postTokenData = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: user } = await api('/api/v1/user', 'POST', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
             });
+
+            setUserData(user);
+            setIsDataLoaded(true);
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+        }
+    };
+
+
 
     useEffect(() => {
         if (!isDataLoaded) {
-            getTokenData()
+            postTokenData()
         }
 
     }, [isDataLoaded])
