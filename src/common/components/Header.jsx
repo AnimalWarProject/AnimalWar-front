@@ -51,7 +51,7 @@ function Header() {
             setProfile({});
             setSearchedUser(null);
             // 로그아웃 후 로그인 페이지로 이동
-            navigate('/login');
+            navigate('/');
         } catch (error) {
             console.error('Logout failed:', error);
         }
@@ -126,7 +126,11 @@ function Header() {
                 )}
             </div>
             <div className="profile-section">
-                <img src={profile.profileImage || 'default-profile-path'} alt="Profile" />
+                <img
+                    className="header-profile-image"
+                    src={profile.profileImage || 'default-profile-path'}
+                    alt="Profile"
+                />
                 <span>{profile.nickName || 'Unknown'}</span>
                 <button onClick={() => setDropdownVisible(!dropdownVisible)}>
                     <FontAwesomeIcon icon={faCog} className="fa-icon" />
