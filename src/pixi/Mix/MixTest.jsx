@@ -11,12 +11,13 @@ import { useHistory } from 'react-router-use-history';
 import { ButtonContainer, ScrollBox } from "@pixi/ui";
 const MixTest = () => {
     const canvasRef = useRef(null);
-    const [animal, setAnimal] = useState([pig, bird, fish, cat, pig, bird, fish, cat, pig, bird, fish, cat, pig, bird, fish, cat]);
-    const [count, setCount] = useState([1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]);
+    const [animal, setAnimal] = useState([pig, bird, fish, cat, pig, bird, fish, cat]);
+    const [count, setCount] = useState([1, 2, 3, 4, 1, 2, 3, 4]);
     const [potAnimals, setPotAnimals] = useState([]);
     const [xValue, setXvalue] = useState(0);
     const history = useHistory();
     const grade = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+
 
 
     useEffect(() => {
@@ -76,7 +77,6 @@ const MixTest = () => {
         animalMixText.x = 130;
         animalMixText.y = 10;
         profileBox.addChild(mixAnimalBtn);
-
         // 건물
         const mixBuildingBtn = new PIXI.Graphics();
         mixBuildingBtn.beginFill(0xB6C1EA, 0.7);
@@ -87,194 +87,130 @@ const MixTest = () => {
         BuildingMixText.y = 10;
         profileBox.addChild(mixBuildingBtn);
 
-        /////
-
-        const boxWidth = 105;
-        const boxHeight = 122;
-        const boxesPerRow = 3;
-        const padding = 10;
-
-        const potArr = [];
+        let testArr = [];
         let clickNum = 0;
+        // TODO animal에 4개가 들어있으면 3개만 나옴.. 반올림처리가 잘못되었나봄..3의 나머지가 1일 때 나머지 1이 안나옴..
+        // 인벤토리
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < Math.ceil(animal.length / 3); j++) {
+                // 인벤토리
+                const inventoryBtn = new ButtonContainer(
+                    new PIXI.Graphics()
+                        .beginFill(0xffffff, 0.5)
+                        .drawRoundedRect(10, 0, 105, 122, 40)
+                );
+                testArr.push(inventoryBtn)
+                profileBox.addChild(inventoryBtn)
 
-        const boxes = animal.map((animalImg, i) => {
-            const box = new PIXI.Graphics();
-            box.beginFill(0xFFFFFF, 0.5);
-            box.drawRoundedRect(0, 0, boxWidth, boxHeight, 40);
-            box.endFill();
+                // 인벤토리 index
+                const imageIndex = i * Math.round(animal.length / 3) + j;
 
-            // Calculate position based on the index and number of boxes per row
-            const row = Math.floor(i / boxesPerRow);
-            const col = i % boxesPerRow;
+                // 이미지 텍스처 생성
+                if (imageIndex < animal.length) {
+                    const imgInventoryTexture = PIXI.Texture.from(animal[imageIndex]);
+                    // 스프라이트 생성
+                    const imgInventorySprite = new PIXI.Sprite(imgInventoryTexture);
+                    // Count 텍스트 생성 및 스타일 설정
+                    const countText = new PIXI.Text(count[imageIndex], textStyle);
 
-            box.x = col * (boxWidth + padding);
-            box.y = row * (boxHeight + padding);
+                    imgInventorySprite.width = 69;
+                    imgInventorySprite.height = 99;
 
-            // 인벤토리 칸의 가운데로 위치 조정
-            const inventoryWidth = 105; // 인벤토리 칸의 가로 크기
-            const inventoryHeight = 122; // 인벤토리 칸의 세로 크기
-            const xPosition = 0; // 인벤토리 칸의 x 위치
-            const yPosition = 0; // 인벤토리 칸의 y 위치
+                    // 인벤토리 칸의 가운데로 위치 조정
+                    const inventoryWidth = 105; // 인벤토리 칸의 가로 크기
+                    const inventoryHeight = 122; // 인벤토리 칸의 세로 크기
+                    const xPosition = 10; // 인벤토리 칸의 x 위치
+                    const yPosition = 0; // 인벤토리 칸의 y 위치
+                    // image 가운데로 위치 조정
+                    imgInventorySprite.x = xPosition + (inventoryWidth - imgInventorySprite.width) / 2;
+                    imgInventorySprite.y = yPosition + (inventoryHeight - imgInventorySprite.height) / 2;
+                    // Count 텍스트 위치 설정 (가운데 정렬 및 동물 이미지 머리 바로 위에 표시)
+                    countText.x = xPosition + (inventoryWidth - countText.width) / 2;
+                    countText.y = yPosition - countText.height + 25; // 동물 이미지 머리 바로 위에 표시
+                    inventoryBtn.addChild(imgInventorySprite); // inventoryBtn에 스프라이트 추가
+                    inventoryBtn.addChild(countText);
 
-            // image 생성..
-            const imgInventoryTexture = PIXI.Texture.from(animal[i]);
-            const imgInventorySprite = new PIXI.Sprite(imgInventoryTexture);
-
-            imgInventorySprite.width = 69;
-            imgInventorySprite.height = 99;
-
-            // image 가운데로 위치 조정
-            imgInventorySprite.x = xPosition + (inventoryWidth - imgInventorySprite.width) / 2;
-            imgInventorySprite.y = yPosition + (inventoryHeight - imgInventorySprite.height) / 2;
-
-            box.addChild(imgInventorySprite);
-
-            // count 생성..
-
-            const countText = new PIXI.Text(count[i], textStyle);
-
-            // Count 텍스트 위치 설정 (가운데 정렬 및 동물 이미지 머리 바로 위에 표시)
-            countText.x = xPosition + (inventoryWidth - countText.width) / 2;
-            countText.y = yPosition - countText.height + 25; // 동물 이미지 머리 바로 위에 표시
-            box.addChild(countText);
-
-            //profileBox.addChild(box);
-
-            // 이벤트 감지 설정
-            box.interactive = true;
-
-            const clickEventFunction = (e) => {
-                if (clickNum > 3) { // 항아리 4개가 선택됐으면 인벤토리의 count가 -1이 되면 안됨.. 그래서 clickNum가 맨 위에 있는 거임..
-                    return;
-                }
-
-                setCount(prevCount => { // setCount(prevCount=>{prevCount}) 무조건 이전 count를 가져오겠다.
-                    const newCount = [...prevCount];
-
-                    if(newCount[i] > 0) { // 0이면 -1 안됨
-                        //  TODO
-                        // 0 이면 event off
-                        if(countText.text == 0) {
-                            box.off('click', clickEventFunction);
+                    // 인벤토리 안에 클릭하면
+                    inventoryBtn.onPress.connect(() => {
+                        if (clickNum > 3) {
+                            return;
                         }
 
+                        const maxPotAnimals = 4; // 항아리에 추가할 수 있는 최대 동물 수
 
-                        newCount[i] = newCount[i] - 1;
-                        countText.text = newCount[i];
-                    }
+                        if (potAnimals.length < maxPotAnimals) {
 
-                    return newCount;
-                });
+                            // 클릭된 동물의 이미지를 새로 로드하고 새로운 스프라이트를 만듭니다.
+                            const selectedAnimalTexture = PIXI.Texture.from(animal[imageIndex]);
+                            const selectedAnimalSprite = new PIXI.Sprite(selectedAnimalTexture);
 
-
-                // image 생성..
-                // 클릭된 동물의 이미지를 새로 로드하고 새로운 스프라이트를 만듭니다.
-                const selectedAnimalTexture = PIXI.Texture.from(animal[i]);
-                const selectedAnimalSprite = new PIXI.Sprite(selectedAnimalTexture);
-
-                // 이미지 크기를 100x100으로 변경
-                selectedAnimalSprite.width = 45;
-                selectedAnimalSprite.height = 78;
+                            // 이미지 크기를 100x100으로 변경
+                            selectedAnimalSprite.width = 45;
+                            selectedAnimalSprite.height = 78;
 
 
-                let startPoint = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
-                if (clickNum > 0) {
-                    selectedAnimalSprite.x = startPoint + (73 * clickNum); // 1~3부터는 x축 옆으로 이동(가로 나열)
-                } else {
-                    selectedAnimalSprite.x = startPoint; // 0이면
+                            let startPoint = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
+                            if (clickNum > 0) {
+                                selectedAnimalSprite.x = startPoint + (73 * clickNum); // 1~3부터는 x축 옆으로 이동(가로 나열)
+                            } else {
+                                selectedAnimalSprite.x = startPoint; // 0이면
+                            }
+
+                            selectedAnimalSprite.y = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) / 2 + 60;
+                            clickNum++;
+                            profileBox.addChild(selectedAnimalSprite);
+
+                            // Feat : 클릭 시 count -1
+                            // "count" 배열을 복제하여 업데이트할 값을 변경한 다음 상태 업데이트
+
+                            const updatedCount = [...count];
+                            console.log("########## 1      : " + updatedCount)
+                            updatedCount[imageIndex]--;
+
+
+
+
+
+                            count(updatedCount);
+                            console.log("########## 2      : " + updatedCount)
+
+                            // // "countText" 업데이트
+                            countText.text = updatedCount[imageIndex];
+
+
+
+
+                            // 항아리에서 동물을 클릭하면
+                            mixPotSprite.interactive = true; //  mixPotSprite 객체를 상호작용, 클릭 이벤트를 감지
+                            mixPotSprite.on('pointertap', () => { // 항아리 (mixPotSprite)를 클릭할 때
+                                // 항아리에서 마지막으로 추가된 동물을 제거
+                                clickNum = 0;
+                                profileBox.removeChild(selectedAnimalSprite);
+                                // const lastAddedAnimal = profileBox.children[profileBox.children.length - 1]; // 항아리에 마지막으로 추가된 동물
+                                // if (lastAddedAnimal !== mixPotSprite) {
+                                //     profileBox.removeChild(lastAddedAnimal); // 4번 초과해서 클릭 했을 때, 4번째 mixPotSprite와 다를 경우에는 삭제
+                                // }
+                            });
+                        }
+                    });
                 }
+            }
+        }
 
-                selectedAnimalSprite.y = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) / 2 + 60;
-                clickNum++;
-                profileBox.addChild(selectedAnimalSprite);
-
-                // 항아리에서 동물을 클릭하면
-                mixPotSprite.interactive = true; //  mixPotSprite 객체를 상호작용, 클릭 이벤트를 감지
-                mixPotSprite.on('pointertap', () => { // 항아리 (mixPotSprite)를 클릭할 때
-                    // 항아리에서 마지막으로 추가된 동물을 제거
-                    clickNum = 0;
-                    profileBox.removeChild(selectedAnimalSprite);
-                    // const lastAddedAnimal = profileBox.children[profileBox.children.length - 1]; // 항아리에 마지막으로 추가된 동물
-                    // if (lastAddedAnimal !== mixPotSprite) {
-                    //     profileBox.removeChild(lastAddedAnimal); // 4번 초과해서 클릭 했을 때, 4번째 mixPotSprite와 다를 경우에는 삭제
-                    // }
-                });
-            };
-
-            box.on('click', clickEventFunction)
-
-            // box.on('click', (e) => {
-            //     // count 변경
-            //     setCount(prevCount => { // setCount(prevCount=>{prevCount}) 무조건 이전 count를 가져오겠다.
-            //         const newCount = [...prevCount];
-            //
-            //         if(newCount[i] > 0) { // 0이면 -1 안됨
-            //             newCount[i] = newCount[i] - 1;
-            //             countText.text = newCount[i];
-            //         }
-            //
-            //         return newCount;
-            //     });
-            //
-            //     if (clickNum > 3) {
-            //         return;
-            //     }
-            //
-            //     // image 생성..
-            //     // 클릭된 동물의 이미지를 새로 로드하고 새로운 스프라이트를 만듭니다.
-            //     const selectedAnimalTexture = PIXI.Texture.from(animal[i]);
-            //     const selectedAnimalSprite = new PIXI.Sprite(selectedAnimalTexture);
-            //
-            //     // 이미지 크기를 100x100으로 변경
-            //     selectedAnimalSprite.width = 45;
-            //     selectedAnimalSprite.height = 78;
-            //
-            //
-            //     let startPoint = mixPotSprite.x + (mixPotSprite.width - selectedAnimalSprite.width) / 2 - 105;
-            //     if (clickNum > 0) {
-            //         selectedAnimalSprite.x = startPoint + (73 * clickNum); // 1~3부터는 x축 옆으로 이동(가로 나열)
-            //     } else {
-            //         selectedAnimalSprite.x = startPoint; // 0이면
-            //     }
-            //
-            //     selectedAnimalSprite.y = mixPotSprite.y + (mixPotSprite.height - selectedAnimalSprite.height) / 2 + 60;
-            //     clickNum++;
-            //     profileBox.addChild(selectedAnimalSprite);
-            //
-            //     // 항아리에서 동물을 클릭하면
-            //     mixPotSprite.interactive = true; //  mixPotSprite 객체를 상호작용, 클릭 이벤트를 감지
-            //     mixPotSprite.on('pointertap', () => { // 항아리 (mixPotSprite)를 클릭할 때
-            //         // 항아리에서 마지막으로 추가된 동물을 제거
-            //         clickNum = 0;
-            //         profileBox.removeChild(selectedAnimalSprite);
-            //         // const lastAddedAnimal = profileBox.children[profileBox.children.length - 1]; // 항아리에 마지막으로 추가된 동물
-            //         // if (lastAddedAnimal !== mixPotSprite) {
-            //         //     profileBox.removeChild(lastAddedAnimal); // 4번 초과해서 클릭 했을 때, 4번째 mixPotSprite와 다를 경우에는 삭제
-            //         // }
-            //     });
-            //
-            //
-            // });
-            return box;
-        });
-
-
+        // Feat : inventory scroll
         const scrollBox = new ScrollBox({
             width: 377,
             height: 448,
             radius: 40,
-            items: boxes,
-            elementsMargin: 15,
-            vertPadding: 15,
-            horPadding: 15
+            items: testArr,
+            elementsMargin: 10,
+            vertPadding: 20,
+            horPadding: 10
 
         });
         scrollBox.x = 80; // x 좌표
         scrollBox.y = 120; // y 좌표
         profileBox.addChild(scrollBox);
-
-
-
 
         // Feat : 항아리
         const mixPotTexture = PIXI.Texture.from(mixPot);
