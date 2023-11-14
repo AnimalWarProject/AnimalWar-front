@@ -13,8 +13,8 @@ import axios from "axios";
 import {api} from "../../network/api";
 const Mix = () => {
     const canvasRef = useRef(null);
-    const initialAnimal = useState([]);
-    const initialCount = useState([]);
+    const initialAnimal = useState([pig, bird, cat, pig, bird, cat]);
+    const initialCount = useState([1, 2, 3, 1, 2, 3]);
     const [animal, setAnimal] = useState(initialAnimal);
     const [count, setCount] = useState(initialCount);
     const history = useHistory();
