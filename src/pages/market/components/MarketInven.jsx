@@ -2,11 +2,21 @@ import React, {useEffect, useRef, useState} from "react";
 import "../css/MarketInven.css";
 import axios from "axios";
 
-const MarketInven = () => {
+const MarketInven = ({onEventInMarketInven}) => {
     const [data, setData] = useState([]); // 건물, 동물 데이터
     const itemsPerRow = 3; // 한 행당 표시할 항목 수
     const containerRef = useRef();
     const accessToken = localStorage.getItem('accessToken');
+    const [selectedItem, setSelectedItem] = useState(null);
+    // const [sellData, setSellData] = useState(null);
+
+    const handleItemClick = (item) => { // todo: image에 onClick걸어야 할거같다.
+        // 클릭한 아이템 정보를 상태에 저장
+        setSelectedItem(item);
+    };
+    const onClickSell = () => {
+        onEventInMarketInven(selectedItem)
+    }
 
     const fetchData = (type) => {
         let url = '';
@@ -49,13 +59,17 @@ const MarketInven = () => {
                 <button onClick={() => fetchData('buildings')} className="marketinven-section-buildingBtn">건물</button>
             </div>
             <div className="marketinven-section-sell">
-                <button className="marketinven-section-sellBtn">판매하기</button>
+                <button onClick={onClickSell} className="marketinven-section-sellBtn">판매하기</button>
             </div>
             <div className="marketinven-section">
                 {rows.map((row, rowIndex) => (
-                    <div className="marketinven-wrap" key={rowIndex}>
+                    <div className="marketinven-wrap" key={rowIndex} >
                         {row.map((item, index) => (
-                            <div className="marketinven-content" key={index}>
+                            <div
+                                className={`marketinven-content ${selectedItem === item ? 'selected' : ''}`}
+                                key={index}
+                                onClick={() => handleItemClick(item)}
+                            >
                                 <div>{item.animal ? item.animal.name : item.building.name}</div> {/* todo: 이름대신 이미지 */}
                                 <div>{item.animal ? item.ownedQuantity : item.ownedQuantity}</div>
                             </div>

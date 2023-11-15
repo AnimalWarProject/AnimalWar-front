@@ -1,5 +1,6 @@
 import "../css/SearchBox.css" ;
 import {useState} from "react";
+import searchIcon from '../marketImages/search.webp';
 const SearchBox = ({ onAnimalTypeSelect, onSearchWord }) => {
     const [word, setWord] = useState("");
 
@@ -17,7 +18,7 @@ const SearchBox = ({ onAnimalTypeSelect, onSearchWord }) => {
             <div className="searchbox-wrap">
                 <div style={{display:"flex", alignItems:"center"}}>
                     <input onChange={onChangeHandler} className="searchbox-input" placeholder={"동물/건물을 입력하세요."}/>
-                    <button onClick={onClickSearchBtn} className="searchbox-input-Btn"><img src="/marketImages/search.webp"  alt="#" className="searchbox-input-image"/></button>
+                    <button onClick={onClickSearchBtn} className="searchbox-input-Btn"><img className="searchbox-input-image" src={searchIcon} alt=""/></button>
                 </div>
                 <div className="searchbox-division">
                     <div>
