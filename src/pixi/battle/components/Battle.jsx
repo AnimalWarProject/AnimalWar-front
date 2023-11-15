@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+
+import React, { useRef, useEffect, useState } from 'react';
 import * as PIXI from 'pixi.js';
 import { ScrollBox } from '@pixi/ui';
 import { Container, Graphics } from 'pixi.js';
@@ -6,52 +7,39 @@ import Transparency from '../imgs/Transparency.png';
 
 // 공격형 스킬 이미지
 import backgroundImage from '../imgs/Rectangle 12290.png';
-import berserkerImage from '../imgs/Berserker.png';
-import bombDropImage from '../imgs/BombDrop.webp';
-import ExecutionImage from '../imgs/Execution.webp';
-import hiddenAceImage from '../imgs/HiddenAce.webp';
-import poisonImage from '../imgs/Poison.webp';
-import speedRunImage from '../imgs/SpeedRun.webp';
-
-// 수비형 스킬 이미지
-import EmergencyFood from '../imgs/EmergencyFood.webp';
-import Heal from '../imgs/Heal.webp';
-import IronCladDefense from '../imgs/IronCladDefense.webp';
-import LuckySeven from '../imgs/LuckySeven.webp';
-import RustedSword from '../imgs/RustedSword.webp';
-import Bandaging from '../imgs/Bandaging.webp';
-
-// 유틸형 스킬 이미지
-import BrokenSpear from '../imgs/BrokenSpear.webp';
-import BrokenShield from '../imgs/BrokenShield.webp';
-import DoItAgain from '../imgs/DoItAgain.webp';
-import OffenseDefenseShift from '../imgs/OffenseDefenseShift.webp';
-import StrongAndWeak from '../imgs/StrongAndWeak.webp';
 import Swap from '../imgs/Swap.webp';
+
 
 const Battle = () => {
     const pixiContainer = useRef(null);
-    let clickedContainer = null;
-    let clickedContainer1 = null;
-    let clickedContainer2 = null;
-    let testArr = [];
-    let testArr1 = [];
-    let testArr2 = [];
+    const [userProfile, setUserProfile] = useState(null);
+    const [defenderHealth, setDefenderHealth] = useState(null);
+    const [attackerHealth, setAttackerHealth] = useState(null);
+    const [attackerAtkPower, setAttackerAtkPower] = useState(null);
+    const [attackerDefPower, setAttackerDefPower] = useState(null);
+    const [defenderAtkPower, setDefenderAtkPower] = useState(null);
+    const [defenderDefPower, setDefenderDefPower] = useState(null);
+    const [battleLog, setBattleLog] = useState([])
+
 
     // 기본 배경크기 설정
+
     useEffect(() => {
         const app = new PIXI.Application({
             width: 960,
             height: 640,
             transparent: true,
         });
+
         pixiContainer.current.appendChild(app.view);
 
-        // 뒷 배경화면
         const background = PIXI.Sprite.from(backgroundImage);
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
+
+
+        // 배틀 큰틀 담는 컨테이너
 
         // 유형별 스킬 크기 및 위치 조정
         const addRoundedText = (text, x, y, width, height, cornerRadius, color) => {
@@ -80,26 +68,77 @@ const Battle = () => {
         addRoundedText('유틸형 스킬', app.renderer.width / 1.215, app.renderer.height / 9, 277, 70, 5, 0x0f1828);
 
         // 공격형 스킬 큰 박스를 담을 컨테이너
+
         const bigBoxContainer = new PIXI.Container();
         app.stage.addChild(bigBoxContainer);
 
-        // 수비형 스킬 큰 박스를 담을 컨테이너
-        const bigBoxContainer1 = new PIXI.Container();
-        app.stage.addChild(bigBoxContainer1);
+        // 배틀 유저 상태 박스 담는 컨테이너
+        const stateContainer = new PIXI.Container();
+        app.stage.addChild(stateContainer);
 
-        // 수비형 스킬 큰 박스를 담을 컨테이너
-        const bigBoxContainer2 = new PIXI.Container();
-        app.stage.addChild(bigBoxContainer2);
+        // 배틀 로그 담는 컨테이너
+        const logContainer = new PIXI.Container();
+        app.stage.addChild(logContainer);
+
+
+        // 배틀 큰틀 박스
 
         // 공격형 스킬 큰박스
+
         const bigBox = new PIXI.Graphics();
-        bigBox.beginFill(0xffffff, 0.5);
-        const bigBoxWidth = 277;
-        const bigBoxHeight = 490;
-        const cornerRadius = 5;
-        bigBox.drawRoundedRect(34, 130, bigBoxWidth, bigBoxHeight, cornerRadius);
+        bigBox.beginFill(0xffffff, 0.2);
+        const bigBoxWidth = 850;
+        const bigBoxHeight = 540;
+        const bigBoxCornerRadius = 10;
+        bigBox.drawRoundedRect(50, 50, bigBoxWidth, bigBoxHeight, bigBoxCornerRadius);
         bigBox.endFill();
         bigBoxContainer.addChild(bigBox);
+
+        // 공격자 상태 외곽 박스
+        const smallAttackerBox = new PIXI.Graphics();
+        smallAttackerBox.beginFill(0xffffff, 0.4);
+        const smallAttackerBoxWidth = 365;
+        const smallAttackerBoxHeight = 154;
+        const smallAttackerBoxCornerRadius = 10;
+        smallAttackerBox.drawRoundedRect(70, 70, smallAttackerBoxWidth, smallAttackerBoxHeight, smallAttackerBoxCornerRadius);
+        smallAttackerBox.endFill();
+        stateContainer.addChild(smallAttackerBox);
+
+        // 수비자 상태 외곽 박스
+        const smallDefenderBox = new PIXI.Graphics();
+        smallDefenderBox.beginFill(0xffffff, 0.4);
+        const smallDefenderBoxWidth = 365;
+        const smallDefenderBoxHeight = 154;
+        const smallDefenderBoxCornerRadius = 10;
+        smallDefenderBox.drawRoundedRect(515, 70, smallDefenderBoxWidth, smallDefenderBoxHeight, smallDefenderBoxCornerRadius);
+        smallDefenderBox.endFill();
+        stateContainer.addChild(smallDefenderBox);
+
+        // 배틀 로그 외곽 박스
+        const battleLogBox = new PIXI.Graphics();
+        battleLogBox.beginFill(0xffffff, 0.4);
+        const battleLogBoxBoxWidth = 810;
+        const battleLogBoxBoxHeight = 320;
+        const battleLogBoxCornerRadius = 10;
+        battleLogBox.drawRoundedRect(70, 250, battleLogBoxBoxWidth, battleLogBoxBoxHeight, battleLogBoxCornerRadius);
+        battleLogBox.endFill();
+        logContainer.addChild(battleLogBox);
+
+
+
+        // 공격자 수비자 상태 박스
+        const addStateBox = (x, y, profileBoxPath, nickName,
+                             currentHealth, maxHealth,
+                             attackPower, defensePower, healthBarColor) => {
+
+            // 프로필 사진
+            if (profileBoxPath) {
+                const profile =  PIXI.Sprite.from(profileBoxPath);
+                profile.width = 70;
+                profile.height = 70;
+                profile.x = x + 20;
+                profile.y = y + 20;
+                stateContainer.addChild(profile);
 
         // 수비형 스킬 큰박스
         const bigBox1 = new PIXI.Graphics();
@@ -405,20 +444,91 @@ const Battle = () => {
                 image2.x = 4;
                 image2.y = 30;
                 box2.addChild(image2);
+
             }
 
-            // 유틸형 스킬 이름 크기 및 폰트
-            const nameText2 = new PIXI.Text(skillName, {
-                fontSize: 21,
+            // 닉네임
+            const nicknameText = new PIXI.Text(nickName, {
+                fontSize: 15,
                 fill: 0x0f1828,
                 align: 'justify',
                 fontWeight: 'bolder',
                 fontFamily: 'Arial',
             });
-            nameText2.anchor.set(0, 0.5);
-            nameText2.x = 70;
-            nameText2.y = 44;
-            box2.addChild(nameText2);
+            nicknameText.x = x + 80;
+            nicknameText.y = y + 20;
+            stateContainer.addChild(nicknameText);
+
+            // 체력바
+            const healthBar = createHealthBar(x + 80, y + 50, currentHealth, maxHealth, healthBarColor)
+            stateContainer.addChild(healthBar);
+            
+            // 유저 수치
+            const useState = new PIXI.Text(
+                `공격력: ${attackPower} | 공격력: ${defensePower} `,
+                {
+                    fontSize: 15,
+                    fill: 0x0f1828,
+                    align: 'justify',
+                    fontWeight: 'bolder',
+                    fontFamily: 'Arial'
+
+                });
+            useState.x = x + 80;
+            useState.y = y + 85;
+            stateContainer.addChild(useState);
+
+            const hpState = new PIXI.Text(
+                `HP: [${currentHealth} / ${maxHealth}]`,
+                {
+                    fontSize: 15,
+                    fill: 0x0f1828,
+                    align: 'justify',
+                    fontWeight: 'bolder',
+                    fontFamily: 'Arial'
+                })
+            hpState.x = x + 80;
+            hpState.y = y + 65;
+            stateContainer.addChild(hpState);
+
+
+        };
+        addStateBox(
+            50,
+            50,
+            Swap,
+            '공격자',
+            10000,
+            10000,
+            attackerAtkPower,
+            attackerDefPower,
+            '#FC5740'
+        )
+        addStateBox(
+            500,
+            50,
+            "",
+            '수비자',
+            10000,
+            10000,
+            defenderAtkPower,
+            defenderDefPower,
+            '#5B7FFF'
+        );
+    }, []);
+
+    const createHealthBar = (x, y, currentHealth, maxHealth, healthBarColor) => {
+        const healthBar = new PIXI.Graphics();
+        healthBar.beginFill(healthBarColor);
+        const healthBarWidth = (currentHealth / maxHealth) * 228; // 조절된 너비 계산
+        const healthBarHeight = 40;
+        const healthBarRadius = 10;
+        healthBar.drawRoundedRect(x, y, healthBarWidth, healthBarHeight, healthBarRadius);
+        healthBar.endFill();
+        return healthBar;
+    };
+
+
 
             // 유틸형 스킬 설명 조정
             const descriptionText2 = new PIXI.Text(skillDescription, {
@@ -514,6 +624,7 @@ const Battle = () => {
         scBox2.y = 134; // y 좌표
         bigBoxContainer2.addChild(scBox2);
     }, []);
+
 
     return <div ref={pixiContainer} className="outlet-container"></div>;
 };
