@@ -17,6 +17,7 @@
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
     "firebase": "^10.5.2",
+    "gsap": "^3.12.2",
     "highlight.js": "^11.9.0",
     "net": "^1.0.2",
     "pixi-scrollbox": "^2.3.1",

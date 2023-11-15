@@ -1,86 +1,84 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "../css/MarketInven.css";
 import axios from "axios";
 
-const MarketInven = () => {
+const MarketInven = ({onEventInMarketInven}) => {
+    const [data, setData] = useState([]); // 건물, 동물 데이터
+    const itemsPerRow = 3; // 한 행당 표시할 항목 수
+    const containerRef = useRef();
+    const accessToken = localStorage.getItem('accessToken');
+    const [selectedItem, setSelectedItem] = useState(null);
+    // const [sellData, setSellData] = useState(null);
+
+    const handleItemClick = (item) => { // todo: image에 onClick걸어야 할거같다.
+        // 클릭한 아이템 정보를 상태에 저장
+        setSelectedItem(item);
+    };
+    const onClickSell = () => {
+        onEventInMarketInven(selectedItem)
+    }
+
+    const fetchData = (type) => {
+        let url = '';
+        if (type === 'animals') {
+            url = "http://localhost:8000/api/v1/inventory/animals";
+            containerRef.current.style.backgroundColor = '#A3FFF9';
+        } else if (type === 'buildings') {
+            url = "http://localhost:8000/api/v1/inventory/buildings";
+            containerRef.current.style.backgroundColor = '#FFD1FA';
+        }
+
+        axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+            .then((response) => {
+                if (response.data !== null) {
+                    setData(response.data);
+                }
+            })
+            .catch((error) => {
+                console.log('데이터 가져오기 실패 : ', error);
+            });
+    };
 
     useEffect(() => {
-        const animalButton = document.querySelector('.marketinven-section-animalBtn');
-        const buildingButton = document.querySelector('.marketinven-section-buildingBtn');
-        const container = document.querySelector('.marketinven-container');
+        fetchData('animals'); // 초기 렌더링 시 동물 데이터 가져오기
+    }, []); // 빈 배열을 제거하고 필요한 의존성 배열을 추가해도 좋을 것 같아요.
 
-        // axios.get("http://localhost:8000/api/v1/exchange/animals") // 동물버튼 눌렀을때 동물데이터 가져오기
-        //     .then((response) => {
-        //         // 결과가 빈 객체로 오는 경우, response.data를 살펴봐야 할 수 있음
-        //         console.log("loading data : ", response.data);
-        //         nav('/draw/result', { state: response.data });
-        //     })
-        //     .catch((error) => {
-        //         console.error("데이터 가져오기 실패: ", error);
-        //     });
-        //
-        // axios.get("http://localhost:8000/api/v1/exchange/buildings") // 건물버튼 눌렀을때 건물데이터 가져오기
-        //     .then((response) => {
-        //         // 결과가 빈 객체로 오는 경우, response.data를 살펴봐야 할 수 있음
-        //         console.log("loading data : ", response.data);
-        //         nav('/draw/result', { state: response.data });
-        //     })
-        //     .catch((error) => {
-        //         console.error("데이터 가져오기 실패: ", error);
-        //     });
+    const rows = [];
+    for (let i = 0; i < data.length; i ++) {
+        rows.push(data.slice(i * itemsPerRow, 3 + (i * itemsPerRow)));
+    }
 
-
-        // 동물 버튼을 클릭했을 때의 동작
-        animalButton.addEventListener('click', function() {
-            container.style.backgroundColor = '#A3FFF9';
-        });
-
-        // 건물 버튼을 클릭했을 때의 동작
-        buildingButton.addEventListener('click', function() {
-            container.style.backgroundColor = '#FFD1FA';
-        });
-    }, []);
-
-    return <>
-        <div className="marketinven-container">
+    return (
+        <div className="marketinven-container" ref={containerRef}>
             <div className="marketinven-section-title">
-                <button className="marketinven-section-animalBtn">동물</button>
-                <button className="marketinven-section-buildingBtn">건물</button>
+                <button onClick={() => fetchData('animals')} className="marketinven-section-animalBtn">동물</button>
+                <button onClick={() => fetchData('buildings')} className="marketinven-section-buildingBtn">건물</button>
             </div>
             <div className="marketinven-section-sell">
-                <button className="marketinven-section-sellBtn">판매하기</button>
+                <button onClick={onClickSell} className="marketinven-section-sellBtn">판매하기</button>
             </div>
             <div className="marketinven-section">
-                <div className="marketinven-wrap">
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                </div>
-                <div className="marketinven-wrap">
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                </div>
-                <div className="marketinven-wrap">
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                </div>
-                <div className="marketinven-wrap">
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                    <div className="marketinven-content">1</div>
-                </div>
-                <div className="marketinven-page">
-                    <button className="marketinven-pageBtn">1</button>
-                    <button className="marketinven-pageBtn">1</button>
-                    <button className="marketinven-pageBtn">1</button>
-                </div>
+                {rows.map((row, rowIndex) => (
+                    <div className="marketinven-wrap" key={rowIndex} >
+                        {row.map((item, index) => (
+                            <div
+                                className={`marketinven-content ${selectedItem === item ? 'selected' : ''}`}
+                                key={index}
+                                onClick={() => handleItemClick(item)}
+                            >
+                                <div>{item.animal ? item.animal.name : item.building.name}</div> {/* todo: 이름대신 이미지 */}
+                                <div>{item.animal ? item.ownedQuantity : item.ownedQuantity}</div>
+                            </div>
+                        ))}
+                    </div>
+                ))}
             </div>
         </div>
-    </>;
+    );
 };
 
-
 export default MarketInven;
-// 마켓 안에서 인벤토리
