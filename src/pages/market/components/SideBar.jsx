@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../css/SideBar.css";
 
-const SideBar = ({onSortSelect}) => {
+const SideBar = ({ onSortSelect, onGradeSelect }) => {
 
     const handleAnimalTypeClick = (isSort) => {
         onSortSelect(isSort); // 이 부분이 수정되었습니다.
@@ -17,11 +17,71 @@ const SideBar = ({onSortSelect}) => {
     const [priceLowClicked, setPriceLowClicked] = useState(false);
 
     // 클릭 시 해당 버튼의 클릭 상태를 토글
-    const toggleNormalClicked = () => setNormalClicked(!normalClicked);
-    const toggleRareClicked = () => setRareClicked(!rareClicked);
-    const toggleSuperRareClicked = () => setSuperRareClicked(!superRareClicked);
-    const toggleUniqueClicked = () => setUniqueClicked(!uniqueClicked);
-    const toggleLegendClicked = () => setLegendClicked(!legendClicked);
+    const toggleNormalClicked = () =>{
+        if (!normalClicked) {
+            setNormalClicked(true);
+            onGradeSelect('NORMAL');
+            setRareClicked(false);
+            setSuperRareClicked(false);
+            setUniqueClicked(false);
+            setLegendClicked(false);
+        } else {
+            setNormalClicked(false);
+            onGradeSelect('');
+        }
+    }
+    const toggleRareClicked = () =>{
+        if (!rareClicked) {
+            setRareClicked(true);
+            onGradeSelect('RARE')
+            setNormalClicked(false);
+            setSuperRareClicked(false);
+            setUniqueClicked(false);
+            setLegendClicked(false);
+        } else {
+            setRareClicked(false);
+            onGradeSelect('');
+        }
+    }
+    const toggleSuperRareClicked = () => {
+        if (!superRareClicked) {
+            setSuperRareClicked(true);
+            onGradeSelect('SUPERRARE')
+            setNormalClicked(false);
+            setRareClicked(false);
+            setUniqueClicked(false);
+            setLegendClicked(false);
+        } else {
+            setSuperRareClicked(false);
+            onGradeSelect('');
+        }
+    }
+    const toggleUniqueClicked = () =>{
+        if (!uniqueClicked){
+            setUniqueClicked(true);
+            onGradeSelect('UNIQUE')
+            setNormalClicked(false);
+            setRareClicked(false);
+            setSuperRareClicked(false);
+            setLegendClicked(false);
+        }else {
+            setUniqueClicked(false);
+            onGradeSelect('');
+        }
+    }
+    const toggleLegendClicked = () => {
+        if (!legendClicked){
+            setLegendClicked(true);
+            onGradeSelect('LEGEND')
+            setNormalClicked(false);
+            setRareClicked(false);
+            setSuperRareClicked(false);
+            setUniqueClicked(false)
+        }else {
+            setLegendClicked(false);
+            onGradeSelect('');
+        }
+    }
 
     const togglePriceHighClicked = () => {
         handleAnimalTypeClick('ASC')
