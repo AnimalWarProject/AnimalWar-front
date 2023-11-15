@@ -1,84 +1,69 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import back from './imgs/Rectangle 12416.webp';
 import arrow1 from './imgs/ARROW 1.webp';
 import * as PIXI from 'pixi.js';
 
-import foodImg from '../../../src/common/imgs/Food.webp'
-import ironImg from '../../../src/common/imgs/Iron.webp'
-import woodImg from '../../../src/common/imgs/Wood.webp'
-import goldImg from '../../../src/common/imgs/Gold.webp'
-import axios from "axios";
-import { ButtonContainer } from "@pixi/ui";
-import { ToastContainer, toast } from "react-toastify";
-import { useHistory } from "react-router-use-history";
+import foodImg from '../../../src/common/imgs/Food.webp';
+import ironImg from '../../../src/common/imgs/Iron.webp';
+import woodImg from '../../../src/common/imgs/Wood.webp';
+import goldImg from '../../../src/common/imgs/Gold.webp';
+import axios from 'axios';
+import { ButtonContainer } from '@pixi/ui';
+import { ToastContainer, toast } from 'react-toastify';
+import { useHistory } from 'react-router-use-history';
+import { api } from '../../network/api';
 
-
-
-const Exchange = React.memo(() => {
+const Exchange = () => {
     const history = useHistory();
     const canvasRef = useRef(null);
     const canvasWidth = 960;
     const canvasHeight = 640;
-
-
-
-    //데이터 받아오기 
-    const [userData, setUserData] = useState([]);
 
     const [wood, setWood] = useState();
     const [iron, setIron] = useState();
     const [food, setFood] = useState();
     const [gold, setGold] = useState();
 
-
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6IuygleykgOq4sCIsInVzZXJVVUlEIjoiZDMzM2JmNmQtZGEzNS00ZGFhLWIxZTYtMTg2OTllYzQxOWVlIiwiaWQiOiJ0aGtpbTIiLCJzdWIiOiJ0aGtpbTIiLCJleHAiOjE3MDY1NDA2NDd9.3so3znBSh4i3LgQleiMbvvgI2Qq7DK5vtBXIFNairOI'
+    const token = 'Bearer ' + localStorage.getItem('accessToken');
 
-    const postExchange = async () =>
-        await axios
-            .post(`http://localhost:8000/api/v1/exchange`, {}, {
-                headers: {
-                    Authorization: token,
-                }
-            })
-            .then((response) => {
-
+    const getTokenData = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: user } = await api('/api/v1/user', 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
             });
 
+            setWood(user.wood);
+            setIron(user.iron);
+            setFood(user.food);
+            setGold(user.gold);
+            setIsDataLoaded(true);
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+        }
+    };
+
+    const postExchange = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: user } = await api('/api/v1/exchange', 'POST', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+        }
+    }
+
     useEffect(() => {
-
-        const getTokenData = () =>
-            axios
-                .get(`http://localhost:8000/api/v1/user`, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then((response) => {
-                    setUserData(response.data);
-                    setWood(response.data.wood);
-                    setIron(response.data.iron);
-                    setFood(response.data.food);
-                    setGold(response.data.gold);
-                    setIsDataLoaded(true);
-
-                });
-
-
         if (!isDataLoaded) {
             getTokenData();
         }
-
-
     }, [isDataLoaded]);
 
-
     useEffect(() => {
-
-
-        if (isDataLoaded && canvasRef.current) {
-
+        if (isDataLoaded) {
             const app = new PIXI.Application({
                 width: canvasWidth,
                 height: canvasHeight,
@@ -88,7 +73,6 @@ const Exchange = React.memo(() => {
             if (canvasRef.current) {
                 canvasRef.current.appendChild(app.view);
             }
-
 
             // 백그라운드 사진
             const background = PIXI.Sprite.from(back);
@@ -107,7 +91,6 @@ const Exchange = React.memo(() => {
 
             app.stage.addChild(whiteBox);
 
-
             //왼쪽 하얀틀
 
             const leftBox = new PIXI.Graphics();
@@ -118,7 +101,6 @@ const Exchange = React.memo(() => {
 
             app.stage.addChild(leftBox);
 
-
             //나무 철 식량 틀
 
             const imgs = [woodImg, ironImg, foodImg];
@@ -126,13 +108,10 @@ const Exchange = React.memo(() => {
             const remain = {
                 '잔여 목재': wood,
                 '잔여 철': iron,
-                '잔여 식량': food
+                '잔여 식량': food,
             };
 
-
-
             for (let i = 0; i < 3; i++) {
-
                 const matBox = new PIXI.Graphics();
                 matBox.beginFill(0xffffff, 0.5);
                 matBox.lineStyle(2, 0x000);
@@ -155,7 +134,7 @@ const Exchange = React.memo(() => {
                 //교환 비율 양
 
                 const amountBox = new PIXI.Graphics();
-                amountBox.beginFill(0xD4F1FE);
+                amountBox.beginFill(0xd4f1fe);
                 amountBox.lineStyle(2, 0x000);
                 const amountBoxWidth = canvasWidth * 0.13;
                 const amountBoxHeight = canvasHeight * 0.05;
@@ -164,7 +143,7 @@ const Exchange = React.memo(() => {
                 app.stage.addChild(amountBox);
 
                 const textStyle = new PIXI.TextStyle({
-                    fill: 0x0F1828,
+                    fill: 0x0f1828,
                     fontSize: 20, // 폰트 크기
                     fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
                 });
@@ -177,36 +156,29 @@ const Exchange = React.memo(() => {
                 text.y = 142 + i * (matBoxHeight + 20);
                 app.stage.addChild(text);
                 amountBox.addChild(text);
-
-
-
-
-
-
             }
 
             const text2Style = new PIXI.TextStyle({
-                fill: 0x0F1828,
+                fill: 0x0f1828,
                 fontSize: 15, // 폰트 크기
                 fontWeight: 'bold',
                 fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
             });
 
-            const woodText = new PIXI.Text(Object.keys(remain)[0] + " :" + Object.values(remain)[0], text2Style);
+            const woodText = new PIXI.Text(Object.keys(remain)[0] + ' :' + Object.values(remain)[0], text2Style);
 
             woodText.x = 220;
             woodText.y = 180;
             app.stage.addChild(woodText);
 
-
-            const ironText = new PIXI.Text(Object.keys(remain)[1] + " :" + Object.values(remain)[1], text2Style);
+            const ironText = new PIXI.Text(Object.keys(remain)[1] + ' :' + Object.values(remain)[1], text2Style);
 
             ironText.x = 220;
             ironText.y = 180 + 1 * (canvasHeight * 0.15 + 20);
 
             app.stage.addChild(ironText);
 
-            const foodText = new PIXI.Text(Object.keys(remain)[2] + " :" + Object.values(remain)[2], text2Style);
+            const foodText = new PIXI.Text(Object.keys(remain)[2] + ' :' + Object.values(remain)[2], text2Style);
 
             foodText.x = 220;
             foodText.y = 180 + 2 * (canvasHeight * 0.15 + 20);
@@ -234,13 +206,13 @@ const Exchange = React.memo(() => {
             app.stage.addChild(matBox);
 
             const textStyle = new PIXI.TextStyle({
-                fill: 0x0F1828,
+                fill: 0x0f1828,
                 fontSize: 40, // 폰트 크기
                 fontWeight: 'bold',
                 fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
             });
 
-            const text = new PIXI.Text("1000", textStyle);
+            const text = new PIXI.Text('1000', textStyle);
 
             text.x = 660;
             text.y = 265;
@@ -248,14 +220,11 @@ const Exchange = React.memo(() => {
             matBox.addChild(text);
 
             //잔여 골드
-            const goldText = new PIXI.Text(`잔여 골드 : ${userData.gold}`, text2Style);
+            const goldText = new PIXI.Text(`잔여 골드 : ${gold}`, text2Style);
 
             goldText.x = 600;
             goldText.y = 350;
             app.stage.addChild(goldText);
-
-
-
 
             const img = PIXI.Sprite.from(goldImg);
 
@@ -266,7 +235,6 @@ const Exchange = React.memo(() => {
             img.y = canvasHeight * 0.39;
             app.stage.addChild(img);
 
-
             //애로우1
             const arrow = PIXI.Sprite.from(arrow1);
 
@@ -274,23 +242,20 @@ const Exchange = React.memo(() => {
             arrow.y = canvasHeight * 0.4;
             app.stage.addChild(arrow);
 
-
-
-            //교환 시작 버튼 
+            //교환 시작 버튼
 
             const button = new ButtonContainer(
                 new PIXI.Graphics()
-                    .beginFill(0x1EB563)
+                    .beginFill(0x1eb563)
                     .drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.8, 150, 60, 50)
-            )
+            );
 
             app.stage.addChild(button);
 
             let count = 0;
 
-            //버튼 액션 
+            //버튼 액션
             button.onPress.connect(async () => {
-
                 try {
                     // postExchange 함수를 비동기로 호출하고 요청이 끝날 때까지 기다립니다.
                     await postExchange();
@@ -299,21 +264,28 @@ const Exchange = React.memo(() => {
                     console.log('postExchange 요청이 완료되었습니다.');
 
 
+
+
                     count++;
 
-
                     const newWood = wood - count * 2000;
-
 
                     const newIron = iron - count * 2000;
                     const newFood = food - count * 2000;
 
                     const newGold = gold + count * 1000;
 
+
+                    if (newWood < 0 || newIron < 0 || newFood < 0) {
+                        throw new Error('에러');
+                    }
+
                     woodText.text = `잔여 목재 :${newWood}`;
                     ironText.text = `잔여 철 :${newIron}`;
                     foodText.text = `잔여 식량 :${newFood}`;
                     goldText.text = `잔여 골드 : ${newGold}`;
+
+
 
                     const starTexture = PIXI.Texture.from(goldImg); // 별 이미지의 경로를 넣어주세요
                     const numberOfStars = 10;
@@ -328,7 +300,6 @@ const Exchange = React.memo(() => {
 
                         background.addChild(star);
 
-
                         // 별이 아래로 떨어지는 애니메이션 설정
                         const speed = 3 + Math.random() * 2; // 떨어지는 속도를 랜덤하게 설정
                         app.ticker.add(() => {
@@ -341,77 +312,50 @@ const Exchange = React.memo(() => {
                         });
                     }
 
-
-
-                    // const text2Style = new PIXI.TextStyle({
-                    //     fill: 0x0F1828,
-                    //     fontSize: 15, // 폰트 크기
-                    //     fontWeight: 'bold',
-                    //     fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
-                    // });
-
-                    // const text2 = new PIXI.Text(`잔여 목재: ${newWood}`, text2Style);
-
-                    // text2.x = 220;
-                    // text2.y = 180;
-                    // app.stage.addChild(text2);
-
-                    // 페이지를 새로 고침할 경우
-
-                    // window.location.reload();
-
                 } catch (error) {
                     // 요청이 실패한 경우 에러 처리
-                    console.error('postExchange 요청이 실패했습니다.', error);
-                    toast.error("교환 실패 !!  자원이 없습니다");
+                    if (error.response && error.response.status === 400) {
+                        // 400 에러 처리
+                        console.error('postExchange 요청이 실패했습니다. 400 에러 발생', error);
+                        toast.error('교환 실패 !!  자원이 없습니다');
+                    } else {
+                        console.error('postExchange 요청이 실패했습니다.', error);
+                        toast.error('교환 실패 !!  자원이 없습니다');
+                    }
                 }
-
-
-            }
-
-            );
-
-
+            });
 
             //교환 시작 텍스트 스프라이트
             const textStyle2 = new PIXI.TextStyle({
-                fill: 0x0F1828,
+                fill: 0x0f1828,
                 fontSize: 24, // 폰트 크기
                 fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
             });
-            const text2 = new PIXI.Text("교환하기", textStyle2);
+            const text2 = new PIXI.Text('교환하기', textStyle2);
 
             text2.x = canvasWidth * 0.73;
             text2.y = canvasHeight * 0.83;
             app.stage.addChild(text2);
 
-
-
             //교환 안내문 텍스트 스프라이트
             const textStyle3 = new PIXI.TextStyle({
-                fill: 0x0F1828,
+                fill: 0x0f1828,
                 fontSize: 24, // 폰트 크기
                 fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
             });
-            const text3 = new PIXI.Text("각 자원 2000개 = 1000골드", textStyle3);
+            const text3 = new PIXI.Text('각 자원 2000개 = 1000골드', textStyle3);
 
             text3.x = canvasWidth * 0.13;
             text3.y = canvasHeight * 0.83;
             app.stage.addChild(text3);
-
-
-
         }
+    }, [isDataLoaded]);
 
-    }, [isDataLoaded])
-
-
-
-
-    return (<div ref={canvasRef}>
-
-        <ToastContainer />
-    </div>);
-})
+    return (
+        <div ref={canvasRef}>
+            <ToastContainer />
+        </div>
+    );
+};
 
 export default Exchange;

@@ -47,12 +47,19 @@ function Header() {
             });
 
             localStorage.removeItem('accessToken');
-
+            // 사용자 상태 초기화
             setProfile({});
             setSearchedUser(null);
+            // 로그아웃 후 로그인 페이지로 이동
+            navigate('/');
         } catch (error) {
             console.error('Logout failed:', error);
         }
+    };
+
+    // 마이페이지로 이동하는 함수
+    const goToMyPage = () => {
+        navigate('/my');
     };
 
     useEffect(() => {
@@ -64,7 +71,7 @@ function Header() {
             <img className="logo" src={logoImage} alt="Logo" />
             <div className="header-middle">
                 <div className="menu-buttons">
-                    <NavLink to="/main" activeClassName="active">
+                    <NavLink to="/place" activeClassName="active">
                         홈
                     </NavLink>
                     <NavLink to="/battle" activeClassName="active">
@@ -78,9 +85,6 @@ function Header() {
                     </NavLink>
                     <NavLink to="/upgrade" activeClassName="active">
                         강화
-                    </NavLink>
-                    <NavLink to="/place" activeClassName="active">
-                        배치
                     </NavLink>
                     <NavLink to="/terrain" activeClassName="active">
                         이사
@@ -96,6 +100,9 @@ function Header() {
                     </NavLink>
                     <NavLink to="/board" activeClassName="active">
                         게시판
+                    </NavLink>
+                    <NavLink to="/board" activeClassName="active">
+                        게임소개
                     </NavLink>
                 </div>
 
@@ -119,13 +126,17 @@ function Header() {
                 )}
             </div>
             <div className="profile-section">
-                <img src={profile.profileImage || 'default-profile-path'} alt="Profile" />
+                <img
+                    className="header-profile-image"
+                    src={profile.profileImage || 'default-profile-path'}
+                    alt="Profile"
+                />
                 <span>{profile.nickName || 'Unknown'}</span>
                 <button onClick={() => setDropdownVisible(!dropdownVisible)}>
                     <FontAwesomeIcon icon={faCog} className="fa-icon" />
                 </button>
                 <div className={`dropdown-content ${dropdownVisible ? 'show' : ''}`}>
-                    <button>마이페이지</button>
+                    <button onClick={goToMyPage}>마이페이지</button>
                     <button onClick={handleLogout}>로그아웃</button>
                 </div>
             </div>

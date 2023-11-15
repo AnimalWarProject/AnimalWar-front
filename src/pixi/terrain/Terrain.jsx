@@ -11,8 +11,6 @@ import { Assets } from '@pixi/assets';
 import { Spine } from 'pixi-spine';
 import '@pixi-spine/loader-3.8';
 
-import './css/Terrain.css';
-
 const Terrain = () => {
     const canvasRef = useRef(null);
     const magicianRef = useRef(null);
@@ -303,29 +301,39 @@ const Terrain = () => {
         terrainButton.beginFill(15817563);
         terrainButton.drawRoundedRect(73, 372, 250, 50, 10);
         terrainButton.endFill();
-        terrainButton.interactive = true; // 클릭 가능하도록 설정
-        terrainButton.buttonMode = true; // 버튼 모드 활성화
+        terrainButton.interactive = true;
+        terrainButton.buttonMode = true;
         terrainButton.on('pointerdown', async () => {
             try {
-                const response = await api('/api/v1/user/terrain', 'POST');
+                const accessToken = localStorage.getItem('accessToken');
+                const response = await api('/api/v1/user/terrain', 'POST', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
 
                 setResources((prev) => ({
                     ...prev,
-                    gold: response.data.newGold,
+                    gold: response.data.gold,
                     land: response.data.land,
                     sea: response.data.sea,
                     mountain: response.data.mountain,
                 }));
+                console.log(response);
 
-                magicianRef.current.state.setAnimation(0, 'Terrain', false);
-                magicianRef.current.state.addAnimation(0, 'Terrain', false, 0);
-                explodePow(terrainButton.x + terrainButton.width / 2, terrainButton.y - terrainButton.height / 2);
-                magicianRef.current.state.addAnimation(0, 'Normal', true, 0);
+                // magicianRef.current가 null인지 확인 후 호출
+                if (magicianRef.current) {
+                    magicianRef.current.state.setAnimation(0, 'Terrain', false);
+                    magicianRef.current.state.addAnimation(0, 'Terrain', false, 0);
+                    explodePow(terrainButton.x + terrainButton.width / 2, terrainButton.y - terrainButton.height / 2);
+                    magicianRef.current.state.addAnimation(0, 'Normal', true, 0);
+                }
             } catch (error) {
-                magicianRef.current.state.setAnimation(0, 'Terrain', false);
-                magicianRef.current.state.addAnimation(0, 'Terrain', false, 0);
-                explodePow(terrainButton.x + terrainButton.width / 2, terrainButton.y - terrainButton.height / 2);
-                magicianRef.current.state.addAnimation(0, 'Normal', true, 0);
+                // magicianRef.current가 null인지 확인 후 호출
+                if (magicianRef.current) {
+                    magicianRef.current.state.setAnimation(0, 'Terrain', false);
+                    magicianRef.current.state.addAnimation(0, 'Terrain', false, 0);
+                    explodePow(terrainButton.x + terrainButton.width / 2, terrainButton.y - terrainButton.height / 2);
+                    magicianRef.current.state.addAnimation(0, 'Normal', true, 0);
+                }
                 console.error('Failed to redistribute:', error);
             }
         });

@@ -19,12 +19,13 @@ const Chatting = () => {
     const [stompClient, setStompClient] = useState(null);
     const [greetings, setGreetings] = useState([]);
     const [userColor, serUserColor] = useState('yellow');
+    const scrollRef = useRef();
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
 
         axios
-            .get('http://192.168.0.44:8000/api/v1/user', {
+            .get('http://localhost:8000/api/v1/user', {
                 headers: {
                     ContentType: 'application/json',
                     Authorization: `Bearer ${accessToken}`,
@@ -38,7 +39,7 @@ const Chatting = () => {
                 console.log(err);
             });
 
-        const socket = new SockJS('http://192.168.0.44:8082/stomp-endpoint'); // #1 socket열기(server와 연결) // npm install stompjs
+        const socket = new SockJS('http://localhost:8082/stomp-endpoint'); // #1 socket열기(server와 연결) // npm install stompjs
         const stomp = Stomp.over(socket); // STOMP 클라이언트를 통해 STOMP 프로토콜을 사용하여 메시지를 전송 및 수신
 
         stomp.connect({}, (frame) => {
@@ -71,7 +72,7 @@ const Chatting = () => {
     // Feat : 메시지 보내기
     const sendName = () => {
         const obj = {
-            nickname: nickName || 'GUEST',
+            nickname: nickName,
             content: inputText,
         };
         stompClient.send('/app/hello', {}, JSON.stringify(obj));
@@ -112,6 +113,10 @@ const Chatting = () => {
         if (e.key === 'Enter') {
             sendName();
             setInputText('');
+            // scrollRef.current가 현재 컨테이너의 DOM 요소를 가리키고 있다고 가정합니다.
+            const container = scrollRef.current;
+            // 스크롤을 가장 아래로 내리기
+            container.scrollTop = container.scrollHeight;
         }
     };
 
@@ -119,15 +124,17 @@ const Chatting = () => {
         <section className={classes.Wrap} ref={wrapRef}>
             <div className={classes.box}>
                 <div className={classes.title}>CHATTING</div>
-                <div className={classes.message} style={messageStyle}>
+                <div ref={scrollRef} className={classes.message} style={messageStyle}>
                     <div className={classes.message_title}>GOOD CHATTING PLZ!</div>
 
                     {greetings.map((item, idx) => (
                         <div key={idx} className={classes.message_container}>
-                            <img className={classes.profileImg} src={profileImage} />
-                            <div className={classes.profileNickname} style={{ color: getRandomColor(nickName) }}>
-                                {item.nickname}
-                            </div>
+                            <img
+                                style={{  width: '50px', height: '50px', objectFit: 'cover'}}
+                                className={classes.profileImg}
+                                src={profileImage}
+                            />
+                            <div className={classes.profileNickname}>{item.nickname}</div>
                             <div className={classes.messageRecord}>{item.message}</div>
                         </div>
                     ))}
