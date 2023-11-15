@@ -1,5 +1,5 @@
-import "./css/Board.css"
-import serachImg from "../../common/imgs/Search.webp"
+import "../css/Board.css"
+import serachImg from "../../../common/imgs/Search.webp"
 import { Pagination, Stack } from "@mui/material";
 
 const Board = () => {
@@ -33,7 +33,7 @@ const Board = () => {
 
             <table class="tg" style={{
                 tableLayout: "fixed", width: "810px"
-                
+
             }}>
 
                 <colgroup>

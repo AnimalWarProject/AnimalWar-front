@@ -38,12 +38,13 @@ const MatchProcess = () => {
     const postTokenData = async () => {
         try {
             const accessToken = localStorage.getItem('accessToken');
-            const { data: user } = await api('/api/v1/user', 'POST', null, {
+            const { data: user } = await api('/api/v1/match', 'POST', null, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
             setUserData(user);
             setIsDataLoaded(true);
+            console.log(user);
         } catch (error) {
             console.error('Failed to fetch user profile:', error);
         }

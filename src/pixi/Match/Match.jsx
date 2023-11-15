@@ -132,7 +132,7 @@ const Match = () => {
             // //매칭 시작 버튼 
             // const box1 = new PIXI.Graphics();
             // box1.beginFill(0xFFC000);
-            const boxWidth = canvasWidth * 0.16;
+            const boxWidth = canvasWidth * 0.2;
             const boxHeight = canvasHeight * 0.1;
 
             // box1.drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.78, boxWidth, boxHeight, 50);
@@ -143,7 +143,7 @@ const Match = () => {
                 fontSize: 24, // 폰트 크기
                 fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
             });
-            const text2 = new PIXI.Text("매칭시작", textStyle2);
+            const text2 = new PIXI.Text("스킬세팅시작", textStyle2);
 
             text2.x = canvasWidth * 0.73;
             text2.y = canvasHeight * 0.81;
@@ -160,7 +160,7 @@ const Match = () => {
             button.onPress.connect(() => {
 
                 //다음스테이지
-                history.push("/match2");
+                history.push("/battle");
 
             }
 
