@@ -16,9 +16,17 @@ const Place = ({ userUUID }) => {
     const animalTabBox = useRef(null);
     const buildingTabBox = useRef(null);
 
+    const clearInventoryDisplay = () => {
+        if (appRef.current) {
+            const childrenToRemove = appRef.current.stage.children.filter((child) => child.isInventoryItem);
+            childrenToRemove.forEach((child) => appRef.current.stage.removeChild(child));
+        }
+    };
+
     // 탭 선택 처리 함수
     const handleTabSelect = useCallback(
         (tab) => {
+            clearInventoryDisplay(); // 탭 전환 시 인벤토리 표시 내용 제거
             setActiveTab(tab);
             fetchInventory(tab);
             if (animalTabBox.current && buildingTabBox.current) {
@@ -79,17 +87,19 @@ const Place = ({ userUUID }) => {
         setTextures(loadedTextures);
     }, []);
 
-    const getObjectImagePath = (item) => {
-        if (activeTab === 'animals') {
-            return `/objectImgs/animals/${item.imagePath}`;
-        } else if (activeTab === 'buildings') {
-            return `/objectImgs/buildings/${item.imagePath}`;
-        }
-        return '';
-    };
+    const getObjectImagePath = useCallback(
+        (item) => {
+            if (activeTab === 'animals') {
+                return `/objectImgs/animals/${item.animal.imagePath}`;
+            } else if (activeTab === 'buildings') {
+                return `/objectImgs/buildings/${item.building.imagePath}`;
+            }
+            return '';
+        },
+        [activeTab]
+    );
 
     useEffect(() => {
-        fetchInventory('buildings');
         fetchInventory('animals');
         loadTextures();
         fetchTileData();
@@ -132,7 +142,7 @@ const Place = ({ userUUID }) => {
 
                 // 우측 UI 박스 생성
                 const ListContainer = new PIXI.Graphics(); // 수정된 부분
-                ListContainer.beginFill(0xffffff, 0.85);
+                ListContainer.beginFill(0xffffff, 0.8);
                 ListContainer.drawRoundedRect(0, 70, 400, 500, 20);
                 ListContainer.x = app.screen.width - 300; // 위치 조정
                 ListContainer.y = 0;
@@ -140,7 +150,7 @@ const Place = ({ userUUID }) => {
 
                 // 동물 탭 박스 생성
                 animalTabBox.current = new PIXI.Graphics(); // 수정된 부분
-                animalTabBox.current.beginFill(0xffffff, 0.85);
+                animalTabBox.current.beginFill(0xffffff, 0.8);
                 animalTabBox.current.drawRoundedRect(660, 20, 150, 50, 20);
                 animalTabBox.current.interactive = true; // 상호작용 가능하게 설정
                 animalTabBox.current.buttonMode = true; // 버튼 모드 활성화
@@ -153,7 +163,7 @@ const Place = ({ userUUID }) => {
 
                 // 건물 탭 박스 생성
                 buildingTabBox.current = new PIXI.Graphics(); // 수정된 부분
-                buildingTabBox.current.beginFill(0xffffff, 0.85);
+                buildingTabBox.current.beginFill(0xffffff, 0.8);
                 buildingTabBox.current.drawRoundedRect(810, 20, 150, 50, 20);
                 buildingTabBox.current.interactive = true; // 상호작용 가능하게 설정
                 buildingTabBox.current.buttonMode = true; // 버튼 모드 활성화
@@ -204,9 +214,9 @@ const Place = ({ userUUID }) => {
             // 예: activeTab === 'buildings' 일 때 건물 인벤토리를 표시
 
             // ListBox를 생성하기 위한 초기 위치 및 간격 설정
-            let initialX = 500;
-            let initialY = 100;
-            const yOffset = 60;
+            let initialX = 670;
+            let initialY = 90;
+            const yOffset = 95;
 
             // 선택된 탭에 따라 표시할 데이터 배열 선택
             const selectedInventory = inventory[activeTab];
@@ -214,25 +224,61 @@ const Place = ({ userUUID }) => {
             // 데이터를 순회하며 ListBox 생성 및 표시
             selectedInventory.forEach((item, index) => {
                 const listBox = new Graphics();
-                listBox.beginFill(0xffffff, 0.85);
-                listBox.drawRoundedRect(initialX, initialY + index * yOffset, 300, 50, 20);
+                listBox.isInventoryItem = true;
+                listBox.beginFill(0xffffff, 1);
+                // listBox.lineStyle(1, 0x000000); // 검은색 테두리
+                listBox.drawRoundedRect(initialX, initialY + index * yOffset, 280, 80, 15);
                 listBox.interactive = true;
                 listBox.buttonMode = true;
 
-                const objectImagePath = getObjectImagePath(item.building);
+                const objectImagePath = getObjectImagePath(item);
+                let nameTextContent, quantityTextContent;
+                if (activeTab === 'animals') {
+                    nameTextContent = `${item.animal.name} (강화: ${item.animal.upgrade})`;
+                    quantityTextContent = `수량: ${item.animal.ownedQuantity}`;
+                } else if (activeTab === 'buildings') {
+                    nameTextContent = `${item.building.name}`;
+                    quantityTextContent = `수량: ${item.ownedQuantity}`;
+                }
 
-                // 이미지를 PIXI.Sprite에 추가
-                const objectImage = PIXI.Sprite.from(objectImagePath);
-                objectImage.anchor.set(0.5);
-                objectImage.x = initialX + 50; // 이미지의 x 위치 조정
-                objectImage.y = initialY + index * yOffset + 25; // 이미지의 y 위치 조정
-                objectImage.scale.set(0.5); // 이미지 크기 조정                // 데이터 내용을 텍스트로 표시
-                const text = new PIXI.Text(`이름: ${item.building.name}, 보유 수량: ${item.ownedQuantity}`, {
+                // 이름 텍스트 설정
+                const nameText = new PIXI.Text(nameTextContent, {
                     fill: 0x000000,
                     fontSize: 18,
                 });
-                text.x = initialX + 10;
-                text.y = initialY + index * yOffset + 10;
+                nameText.x = initialX + 100;
+                nameText.y = initialY + index * yOffset + 15;
+                nameText.isInventoryItem = true;
+
+                // 보유 수량 텍스트 설정 (글씨 크기 작게)
+                const quantityText = new PIXI.Text(quantityTextContent, {
+                    fill: 0x000000,
+                    fontSize: 16, // 보유 수량 글씨 크기 작게 설정
+                });
+                quantityText.x = initialX + 100;
+                quantityText.y = initialY + index * yOffset + 45; // 세로 간격 조절
+                quantityText.isInventoryItem = true;
+
+                // 흰색 동그라미 생성
+                const circle = new PIXI.Graphics();
+                circle.beginFill(0xffffff); // 흰색 채우기
+                circle.lineStyle(1, 0x000000); // 검은색 테두리
+                const circleSize = 70; // 동그라미 크기 설정
+                circle.drawCircle(initialX + 45, initialY + index * yOffset + 40, circleSize / 2);
+                circle.endFill();
+
+                // 이미지를 PIXI.Sprite에 추가
+                const objectImage = PIXI.Sprite.from(objectImagePath);
+                objectImage.isInventoryItem = true;
+                objectImage.anchor.set(0.5);
+                objectImage.x = initialX + 45; // 이미지의 x 위치 조정
+                objectImage.y = initialY + index * yOffset + 40; // 이미지의 y 위치 조정
+                objectImage.scale.set(0.11); // 이미지 크기 조정
+
+                const imageCircle = new PIXI.Container();
+                imageCircle.addChild(circle);
+                imageCircle.addChild(objectImage);
+                imageCircle.isInventoryItem = true; // 인벤토리 아이템 플래그
 
                 listBox.on('pointerdown', () => {
                     // ListBox를 클릭했을 때 실행할 동작 추가
@@ -241,12 +287,13 @@ const Place = ({ userUUID }) => {
                 });
 
                 // ListBox를 스테이지에 추가
-                appRef.current.stage.addChild(listBox); // 수정된 부분
-                appRef.current.stage.addChild(objectImage); // 이미지를 스테이지에 추가
-                appRef.current.stage.addChild(text); // 수정된 부분
+                appRef.current.stage.addChild(listBox);
+                appRef.current.stage.addChild(imageCircle);
+                appRef.current.stage.addChild(nameText);
+                appRef.current.stage.addChild(quantityText);
             });
         }
-    }, [inventory, activeTab]);
+    }, [inventory, activeTab, getObjectImagePath]);
 
     const createTile = (tileData, container, textures, tileSize) => {
         const texture = textures[tileData.landForm];

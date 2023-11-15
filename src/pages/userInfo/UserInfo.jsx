@@ -19,6 +19,8 @@ function UserInfo() {
         }
     }, [location.state]);
 
+    console.log(location);
+
     if (user === undefined) {
         return <div className="user-info">해당하는 유저가 없습니다.</div>;
     }
@@ -40,11 +42,11 @@ function UserInfo() {
                     <div className="other-info-part">
                         <div className="other-item">
                             <span className="other-item-label">대표 종족:</span>
-                            <span className="other-item-value">{user.species?.name || 'N/A'}</span>
+                            <span className="other-item-value">{user.species || 'N/A'}</span>
                         </div>
                         <div className="other-item">
                             <span className="other-item-label">대표 지형:</span>
-                            <span className="other-item-value">{user.landForm?.name || 'N/A'}</span>
+                            <span className="other-item-value">{user.landForm || 'N/A'}</span>
                         </div>
                         <div className="other-item">
                             <span className="other-item-label">배틀 포인트:</span>
