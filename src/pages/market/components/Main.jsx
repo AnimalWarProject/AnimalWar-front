@@ -2,27 +2,56 @@ import "../css/Main.css" ;
 import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 
-const Main = ({ selectedAnimalType }) => {
-    const [data, setData] = useState([]);
+const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) => {
+    const [sortedData, setSortedData] = useState([]);
     const itemsPerRow = 3; // 한 행당 표시할 항목 수
     const containerRef = useRef();
 
     useEffect(() => {
-        axios
-            .get(`http://localhost:8000/api/v1/market/all`)
-            .then((response) => {
-                setData(response.data);
-            })
-            .catch((error) => {
+        const fetchData = async () => {
+            let response = [];
+
+            try {
+                if (selectedAnimalType === "" && searchWord === "") {
+                    response = await axios.get(`http://localhost:8000/api/v1/market/all`);
+                } else if (searchWord !== "") {
+                    response = await axios.post(`http://localhost:8000/api/v1/market/search/${searchWord}`);
+                } else if (selectedAnimalType !== "") {
+                    response = await axios.post(`http://localhost:8000/api/v1/market/filter/${selectedAnimalType}`);
+                }
+
+                // Filter data based on selectedGrade
+                if (selectedGrade) {
+                    const filteredData = response.data.filter(item => item.grade === selectedGrade);
+
+                    if (selectedSort === 'DESC') {
+                        setSortedData([...filteredData].sort((a, b) => a.price - b.price));
+                    } else if (selectedSort === 'ASC') {
+                        setSortedData([...filteredData].sort((a, b) => b.price - a.price));
+                    } else {
+                        setSortedData(filteredData);
+                    }
+                } else {
+                    // If selectedGrade is not set, apply sorting without filtering
+                    if (selectedSort === 'DESC') {
+                        setSortedData([...response.data].sort((a, b) => a.price - b.price));
+                    } else if (selectedSort === 'ASC') {
+                        setSortedData([...response.data].sort((a, b) => b.price - a.price));
+                    } else {
+                        setSortedData(response.data);
+                    }
+                }
+            } catch (error) {
                 console.error("데이터 가져오기 실패:", error);
-            })
-    }, []);
+            }
+        };
 
+        fetchData();
+    }, [selectedAnimalType, selectedSort, searchWord, selectedGrade]);
     const rows = [];
-    for (let i = 0; i < data.length; i ++) {
-        rows.push(data.slice(i*itemsPerRow, 3+(i*itemsPerRow)));
+    for (let i = 0; i < sortedData.length; i ++) {
+        rows.push(sortedData.slice(i*itemsPerRow, 3+(i*itemsPerRow)));
     }
-
     return (
         <div ref={containerRef} className="main-container"s>
             {rows.map((row, rowIndex) => (
