@@ -1,25 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 import * as PIXI from 'pixi.js';
-import pig from './imgs/PIG 5.png'
-import bird from './imgs/Bird.png'
-import cat from './imgs/Cat.png'
-import dog from './imgs/Dog.png'
-import fish from './imgs/Fish.png'
-import mixPot from './imgs/MIXPOT 1.png'
-import mixBackground from './imgs/Rectangle 12348.png'
+import pig from './imgs/PIG 5.webp'
+import bird from './imgs/Bird.webp'
+import cat from './imgs/Cat.webp'
+import dog from './imgs/Dog.webp'
+import fish from './imgs/Fish.webp'
+import mixPot from './imgs/MIXPOT 1.webp'
+import mixBackground from './imgs/Rectangle 12348.webp'
 import { useHistory } from 'react-router-use-history';
 import { ButtonContainer, ScrollBox } from "@pixi/ui";
 import axios from "axios";
 import {api} from "../../network/api";
+
+
+
 const Mix = () => {
     const canvasRef = useRef(null);
-    const initialAnimal = useState([]);
-    const initialCount = useState([]);
-    const [animal, setAnimal] = useState(initialAnimal);
-    const [count, setCount] = useState(initialCount);
-    const history = useHistory();
-    const grade = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+    // const initialAnimal = useState([]);
+    // const initialCount = useState([]);
+    // const [animal, setAnimal] = useState(initialAnimal);
+    // const [count, setCount] = useState(initialCount);
 
+    const [animal, setAnimal] = useState([pig, bird, fish, cat]);
+    const [count, setCount] = useState([1, 2, 3, 4]);
+
+    const history = useHistory();
+    // const grade = ["NORMAL", "RARE", "SUPERRARE", "UNIQUE", "LEGEND"];
+    const grade = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+    const [entityType,setEntityType] = useState('ANIMAL');
+    const [selectedGrade, setSelectedGrade] = useState('NORMAL');
 
     useEffect(() => {
         // axios
@@ -36,21 +45,24 @@ const Mix = () => {
         //         console.log(err);
         //     });
 
-        // const getAnimalINV = async () => {
-        //     try {
-        //         const accessToken = localStorage.getItem('accessToken');
-        //         const { data: INVData } = await api('/api/v1/inventory/animals', 'GET', null, {
-        //             headers: { Authorization: `Bearer ${accessToken}` },
-        //         });
-        //         console.log(INVData)
-        //         initialAnimal : setAnimal();
-        //         // initialCount :
-        //     } catch (error) {
-        //         console.error('Failed: ', error);
-        //     }
-        // };
-        //
-        // getAnimalINV();
+        const getAnimalINV = async () => {
+            const accessToken = localStorage.getItem('accessToken');
+            try {
+                const { data: INVData } = await api('/api/v1/inventory/grade', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    params: { grade: 'NORMAL' }
+                });
+                console.log(INVData);
+                // initialAnimal : setAnimal();
+                // initialCount :
+            } catch (error) {
+                console.log('Failed: ', error);
+            }
+        };
+
+
+
+        getAnimalINV();
 
 
 
@@ -91,28 +103,95 @@ const Mix = () => {
         profileInnerBox.beginFill(0xffffff, 0.5);
         profileBox.drawRoundedRect(80, 120, 377, 448, 40);
 
+
+
+
+        // const handleGradeClick = (selectedGrade) => {
+        //     getAnimalINV(selectedGrade);
+        // }
+
+
+
+        // 등급 변환 함수
+        const mapGrade= (koreanGrade) => {
+            const gradeMap = {
+                "노말": "NORMAL",
+                "레어": "RARE",
+                "슈퍼레어": "SUPERRARE",
+                "유니크": "UNIQUE",
+                "레전드": "LEGEND",
+            };
+
+            return gradeMap[koreanGrade] || koreanGrade; // 매핑되는 값이 없으면 그대로 반환
+        };
+
+        // 등급을 선택하면
+        const handleGradeClick = (koreanGrade) => {
+            const englishGrade = mapGrade(koreanGrade);
+            console.log("englishGrade : " + englishGrade)
+            setSelectedGrade(englishGrade);
+            // 등급을 영어로 값 리턴
+        }
+
+        // 동물/건물 EntityType 변환 함수
+        // const mapEntityType= (koreanEntityType) => {
+        //     const EntityTypeMap = {
+        //         "동물": "ANIMAL",
+        //         "건물": "BUILDING",
+        //     };
+        //
+        //     return EntityTypeMap[koreanEntityType] || koreanEntityType; // 매핑되는 값이 없으면 그대로 반환
+        // };
+
+        // 선택된 한글 등급이 영어 등급로 변환
+        // const handleGradeClick = (koreanGrade) => {
+        //     setSelectedGrade(mapGrade(koreanGrade));
+        //     console.log("mapGrade(koreanGrade) : " + selectedGrade);
+        // }
+
+
+
+        // 선택된 한글 EntityType이 영어 EntityType으로 변환
+        // function handleEntityTypeClick(selectedEntityType) {
+        //     setEntityType(mapEntityType(selectedEntityType));
+        // }
+
+
         for (let i = 0; i < 5; i++) { // 등급 칸 & 텍스트
             const inventory = new PIXI.Graphics();
             inventory.beginFill(0xffffff, 0.5);
             inventory.drawRoundedRect(100 + (i * 150), 50, 140, 55, 40);
+
             const gradeText = new PIXI.Text(grade[i], textStyle);
             inventory.addChild(gradeText);
             gradeText.anchor.set(0.5); // 글자 중심
             gradeText.x = 170 + (i * 150); // X 위치 조정
             gradeText.y = 80;  // Y 위치 조정
             profileBox.addChild(inventory);
-            profileBox.addChild(gradeText);
+
+            // 등급 버튼에 클릭 이벤트 추가
+            inventory.interactive = true;
+            inventory.on('pointertap', (event) => {
+                const clickedGrade = event.currentTarget.children[0].text; // 클릭된 버튼의 자식 중 첫 번째 자식인 gradeText의 텍스트
+                handleGradeClick(clickedGrade);
+            });
         }
 
 
 
 
-        // 건물/동물 인벤토리
+
+
+        // 동물/건물 인벤토리
         // 동물
         const mixAnimalBtn = new PIXI.Graphics();
         mixAnimalBtn.beginFill(0x6AFFF6, 0.7);
         mixAnimalBtn.drawRoundedRect(100, 0, 100, 40, 40);
         const animalMixText = new PIXI.Text('동물', textStyle);
+
+        // 동물 버튼에 클릭 이벤트 추가
+        // mixAnimalBtn.on('pointertap', () => handleEntityTypeClick("ANIMAL"))
+
         mixAnimalBtn.addChild(animalMixText);
         animalMixText.x = 130;
         animalMixText.y = 10;
@@ -123,10 +202,18 @@ const Mix = () => {
         mixBuildingBtn.beginFill(0xB6C1EA, 0.7);
         mixBuildingBtn.drawRoundedRect(210, 0, 100, 40, 40);
         const BuildingMixText = new PIXI.Text('건물', textStyle);
+
+        // 동물 버튼에 클릭 이벤트 추가
+        // mixBuildingBtn.on('pointertap', () => handleEntityTypeClick("BUILDING"))
+
         mixBuildingBtn.addChild(BuildingMixText);
         BuildingMixText.x = 240;
         BuildingMixText.y = 10;
         profileBox.addChild(mixBuildingBtn);
+
+
+        // 동물/건물 클릭 이벤트
+
 
 
         const boxWidth = 105;
@@ -184,12 +271,16 @@ const Mix = () => {
             box.interactive = true;
 
             const clickEventFunction = (e) => {
+                // TODO 없애기
                 if (clickNum > 3) { // 항아리 4개가 선택됐으면 인벤토리의 count가 -1이 되면 안됨.. 그래서 clickNum가 맨 위에 있는 거임
                     return;
                 }
-
-                setCount(prevCount => { // setCount(prevCount=>{prevCount}) 무조건 이전 count를 가져오겠다.
-                    const newCount = [...prevCount];
+                // TODO count로만.. newCount 없애기
+                // TODO i를 사용해서..       count[i] 이부분의 값을 사용하고 변경하고.. 값이 0이면 사용 X
+                //  count는 0보다 작으면 눌리면 안됨
+                // TODO 항아리에 4개가 들어가 있는지 길이를 확인해서 -> poxBox를 만들어서 선택한거 넣어야 할 듯..
+                setCount(count => { // setCount(prevCount=>{prevCount}) 무조건 이전 count를 가져오겠다.
+                    const newCount = [...count]; // TODO 리스트에서 뺴기
 
                     if (newCount[i] > 0) {
                         newCount[i] -= 1;
@@ -241,13 +332,16 @@ const Mix = () => {
                 // TODO: 항아리에 이미지가 제곱으로 늘어남..
                 // profileBox.addChild(selectedAnimalSprite);
 
+
                 // Feat : 항아리에서 동물을 클릭하면
                 mixPotSprite.interactive = true; //  mixPotSprite 객체를 상호작용, 클릭 이벤트를 감지
 
                 mixPotSprite.on('pointertap', () => { // 항아리 (mixPotSprite)를 클릭할 때
-                setAnimal(initialAnimal);
-                setCount(initialCount);
+                // setAnimal(initialAnimal);
+                // setCount(initialCount);
+                console.log(i)
                 countText.text = count[i]; // 초기 count값으로 다시 반영
+
                 clickNum = 0;
                 console.log("-----------------------삭제 전 : " + selectedAnimalSprite)
                 profileBox.removeChild(selectedAnimalSprite);
@@ -263,6 +357,12 @@ const Mix = () => {
 
             return box;
         });
+
+
+
+
+
+
 
 
         const scrollBox = new ScrollBox({
