@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as PIXI from 'pixi.js';
+
 // 공격형 스킬 이미지
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import Swap from '../imgs/Swap.webp';
@@ -25,20 +26,14 @@ const Battle = () => {
             height: 640,
             transparent: true,
         });
-
         pixiContainer.current.appendChild(app.view);
 
+        // 화면 뒷 배경
         const background = PIXI.Sprite.from(backgroundImage);
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
-
-
-        // 공격형 스킬 큰 박스를 담을 컨테이너
-
-        const bigBoxContainer = new PIXI.Container();
-        app.stage.addChild(bigBoxContainer);
-
+        
         // 배틀 유저 상태 박스 담는 컨테이너
         const stateContainer = new PIXI.Container();
         app.stage.addChild(stateContainer);
@@ -46,17 +41,6 @@ const Battle = () => {
         // 배틀 로그 담는 컨테이너
         const logContainer = new PIXI.Container();
         app.stage.addChild(logContainer);
-
-
-        const bigBox = new PIXI.Graphics();
-        bigBox.beginFill(0xffffff, 0.2);
-        const bigBoxWidth = 850;
-        const bigBoxHeight = 540;
-        const bigBoxCornerRadius = 10;
-        bigBox.drawRoundedRect(50, 50, bigBoxWidth, bigBoxHeight, bigBoxCornerRadius);
-        bigBox.endFill();
-        bigBoxContainer.addChild(bigBox);
-
 
 
         // 공격자 상태 외곽 박스
@@ -90,9 +74,6 @@ const Battle = () => {
         logContainer.addChild(battleLogBox);
 
 
-
-
-
         // 공격자 수비자 상태 박스
         const addStateBox = (x, y, profileBoxPath, nickName,
                              currentHealth, maxHealth,
@@ -108,6 +89,9 @@ const Battle = () => {
                 healthBar.endFill();
                 return healthBar;
             };
+            // 체력바
+            const healthBar = createHealthBar(x + 80, y + 50, currentHealth, maxHealth, healthBarColor)
+            stateContainer.addChild(healthBar);
 
             // 프로필 사진
             if (profileBoxPath) {
@@ -117,6 +101,7 @@ const Battle = () => {
                 profile.x = x + 20;
                 profile.y = y + 20;
                 stateContainer.addChild(profile);
+            }
 
                 // 닉네임
                 const nicknameText = new PIXI.Text(nickName, {
@@ -130,14 +115,12 @@ const Battle = () => {
                 nicknameText.y = y + 20;
                 stateContainer.addChild(nicknameText);
 
-                // 체력바
-                const healthBar = createHealthBar(x + 80, y + 50, currentHealth, maxHealth, healthBarColor)
-                stateContainer.addChild(healthBar);
 
                 // 유저 수치
                 const useState = new PIXI.Text(
-                    `공격력: ${attackPower} | 공격력: ${defensePower} `,
+                    `공격력: ${attackPower} | 방어력: ${defensePower} `,
                     {
+                        
                         fontSize: 15,
                         fill: 0x0f1828,
                         align: 'justify',
@@ -163,7 +146,7 @@ const Battle = () => {
                 stateContainer.addChild(hpState);
 
 
-            }};
+            };
             addStateBox(
                 50,
                 50,
@@ -175,10 +158,11 @@ const Battle = () => {
                 attackerDefPower,
                 '#FC5740'
             )
+
             addStateBox(
                 500,
                 50,
-                "",
+                Swap,
                 '수비자',
                 10000,
                 10000,

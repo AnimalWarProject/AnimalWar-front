@@ -30,7 +30,7 @@ import StrongAndWeak from '../imgs/StrongAndWeak.webp';
 import Swap from '../imgs/Swap.webp';
 
 
-const Skill = () => {
+const AttackerSkill = () => {
     const pixiContainer = useRef(null);
     let clickedContainer = null;
     let clickedContainer1 = null;
@@ -54,7 +54,6 @@ const Skill = () => {
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
-
 
 
         // 유형별 스킬 크기 및 위치 조정
@@ -83,7 +82,21 @@ const Skill = () => {
             const handleClick0 = () => {
                 console.log(`${text}이(가) 클릭되었습니다.`);
 
-                if (text === '전투 시작') {
+                if (text === '매칭 시작') {
+                    // '전투 시작'이 클릭된 경우 리다이렉션 수행
+                    gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
+                            window.location = 'http://localhost:3000/mathing';
+                        } });
+                }
+            };
+            graphics.interactive = true;
+            graphics.buttonMode = true;
+            graphics.on('click', handleClick0);
+
+            const handleClick1 = () => {
+                console.log(`${text}이(가) 클릭되었습니다.`);
+
+                if (text === '수비스킬 셋팅') {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
                             window.location = 'http://localhost:3000/battle1';
@@ -92,13 +105,15 @@ const Skill = () => {
             };
             graphics.interactive = true;
             graphics.buttonMode = true;
-            graphics.on('click', handleClick0);
+            graphics.on('click', handleClick1);
 
         };
         addRoundedText('공격형 스킬', 34, 15, 277, 65, 5);
         addRoundedText('수비형 스킬',  340, 15, 277, 65, 5);
         addRoundedText('유틸형 스킬', 653, 15, 277, 65, 5);
-        addRoundedText('전투 시작',  800, 590, 126, 39, 20, 18, 'bold');
+        addRoundedText('매칭 시작',  800, 590, 126, 39, 20, 18, 'bold');
+        addRoundedText('공격스킬 셋팅',  40, 590, 150, 39, 20, 18, 'bold');
+        addRoundedText('수비스킬 셋팅',  200, 590, 150, 39, 20, 18, 'bold');
 
 
 
@@ -167,7 +182,8 @@ const Skill = () => {
             const handleClick = () => {
                 console.log(`${skillName}이(가) 클릭되었습니다.`);
                 const boxColor = '#ffffff'; // 상자의 색상
-                const alpha = 30; // 투명도
+                // const originalColor = '#ffffff'; // 원래 색상 (하얀색)
+                const alpha = 50; // 투명도
                 const cornerRadiusBox = 5; // 모서리 반경
 
                 if (clickedContainer && clickedContainer !== container) {
@@ -206,6 +222,48 @@ const Skill = () => {
                     clickedContainer = container;
                 }
             };
+
+            // const handleClick = () => {
+            //     console.log(`${skillName}이(가) 클릭되었습니다.`);
+            //     const boxColor = '#FFC000'; // 상자의 색상
+            //     const originalColor = '#ffffff'; // 원래 색상 (하얀색)
+            //     const alpha = 55; // 투명도
+            //     const cornerRadiusBox = 5; // 모서리 반경
+            //
+            //     if (clickedContainer && clickedContainer !== container) {
+            //         // 이전 클릭된 컨테이너가 있으면 테두리 색과 채우기 색을 원래대로 되돌림
+            //         resetContainerStyle(clickedContainer, originalColor, alpha, cornerRadiusBox);
+            //     }
+            //
+            //     if (clickedContainer === container) {
+            //         // 클릭된 컨테이너가 이미 저장된 컨테이너인 경우 클릭 해제
+            //         resetContainerStyle(container, originalColor, alpha, cornerRadiusBox);
+            //         clickedContainer = null;
+            //     } else {
+            //         // 클릭된 컨테이너의 테두리 색과 채우기 색을 변경
+            //         const borderColor = '#000000'; // 변경하고자 하는 테두리 색
+            //         container.children[0].clear()
+            //             .lineStyle(4, borderColor)
+            //             .beginFill(boxColor, alpha)
+            //             .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
+            //             .endFill();
+            //         if (clickedContainer) {
+            //             // 기존에 클릭된 다른 컨테이너의 클릭을 해제
+            //             resetContainerStyle(clickedContainer, originalColor, alpha, cornerRadiusBox);
+            //         }
+            //         clickedContainer = container;
+            //     }
+            // };
+            //
+            // // 컨테이너 스타일을 초기화하는 도우미 함수
+            // const resetContainerStyle = (container, color, alpha, cornerRadiusBox) => {
+            //     container.children[0].clear();
+            //     container.children[0].lineStyle(0)
+            //         .beginFill(color, alpha)
+            //         .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
+            //         .endFill();
+            // };
+
 
             container.on('click', handleClick);
 
@@ -656,4 +714,4 @@ const Skill = () => {
     return <div ref={pixiContainer} className="outlet-container"></div>;
 };
 
-export default Skill;
+export default AttackerSkill;
