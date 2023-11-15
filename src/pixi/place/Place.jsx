@@ -8,31 +8,38 @@ import { api } from '../../network/api';
 
 const Place = ({ userUUID }) => {
     const pixiContainer = useRef(null);
-    const [activeTab, setActiveTab] = useState(null); // null로 초기화
+    const [activeTab, setActiveTab] = useState('animals'); // 'animals'로 초기화
     const [inventory, setInventory] = useState({ buildings: [], animals: [] });
     const [tileData, setTileData] = useState([]);
     const [textures, setTextures] = useState({});
     const appRef = useRef(null);
+    const animalTabBox = useRef(null);
+    const buildingTabBox = useRef(null);
 
-    // Function to preload images and create PIXI textures
-    const preloadImagesAndCreateTextures = (imagePaths, callback) => {
-        let loadedImages = 0;
-        const textures = {};
-        const keys = Object.keys(imagePaths);
-
-        const onImageLoaded = (key, texture) => {
-            textures[key] = texture;
-            loadedImages++;
-            if (loadedImages === keys.length) {
-                callback(textures);
+    // 탭 선택 처리 함수
+    const handleTabSelect = useCallback(
+        (tab) => {
+            setActiveTab(tab);
+            fetchInventory(tab);
+            if (animalTabBox.current && buildingTabBox.current) {
+                updateTabStyle(tab);
             }
-        };
+        },
+        [animalTabBox, buildingTabBox]
+    );
 
-        keys.forEach((key) => {
-            const image = new Image();
-            image.src = imagePaths[key];
-            image.onload = () => onImageLoaded(key, PIXI.Texture.from(image));
-        });
+    const updateTabStyle = (selectedTab) => {
+        // 동물 탭 스타일 업데이트
+        animalTabBox.current.clear();
+        animalTabBox.current.beginFill(selectedTab === 'animals' ? 0xffc0cb : 0xffffff, 0.85);
+        animalTabBox.current.lineStyle(selectedTab === 'animals' ? 1 : 0, 0x000000); // 선택된 탭에 테두리 추가
+        animalTabBox.current.drawRoundedRect(660, 20, 150, 50, 20);
+
+        // 건물 탭 스타일 업데이트
+        buildingTabBox.current.clear();
+        buildingTabBox.current.beginFill(selectedTab === 'buildings' ? 0xffc0cb : 0xffffff, 0.85);
+        buildingTabBox.current.lineStyle(selectedTab === 'buildings' ? 1 : 0, 0x000000); // 선택된 탭에 테두리 추가
+        buildingTabBox.current.drawRoundedRect(810, 20, 150, 50, 20);
     };
 
     const fetchInventory = async (type) => {
@@ -66,159 +73,128 @@ const Place = ({ userUUID }) => {
         const loadedTextures = {};
 
         for (const [key, path] of Object.entries(texturePaths)) {
-            const image = await loadImage(path);
-            loadedTextures[key] = PIXI.Texture.from(image);
+            loadedTextures[key] = PIXI.Texture.from(path); // 이미지 경로를 직접 사용
         }
 
         setTextures(loadedTextures);
     }, []);
 
-    // 이미지를 로드하는 Promise 기반 함수
-    const loadImage = (src) => {
-        return new Promise((resolve, reject) => {
-            const image = new Image();
-            image.src = src;
-            image.onload = () => resolve(image);
-            image.onerror = (e) => reject(e);
-        });
-    };
-
-    // 탭 선택을 처리하는 함수
-    const handleTabSelect = (tab) => {
-        setActiveTab(tab);
-        fetchInventory(tab);
+    const getObjectImagePath = (item) => {
+        if (activeTab === 'animals') {
+            return `/objectImgs/animals/${item.imagePath}`;
+        } else if (activeTab === 'buildings') {
+            return `/objectImgs/buildings/${item.imagePath}`;
+        }
+        return '';
     };
 
     useEffect(() => {
         fetchInventory('buildings');
         fetchInventory('animals');
-    }, []);
-
-    useEffect(() => {
         loadTextures();
         fetchTileData();
-    }, [loadTextures, userUUID]);
+    }, [loadTextures]);
 
     useEffect(() => {
         if (Object.keys(textures).length === 3 && tileData.length > 0) {
-            preloadImagesAndCreateTextures(
-                { LAND: landTileImagePath, SEA: seaTileImagePath, MOUNTAIN: mountainTileImagePath },
-                (textures) => {
-                    const app = new PIXI.Application({
-                        width: 960,
-                        height: 640,
-                        backgroundColor: 0x1099bb,
-                        antialias: true,
-                    });
-                    pixiContainer.current.appendChild(app.view);
-                    appRef.current = app;
+            if (!appRef.current) {
+                const app = new PIXI.Application({
+                    width: 960,
+                    height: 640,
+                    backgroundColor: 0x1099bb,
+                    antialias: true,
+                });
+                pixiContainer.current.appendChild(app.view);
+                appRef.current = app;
+                const container = new PIXI.Container();
+                app.stage.addChild(container);
+                app.stage.sortableChildren = true;
+                const tileSize = {
+                    width: textures.LAND.width,
+                    height: textures.LAND.height,
+                };
 
-                    const container = new PIXI.Container();
-                    app.stage.addChild(container);
-                    app.stage.sortableChildren = true;
-
-                    const tileSize = {
-                        width: textures.LAND.width,
-                        height: textures.LAND.height,
-                    };
-
-                    if (tileSize.width === 0 || tileSize.height === 0) {
-                        console.error('Tile size is zero. Textures may not have loaded properly.');
-                        return;
-                    }
-
-                    tileData.forEach((data) => {
-                        createTile(data, container, textures, tileSize);
-                    });
-
-                    container.interactive = true;
-                    container.buttonMode = true;
-                    container.scale.set(0.5);
-                    container.position.set(app.screen.width / 2, app.screen.height / 2);
-
-                    let startPosition = null;
-
-                    // 탭 선택 처리 함수
-                    const handleTabSelect = (selectedTab) => {
-                        setActiveTab(selectedTab);
-                        // 선택된 탭에 따라서 인벤토리 데이터를 가져옴
-                        fetchInventory(selectedTab);
-                    };
-
-                    // 우측 UI 박스 생성
-                    const ListContainer = new Graphics();
-                    ListContainer.beginFill(0xffffff, 0.5);
-                    ListContainer.drawRoundedRect(0, 70, 400, 500, 20);
-                    ListContainer.x = app.screen.width - 300; // 위치 조정
-                    ListContainer.y = 0;
-                    app.stage.addChild(ListContainer);
-
-                    // 동물 탭 박스 생성
-                    const animalTabBox = new Graphics();
-                    animalTabBox.beginFill(0xffffff, 0.5);
-                    animalTabBox.drawRoundedRect(0, 10, 150, 50, 20);
-                    animalTabBox.x = ListContainer.x; // x 위치 설정
-                    animalTabBox.y = 10; // y 위치 설정
-                    animalTabBox.interactive = true; // 상호작용 가능하게 설정
-                    animalTabBox.buttonMode = true; // 버튼 모드 활성화
-                    const animalText = new PIXI.Text('동물', { fill: 0xffffff });
-                    animalText.x = animalTabBox.x + 5;
-                    animalText.y = animalTabBox.y + 5;
-                    animalTabBox.addChild(animalText);
-                    animalTabBox.on('pointerdown', () => handleTabSelect('animals'));
-                    app.stage.addChild(animalTabBox);
-
-                    // 건물 탭 박스 생성
-                    const buildingTabBox = new Graphics();
-                    buildingTabBox.beginFill(0xffffff, 0.5);
-                    buildingTabBox.drawRoundedRect(150, 10, 150, 50, 20);
-                    buildingTabBox.x = ListContainer.x; // x 위치 설정
-                    buildingTabBox.y = 70; // y 위치 설정
-                    buildingTabBox.interactive = true; // 상호작용 가능하게 설정
-                    buildingTabBox.buttonMode = true; // 버튼 모드 활성화
-                    const buildingText = new PIXI.Text('건물', { fill: 0xffffff });
-                    buildingText.x = buildingTabBox.x + 5;
-                    buildingText.y = buildingTabBox.y + 5;
-                    buildingTabBox.addChild(buildingText);
-                    buildingTabBox.on('pointerdown', () => handleTabSelect('buildings'));
-                    app.stage.addChild(buildingTabBox);
-
-                    app.stage.addChild(animalTabBox);
-                    app.stage.addChild(buildingTabBox);
-
-                    container
-                        .on('pointerdown', (event) => {
-                            startPosition = event.data.getLocalPosition(container.parent);
-                            container.alpha = 0.5;
-                        })
-                        .on('pointerup', () => {
-                            startPosition = null;
-                            container.alpha = 1;
-                        })
-                        .on('pointermove', (event) => {
-                            if (startPosition) {
-                                const newPosition = event.data.getLocalPosition(container.parent);
-                                container.x += newPosition.x - startPosition.x;
-                                container.y += newPosition.y - startPosition.y;
-                                startPosition = newPosition;
-                            }
-                        });
-
-                    // Add zoom functionality
-                    app.view.addEventListener('wheel', (event) => {
-                        event.preventDefault();
-                        const direction = event.deltaY > 0 ? -1 : 1;
-                        const factor = 0.05;
-                        const newScale = container.scale.x + factor * direction;
-                        container.scale.set(newScale, newScale);
-                    });
-                    return () => {
-                        if (app) app.destroy(true, true);
-                    };
+                if (tileSize.width === 0 || tileSize.height === 0) {
+                    console.error('Tile size is zero. Textures may not have loaded properly.');
+                    return;
                 }
-            );
+
+                tileData.forEach((data) => {
+                    createTile(data, container, textures, tileSize);
+                });
+
+                container.interactive = true;
+                container.buttonMode = true;
+                container.scale.set(0.5);
+                container.position.set(app.screen.width / 2, app.screen.height / 2);
+
+                let startPosition = null;
+
+                // 우측 UI 박스 생성
+                const ListContainer = new PIXI.Graphics(); // 수정된 부분
+                ListContainer.beginFill(0xffffff, 0.85);
+                ListContainer.drawRoundedRect(0, 70, 400, 500, 20);
+                ListContainer.x = app.screen.width - 300; // 위치 조정
+                ListContainer.y = 0;
+                app.stage.addChild(ListContainer);
+
+                // 동물 탭 박스 생성
+                animalTabBox.current = new PIXI.Graphics(); // 수정된 부분
+                animalTabBox.current.beginFill(0xffffff, 0.85);
+                animalTabBox.current.drawRoundedRect(660, 20, 150, 50, 20);
+                animalTabBox.current.interactive = true; // 상호작용 가능하게 설정
+                animalTabBox.current.buttonMode = true; // 버튼 모드 활성화
+                const animalText = new PIXI.Text('동물', { fill: 0x000000, fontSize: 24 });
+                animalText.x = 710;
+                animalText.y = 35;
+                animalTabBox.current.addChild(animalText);
+                animalTabBox.current.on('pointerdown', () => handleTabSelect('animals'));
+                app.stage.addChild(animalTabBox.current);
+
+                // 건물 탭 박스 생성
+                buildingTabBox.current = new PIXI.Graphics(); // 수정된 부분
+                buildingTabBox.current.beginFill(0xffffff, 0.85);
+                buildingTabBox.current.drawRoundedRect(810, 20, 150, 50, 20);
+                buildingTabBox.current.interactive = true; // 상호작용 가능하게 설정
+                buildingTabBox.current.buttonMode = true; // 버튼 모드 활성화
+                const buildingText = new PIXI.Text('건물', { fill: 0x000000, fontSize: 24 });
+                buildingText.x = 860;
+                buildingText.y = 35;
+                buildingTabBox.current.addChild(buildingText);
+                buildingTabBox.current.on('pointerdown', () => handleTabSelect('buildings'));
+                app.stage.addChild(buildingTabBox.current);
+
+                updateTabStyle(activeTab);
+
+                container
+                    .on('pointerdown', (event) => {
+                        startPosition = event.data.getLocalPosition(container.parent);
+                        container.alpha = 0.5;
+                    })
+                    .on('pointerup', () => {
+                        startPosition = null;
+                        container.alpha = 1;
+                    })
+                    .on('pointermove', (event) => {
+                        if (startPosition) {
+                            const newPosition = event.data.getLocalPosition(container.parent);
+                            container.x += newPosition.x - startPosition.x;
+                            container.y += newPosition.y - startPosition.y;
+                            startPosition = newPosition;
+                        }
+                    });
+
+                // Add zoom functionality
+                app.view.addEventListener('wheel', (event) => {
+                    event.preventDefault();
+                    const direction = event.deltaY > 0 ? -1 : 1;
+                    const factor = 0.05;
+                    const newScale = container.scale.x + factor * direction;
+                    container.scale.set(newScale, newScale);
+                });
+            }
         }
-    }, [textures, tileData]);
+    }, [textures, tileData, activeTab, handleTabSelect]);
 
     useEffect(() => {
         // 인벤토리 데이터가 변경될 때마다 실행됩니다.
@@ -226,6 +202,49 @@ const Place = ({ userUUID }) => {
             // 인벤토리 데이터를 표시하는 로직을 여기에 구현합니다.
             // 예: activeTab === 'animals' 일 때 동물 인벤토리를 표시
             // 예: activeTab === 'buildings' 일 때 건물 인벤토리를 표시
+
+            // ListBox를 생성하기 위한 초기 위치 및 간격 설정
+            let initialX = 500;
+            let initialY = 100;
+            const yOffset = 60;
+
+            // 선택된 탭에 따라 표시할 데이터 배열 선택
+            const selectedInventory = inventory[activeTab];
+
+            // 데이터를 순회하며 ListBox 생성 및 표시
+            selectedInventory.forEach((item, index) => {
+                const listBox = new Graphics();
+                listBox.beginFill(0xffffff, 0.85);
+                listBox.drawRoundedRect(initialX, initialY + index * yOffset, 300, 50, 20);
+                listBox.interactive = true;
+                listBox.buttonMode = true;
+
+                const objectImagePath = getObjectImagePath(item.building);
+
+                // 이미지를 PIXI.Sprite에 추가
+                const objectImage = PIXI.Sprite.from(objectImagePath);
+                objectImage.anchor.set(0.5);
+                objectImage.x = initialX + 50; // 이미지의 x 위치 조정
+                objectImage.y = initialY + index * yOffset + 25; // 이미지의 y 위치 조정
+                objectImage.scale.set(0.5); // 이미지 크기 조정                // 데이터 내용을 텍스트로 표시
+                const text = new PIXI.Text(`이름: ${item.building.name}, 보유 수량: ${item.ownedQuantity}`, {
+                    fill: 0x000000,
+                    fontSize: 18,
+                });
+                text.x = initialX + 10;
+                text.y = initialY + index * yOffset + 10;
+
+                listBox.on('pointerdown', () => {
+                    // ListBox를 클릭했을 때 실행할 동작 추가
+                    // 예: ListBox 클릭 시 해당 아이템의 상세 정보를 표시
+                    console.log(`Selected item: ${item.building.name}`);
+                });
+
+                // ListBox를 스테이지에 추가
+                appRef.current.stage.addChild(listBox); // 수정된 부분
+                appRef.current.stage.addChild(objectImage); // 이미지를 스테이지에 추가
+                appRef.current.stage.addChild(text); // 수정된 부분
+            });
         }
     }, [inventory, activeTab]);
 
@@ -246,4 +265,5 @@ const Place = ({ userUUID }) => {
 
     return <div ref={pixiContainer} className="outlet-container"></div>;
 };
+
 export default Place;
