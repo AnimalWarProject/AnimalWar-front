@@ -75,6 +75,15 @@
 .marketinven-section{
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    height: 400px;
+}
+.marketinven-section::-webkit-scrollbar {
+    width: 12px; /* 스크롤바의 너비 */
+}
+.marketinven-section::-webkit-scrollbar-thumb {
+    background-color: #888; /* 스크롤바 색상 */
+    border-radius: 6px; /* 스크롤바의 모서리를 둥글게 만듭니다. */
 }
 .marketinven-wrap{
     display: flex;
@@ -85,12 +94,6 @@
     width: 4.2rem;
     height: 4rem;
     margin: 0.5rem;
-}
-.marketinven-page{
-    display: flex;
-    margin-top: 2rem;
-    justify-content: center;
-    gap: 0.3rem;
 }
 .marketinven-pageBtn{
     display: flex;

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import "../css/SideBar.css";
 
-const SideBar = () => {
+const SideBar = ({onSortSelect}) => {
+
+    const handleAnimalTypeClick = (isSort) => {
+        onSortSelect(isSort); // 이 부분이 수정되었습니다.
+    };
+
     // 각 버튼의 클릭 상태를 별도로 관리
     const [normalClicked, setNormalClicked] = useState(false);
     const [rareClicked, setRareClicked] = useState(false);
@@ -19,11 +24,13 @@ const SideBar = () => {
     const toggleLegendClicked = () => setLegendClicked(!legendClicked);
 
     const togglePriceHighClicked = () => {
+        handleAnimalTypeClick('ASC')
         setPriceHighClicked(!priceHighClicked);
         setPriceLowClicked(false); // 가격 낮은 순 클릭 해제
     };
 
     const togglePriceLowClicked = () => {
+        handleAnimalTypeClick('DESC')
         setPriceLowClicked(!priceLowClicked);
         setPriceHighClicked(false); // 가격 높은 순 클릭 해제
     };

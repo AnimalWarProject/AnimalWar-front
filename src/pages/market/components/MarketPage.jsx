@@ -7,9 +7,14 @@ import MarketInven from "./MarketInven";
 
 const MarketPage = () => {
     const [selectedAnimalType, setSelectedAnimalType] = useState('');
+    const [selectedSort, setSelectedSort] = useState('');
 
     const handleAnimalTypeSelect = (animalType) => {
         setSelectedAnimalType(animalType);
+    };
+
+    const handleSortSelect = (isSort) => {
+        setSelectedSort(isSort);
     };
     return <>
         <div className="marketPage-container">
@@ -20,10 +25,10 @@ const MarketPage = () => {
             </div>
             <div className="sidebar-main">
                 <div>
-                    <SideBar />
+                    <SideBar onSortSelect={handleSortSelect} />
                 </div>
                 <div>
-                    <Main selectedAnimalType={selectedAnimalType} />
+                    <Main selectedAnimalType={selectedAnimalType} selectedSort={selectedSort} />
                 </div>
             </div>
             <div>
