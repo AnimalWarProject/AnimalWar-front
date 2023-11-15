@@ -1,0 +1,158 @@
+.BoardContainer {
+
+    margin: 10px 10px 10px 10px;
+    border: 1px solid #000;
+    background: #fff;
+
+}
+
+.BoardSearchBox {
+    width: 460px;
+    height: 45px;
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: flex-start;
+
+    border: 1px solid #000;
+    background: #FFF;
+
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.BoardSearchBox .Title {
+    width: 146px;
+    height: 45px;
+    border-right: 1px solid #000;
+    background: #F0FFFE;
+}
+
+.BoardSearchBox .TitleFont {
+
+
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+
+
+
+    color: #000;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.BoardSearchBox .Input {
+    width: 230px;
+    height: 40px;
+    display: flex;
+    border: none;
+    outline: none;
+    font-size: 24px;
+}
+
+.BoardSearchBox .Submit {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.Search {
+
+    position: relative;
+    width: 60px;
+    height: 40px;
+    margin-left: 10px;
+    background-color: transparent;
+}
+
+.InputContainer {
+    display: flex;
+
+}
+
+.tg {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-left: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.tg td {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 10px 5px;
+    word-break: normal;
+}
+
+.tg th {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    overflow: hidden;
+    padding: 10px 5px;
+    word-break: normal;
+}
+
+.tg .tg-47ck {
+    background-color: #68cbd0;
+    border-color: inherit;
+    color: #000000;
+    text-align: center;
+    vertical-align: top
+}
+
+.tg .tg-fox7 {
+    background-color: #68cbd0;
+    color: #000000;
+    text-align: center;
+    vertical-align: top
+}
+
+.tg .tg-j6lv {
+    background-color: #96fffb;
+    text-align: center;
+    vertical-align: top
+}
+
+
+
+
+.ListContainer {
+
+    margin: 10px 10px 10px 10px;
+    width: 1520px;
+    height: 580px;
+    background-color: #F0FFFE;
+
+    border: 1px solid #000;
+}
+
+.TopContainer {
+    width: 1520px;
+    height: 50px;
+    background-color: #B8FBEA;
+    border: 1px solid #000;
+}
+
+.WriteButton {
+    border: none;
+
+    margin: 20px 20px 10px 10px;
+    height: 40px;
+
+    cursor: pointer;
+
+    background-color: #B8FBEA;
+}

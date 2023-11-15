@@ -7,6 +7,7 @@ import { ButtonContainer } from '@pixi/ui';
 import { Link, NavLink } from 'react-router-dom';
 import MatchProcess from './MatchProcess';
 import { useHistory } from 'react-router-use-history';
+import { api } from '../../network/api';
 
 const Match = () => {
     const canvasRef = useRef(null);
@@ -21,19 +22,20 @@ const Match = () => {
 
     useEffect(() => {
 
-        const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrTmFtZSI6IuygleykgOq4sCIsInVzZXJVVUlEIjoiZDMzM2JmNmQtZGEzNS00ZGFhLWIxZTYtMTg2OTllYzQxOWVlIiwiaWQiOiJ0aGtpbTIiLCJzdWIiOiJ0aGtpbTIiLCJleHAiOjE3MDYwMDg3MjV9.nK449IpFyRtKlnRGgBS6b6i02P2DUvPjjPc5qw2xzng'
-        const getTokenData = () =>
-            axios
-                .get(`http://localhost:8000/api/v1/user`, {
-                    headers: {
-                        Authorization: token,
-                    },
-                })
-                .then((response) => {
-                    setUserData(response.data);
-                    setIsDataLoaded(true);
-                    console.log(response.data);
+        const getTokenData = async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const { data: user } = await api('/api/v1/user', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
                 });
+
+                setUserData(user);
+                setIsDataLoaded(true);
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
+            }
+        };
+
 
 
         if (!isDataLoaded) {
@@ -130,7 +132,7 @@ const Match = () => {
             // //매칭 시작 버튼 
             // const box1 = new PIXI.Graphics();
             // box1.beginFill(0xFFC000);
-            const boxWidth = canvasWidth * 0.16;
+            const boxWidth = canvasWidth * 0.2;
             const boxHeight = canvasHeight * 0.1;
 
             // box1.drawRoundedRect(canvasWidth * 0.7, canvasHeight * 0.78, boxWidth, boxHeight, 50);
@@ -141,7 +143,7 @@ const Match = () => {
                 fontSize: 24, // 폰트 크기
                 fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
             });
-            const text2 = new PIXI.Text("매칭시작", textStyle2);
+            const text2 = new PIXI.Text("스킬세팅시작", textStyle2);
 
             text2.x = canvasWidth * 0.73;
             text2.y = canvasHeight * 0.81;
@@ -158,7 +160,7 @@ const Match = () => {
             button.onPress.connect(() => {
 
                 //다음스테이지
-                history.push("/match2");
+                history.push("/battle");
 
             }
 
