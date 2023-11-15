@@ -626,7 +626,6 @@ const Skill = () => {
         scBox.y = 100; // y 좌표
         bigBoxContainer.addChild(scBox);
 
-
         // 수비형 스킬 스크롤
         const scBox1 = new CustomScrollBox({
             width: 310,
@@ -638,7 +637,6 @@ const Skill = () => {
         bigBoxContainer1.addChild(scBox1);
         scBox1.x = 360 // x 좌표
         scBox1.y = 100; // y 좌표
-
 
         // 유틸형 스킬 스크롤
         const scBox2 = new CustomScrollBox({
