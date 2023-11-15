@@ -7,7 +7,6 @@ import Match from '../pixi/Match/Match';
 import DrawPage from '../pixi/draw/components/DrawPage';
 import LoginPage from '../pages/login/LoginPage';
 import SignupPage from '../pages/signup/SignupPage';
-import MixTest from '../pixi/Mix/MixTest';
 import DrawResult from '../pixi/draw/components/DrawResult';
 import React from 'react';
 import MatchProcess from '../pixi/Match/MatchProcess';
@@ -28,6 +27,7 @@ import Battle from "../pixi/battle/components/Battle";
 import GameResult from "../pixi/battle/components/GameResult";
 import Place from '../pixi/place/Place';
 import Mix from "../pixi/Mix/Mix";
+import DrawLoading from "../pixi/draw/components/DrawLoading";
 
 
 const MyRoutes = () => {
