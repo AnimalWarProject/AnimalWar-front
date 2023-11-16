@@ -1,13 +1,25 @@
 import "../css/SearchBox.css" ;
-const SearchBox = ({ onAnimalTypeSelect }) => {
+import {useState} from "react";
+import searchIcon from '../marketImages/search.webp';
+const SearchBox = ({ onAnimalTypeSelect, onSearchWord }) => {
+    const [word, setWord] = useState("");
+
     const handleAnimalTypeClick = (animalType) => {
         onAnimalTypeSelect(animalType);
     };
+    const onChangeHandler = (e) => {
+        setWord(e.target.value)
+    }
+    const onClickSearchBtn = () => {
+        onSearchWord(word);
+    }
     return<>
         <div className="searchbox-container">
             <div className="searchbox-wrap">
-                <input className="searchbox-input" placeholder={"동물/건물을 입력하세요."}/>
-
+                <div style={{display:"flex", alignItems:"center"}}>
+                    <input onChange={onChangeHandler} className="searchbox-input" placeholder={"동물/건물을 입력하세요."}/>
+                    <button onClick={onClickSearchBtn} className="searchbox-input-Btn"><img className="searchbox-input-image" src={searchIcon} alt=""/></button>
+                </div>
                 <div className="searchbox-division">
                     <div>
                         <div className="searchbox-animal">동물</div>

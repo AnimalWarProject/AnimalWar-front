@@ -1,12 +1,20 @@
 .main-container{
     display: flex;
     flex-direction: column;
-    justify-content: center;
     margin: 0;
+    overflow-y: auto;
+    height: 34rem;
+}
+.main-container::-webkit-scrollbar {
+    width: 12px; /* 스크롤바의 너비 */
+}
+
+.main-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* 스크롤바 색상 */
+    border-radius: 6px; /* 스크롤바의 모서리를 둥글게 만듭니다. */
 }
 .main-list-wrap{
     display: flex;
-
 }
 .main-list-content{
     display: flex;
@@ -15,11 +23,6 @@
     height: 9.6rem;
     border: solid black 0.06rem;
     margin: 0 2.8rem 2.2rem 0;
-}
-.pagination{
-    display: flex;
-    gap: 1rem;
-    margin-top: -2.5rem;
 }
 .page-button{
     width: 2rem;
