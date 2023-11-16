@@ -29,6 +29,7 @@ import GameResult from "../pixi/battle/components/GameResult";
 import Place from '../pixi/place/Place';
 import Mix from "../pixi/Mix/Mix";
 import DrawLoading from "../pixi/draw/components/DrawLoading";
+import SkillSelect from "../pixi/battle/components/SkillSelect";
 
 
 const MyRoutes = () => {
@@ -53,12 +54,14 @@ const MyRoutes = () => {
                 <Route path="/match" element={<Match />} />
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
-                <Route path="/battle" element={<AttackerSkill />}></Route>
-                <Route path="/battle1" element={<DefenderSkill />}></Route>
+                {/*<Route path="/battle" element={<AttackerSkill />}></Route>*/}
+                {/*<Route path="/battle1" element={<DefenderSkill />}></Route>*/}
                 <Route path="/battle2" element={<Battle />}></Route>
                 <Route path="/battle3" element={<GameResult />}></Route>
                 <Route path="/exchange" element={<Exchange />}></Route>
                 <Route path="/place" element={<Place />}></Route>
+                <Route path="/battle" element={<SkillSelect />}></Route>
+
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />

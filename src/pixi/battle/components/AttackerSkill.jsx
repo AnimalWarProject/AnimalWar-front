@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import * as PIXI from "pixi.js";
 import Transparency from '../imgs/Transparency.png';
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import {CustomScrollBox} from "./CustomScollBox";
 import { gsap } from 'gsap';
+import {api} from "../../../network/api";
 
 // 공격형 스킬 이미지
 import berserkerImage from '../imgs/Berserker.png';
@@ -30,7 +31,7 @@ import StrongAndWeak from '../imgs/StrongAndWeak.webp';
 import Swap from '../imgs/Swap.webp';
 
 
-const AttackerSkill = () => {
+const AttackerSkill = ({setFlag}) => {
     const pixiContainer = useRef(null);
     let clickedContainer = null;
     let clickedContainer1 = null;
@@ -38,9 +39,14 @@ const AttackerSkill = () => {
     let testArr = [];
     let testArr1 = [];
     let testArr2 = [];
-
+    const [selectedSkill, setSelectedSkill] = useState({
+        attackerAttackTypeSkill: '',
+        attackerDefensiveTypeSkill: '',
+        attackerUtilityTypeSkill: ''
+    });
 
     useEffect(() => {
+
         // 기본 배경크기 설정
         const app = new PIXI.Application({
             width: 960,
@@ -54,7 +60,6 @@ const AttackerSkill = () => {
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
-
 
         // 유형별 스킬 크기 및 위치 조정
         const addRoundedText = (text, x, y, width, height, cornerRadius, fontSize, fontWeight) => {
@@ -79,13 +84,56 @@ const AttackerSkill = () => {
             app.stage.addChild(message);
 
 
-            const handleClick0 = () => {
+
+            const handleClick0 = async () => {
                 console.log(`${text}이(가) 클릭되었습니다.`);
 
-                if (text === '매칭 시작') {
+                const attackerAttackTypeSkill = localStorage.getItem('attackerAttackTypeSkill');
+                const attackerDefensiveTypeSkill = localStorage.getItem
+                ('attackerDefensiveTypeSkill');
+                const attackerUtilityTypeSkill = localStorage.getItem('attackerUtilityTypeSkill')
+
+                try {
+                    const updatedState = {
+                        attackerAttackTypeSkill,
+                        attackerDefensiveTypeSkill,
+                        attackerUtilityTypeSkill,
+                    };
+                    const skillToken = localStorage.getItem('accessToken');
+                    console.log(text)
+                    if (text === '매칭 시작') {
+
+                        if (!attackerAttackTypeSkill || !attackerDefensiveTypeSkill || !attackerUtilityTypeSkill) {
+                            alert('모든 스킬을 선택해야 매칭이 됩니다.');
+                            return; // 매칭 시작을 중지하고 함수를 종료
+                        }
+                        const response = await api('/api/v1/user/changeAttackerSkill', 'PUT', updatedState, {
+                            headers: {
+                                Authorization: `Bearer ${skillToken}`,
+                            },
+                        });
+
+                        // API 호출이 성공했는지 확인
+                        if (response.status === 200) {
+                            console.log('공격자 스킬이 성공적으로 업데이트되었습니다.');
+                            setSelectedSkill(response);
+                            localStorage.removeItem('attackerAttackTypeSkill');
+                            localStorage.removeItem('attackerDefensiveTypeSkill');
+                            localStorage.removeItem('attackerUtilityTypeSkill');
+                        } else {
+                            console.log('공격자 스킬 업데이트 실패. 서버 응답:', response.status);
+                        }
+                    } else {
+                        setFlag(0);
+                    }
+                } catch (error) {
+                    console.error('API 호출 중 오류 발생:', error);
+                }
+
+                if (text === "매칭 시작") {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/mathing';
+                            window.location = 'http://localhost:3000/matching';
                         } });
                 }
             };
@@ -95,12 +143,9 @@ const AttackerSkill = () => {
 
             const handleClick1 = () => {
                 console.log(`${text}이(가) 클릭되었습니다.`);
-
-                if (text === '수비스킬 셋팅') {
-                    // '전투 시작'이 클릭된 경우 리다이렉션 수행
-                    gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/battle1';
-                        } });
+                console.log(text)
+                if (text === "수비스킬 셋팅") {
+                    // setFlag(0);
                 }
             };
             graphics.interactive = true;
@@ -112,10 +157,8 @@ const AttackerSkill = () => {
         addRoundedText('수비형 스킬',  340, 15, 277, 65, 5);
         addRoundedText('유틸형 스킬', 653, 15, 277, 65, 5);
         addRoundedText('매칭 시작',  800, 590, 126, 39, 20, 18, 'bold');
-        addRoundedText('공격스킬 셋팅',  40, 590, 150, 39, 20, 18, 'bold');
-        addRoundedText('수비스킬 셋팅',  200, 590, 150, 39, 20, 18, 'bold');
-
-
+        // addRoundedText('공격스킬 셋팅',  40, 590, 150, 39, 20, 18, 'bold');
+        addRoundedText('수비스킬 셋팅',  40, 590, 150, 39, 20, 18, 'bold');
 
 
         // 공격형 스킬 큰 박스를 담을 컨테이너
@@ -211,6 +254,7 @@ const AttackerSkill = () => {
                         .beginFill(boxColor, alpha)
                         .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
                         .endFill();
+                    localStorage.setItem('attackerAttackTypeSkill', skillName);
                     if (clickedContainer) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer.children[0].clear();
@@ -222,49 +266,6 @@ const AttackerSkill = () => {
                     clickedContainer = container;
                 }
             };
-
-            // const handleClick = () => {
-            //     console.log(`${skillName}이(가) 클릭되었습니다.`);
-            //     const boxColor = '#FFC000'; // 상자의 색상
-            //     const originalColor = '#ffffff'; // 원래 색상 (하얀색)
-            //     const alpha = 55; // 투명도
-            //     const cornerRadiusBox = 5; // 모서리 반경
-            //
-            //     if (clickedContainer && clickedContainer !== container) {
-            //         // 이전 클릭된 컨테이너가 있으면 테두리 색과 채우기 색을 원래대로 되돌림
-            //         resetContainerStyle(clickedContainer, originalColor, alpha, cornerRadiusBox);
-            //     }
-            //
-            //     if (clickedContainer === container) {
-            //         // 클릭된 컨테이너가 이미 저장된 컨테이너인 경우 클릭 해제
-            //         resetContainerStyle(container, originalColor, alpha, cornerRadiusBox);
-            //         clickedContainer = null;
-            //     } else {
-            //         // 클릭된 컨테이너의 테두리 색과 채우기 색을 변경
-            //         const borderColor = '#000000'; // 변경하고자 하는 테두리 색
-            //         container.children[0].clear()
-            //             .lineStyle(4, borderColor)
-            //             .beginFill(boxColor, alpha)
-            //             .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
-            //             .endFill();
-            //         if (clickedContainer) {
-            //             // 기존에 클릭된 다른 컨테이너의 클릭을 해제
-            //             resetContainerStyle(clickedContainer, originalColor, alpha, cornerRadiusBox);
-            //         }
-            //         clickedContainer = container;
-            //     }
-            // };
-            //
-            // // 컨테이너 스타일을 초기화하는 도우미 함수
-            // const resetContainerStyle = (container, color, alpha, cornerRadiusBox) => {
-            //     container.children[0].clear();
-            //     container.children[0].lineStyle(0)
-            //         .beginFill(color, alpha)
-            //         .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
-            //         .endFill();
-            // };
-
-
             container.on('click', handleClick);
 
 
@@ -311,7 +312,7 @@ const AttackerSkill = () => {
             testArr.push(container);
 
         };
-        
+
         // 수비형 스킬들 설정
         const addDefenseSkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha, x, y) => {
             const container1 = new PIXI.Graphics();
@@ -368,6 +369,7 @@ const AttackerSkill = () => {
                         .beginFill(boxColor1, alpha1)
                         .drawRoundedRect(0, 6, 243, 95, cornerRadiusBox1)
                         .endFill();
+                    localStorage.setItem('attackerDefensiveTypeSkill', skillName);
                     if (clickedContainer1) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer1.children[0].clear();
@@ -443,7 +445,9 @@ const AttackerSkill = () => {
 
             // 유틸형 스킬 클릭 이벤트 핸들링 함수
             const handleClick2 = () => {
+
                 console.log(`${skillName}이(가) 클릭되었습니다.`);
+
                 const boxColor2 = '#ffffff'; // 상자의 색상
                 const alpha2 = 30; // 투명도
                 const cornerRadiusBox2 = 5; // 모서리 반경
@@ -473,6 +477,7 @@ const AttackerSkill = () => {
                         .beginFill(boxColor2, alpha2)
                         .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox2)
                         .endFill();
+                    localStorage.setItem('attackerUtilityTypeSkill', skillName);
                     if (clickedContainer2) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer2.children[0].clear();
@@ -531,7 +536,7 @@ const AttackerSkill = () => {
             testArr2.push(container2);
 
         };
-        
+
         // 공격형 박스
         addAttackSkillBox(
             berserkerImage,
