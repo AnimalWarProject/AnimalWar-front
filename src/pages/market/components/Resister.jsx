@@ -1,8 +1,26 @@
 import '../css/Resister.css';
 import {useState} from "react";
+import axios from "axios";
 
 const Resister = ({selectedData, onEventInMarketCancel}) => {
+    const animalData = selectedData && selectedData.animal;
     const [price, setPrice] = useState('');
+    let animalBuff = useState(0)
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!animalBuff === 0){
+        animalBuff = animalData.buff // 만약 buff 가 0이 아니면 buff값을 그대로 저장
+    }
+
+    const itemInfo = {
+        itemId: animalData.animalId,
+        name: animalData.name,
+        grade: animalData.grade,
+        species: animalData.species,
+        buff: animalBuff[0], // 배열에서 첫 번째 값을 선택하여 정수로 변환하여 보냄
+        price: price
+    };
+
     const onChangePrice = (e) => {
         const inputPrice = e.target.value;
         if (isNaN(inputPrice)) {
@@ -17,17 +35,23 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         onEventInMarketCancel()
     }
     const ItemSell = () => {
-        // market controller에 insert , UUID userId, Long itemId,  String name, String grade,  String type, Integer buff, Integer price < reqeust
-        // user inven delete
+        axios.post(`http://localhost:8000/api/v1/inventory/delete`, itemInfo, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+            .then(()=>{
+                alert("삭제성공")
+            }).catch((err)=>{
+            console.log(err)
+        })
     }
-
-    const animalData = selectedData && selectedData.animal;
 
     return <>
         <div className="register-container">
             <div className="register-wrap">
                 <div className="register-wrap-item">
-                    {/*    아이템 등록 구간*/}
+                    {/*    아이템 이미지 등록 */}
                 </div>
                 <div>
                     이름 : {animalData.name}
@@ -49,5 +73,4 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         </div>
     </>;
 };
-
 export default Resister;
