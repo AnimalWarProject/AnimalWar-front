@@ -28,6 +28,7 @@ import Battle from '../pixi/battle/components/Battle';
 import Place from '../pixi/place/Place';
 import Board from '../pages/board/components/Board';
 import BoardDetail from '../pages/board/components/BoardDetail';
+import NewBoard from '../pages/board/components/NewBoard';
 
 const MyRoutes = () => {
     return (
@@ -60,7 +61,8 @@ const MyRoutes = () => {
                 <Route path="/my" element={<MyPage />} />
                 <Route path="/userInfo" element={<UserInfo />} />
                 <Route path="/board" element={<Board />} />
-                <Route path="/BoardDetail" element={<BoardDetail />} />
+                <Route path="/boardDetail" element={<BoardDetail />} />
+                <Route path="/newBoard" element={<NewBoard />} />
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/" element={<LoginPage />} />

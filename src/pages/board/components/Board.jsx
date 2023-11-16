@@ -1,8 +1,16 @@
 import "../css/Board.css"
 import serachImg from "../../../common/imgs/Search.webp"
 import { Pagination, Stack } from "@mui/material";
+import { useHistory } from "react-router-use-history";
 
 const Board = () => {
+
+    const history = useHistory();
+
+    const handleWirte = () => {
+        history.push("/newBoard")
+    }
+
     return (
         <div className="BoardContainer">
             {/* 서치박스  */}
@@ -26,7 +34,9 @@ const Board = () => {
 
                 </div>
 
-                <button className="WriteButton">
+
+
+                <button className="WriteButton" onClick={handleWirte}>
                     게시글 작성하기
                 </button>
             </div>

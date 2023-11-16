@@ -56,13 +56,14 @@ const Exchange = () => {
         }
     }
 
+
+
     useEffect(() => {
+
         if (!isDataLoaded) {
             getTokenData();
         }
-    }, [isDataLoaded]);
 
-    useEffect(() => {
         if (isDataLoaded) {
             const app = new PIXI.Application({
                 width: canvasWidth,

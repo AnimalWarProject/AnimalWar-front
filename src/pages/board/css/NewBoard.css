@@ -1,0 +1,75 @@
+.NewBoardTitle {
+    width: 50%;
+    height: 100%;
+
+    margin-left: 30px;
+    font-size: 20px;
+
+    border: 1px solid #AEAEAE;
+    background: #FFF;
+}
+
+.NewBoardSide {
+    width: 80px;
+    height: 600px;
+    background-color: #B8FBEA;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #000;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+}
+
+.NewBoardContent {
+    width: 1200px;
+    height: 450px;
+
+    margin: 20px 20px 20px 20px;
+
+    resize: none;
+
+
+    color: #000;
+
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    padding: 10px 10px 10px 10px;
+}
+
+.NewBoardFile::-webkit-file-upload-button {
+    border: 1px solid #000;
+
+    display: inline-block;
+    padding: 10px 20px;
+    color: #000;
+    vertical-align: middle;
+    background-color: #B8FBEA;
+    cursor: pointer;
+    height: 40px;
+    margin-left: 20px;
+}
+
+.NewBoardSubmit {
+    border: 1px solid #000;
+
+    display: inline-block;
+    padding: 10px 20px;
+    color: #000;
+    vertical-align: middle;
+    background-color: #B8FBEA;
+    cursor: pointer;
+    height: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
