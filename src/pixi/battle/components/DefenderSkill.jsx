@@ -640,7 +640,7 @@ const DefenderSkill = ({setFlag}) => {
         addUtilitySkillBox(
             DoItAgain,
             '다시하기',
-            '공격자, 수비자',
+            '상대방과 자신의 체력을       100% 회복',
             '#FFFFFF'
         );
         addUtilitySkillBox(
@@ -658,7 +658,7 @@ const DefenderSkill = ({setFlag}) => {
         );
         addUtilitySkillBox(
             Swap,
-            '다시하기',
+            '바꿔치기',
             '상대방과 나의 체력 교체,     나의 현재 체력의 10% 감소',
             '#FFFFFF'
         );

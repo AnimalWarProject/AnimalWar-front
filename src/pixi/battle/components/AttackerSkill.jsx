@@ -133,7 +133,7 @@ const AttackerSkill = ({setFlag}) => {
                 if (text === "매칭 시작") {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/matching';
+                            window.location = 'http://localhost:3000/match';
                         } });
                 }
             };
@@ -643,7 +643,7 @@ const AttackerSkill = ({setFlag}) => {
         addUtilitySkillBox(
             DoItAgain,
             '다시하기',
-            '공격자, 수비자',
+            '상대방과 자신의 체력을       100% 회복',
             '#FFFFFF'
         );
         addUtilitySkillBox(
@@ -661,7 +661,7 @@ const AttackerSkill = ({setFlag}) => {
         );
         addUtilitySkillBox(
             Swap,
-            '다시하기',
+            '바꿔치기',
             '상대방과 나의 체력 교체,     나의 현재 체력의 10% 감소',
             '#FFFFFF'
         );
