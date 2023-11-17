@@ -6,6 +6,7 @@
     width: 18rem;
     height: 37.1rem;
     border: solid black 0.1rem;
+    border-radius: 1rem;
     align-items: center;
     flex-direction: column;
     justify-content: center;
@@ -23,6 +24,13 @@
     border-radius: 1rem;
     margin-top: 2rem;
     background-color: #FFFFFF;
+}
+.register-wrap-input{
+    width: 10rem;
+    height: 1.7rem;
+    background-color: #f2f2f2;
+    border: none;
+    border-bottom: black 0.2rem solid;
 }
 .register-btnWrap{
     display: flex;

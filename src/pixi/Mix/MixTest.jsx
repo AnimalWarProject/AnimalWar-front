@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import * as PIXI from 'pixi.js';
-import pig from './imgs/PIG 5.png'
-import bird from './imgs/Bird.png'
-import cat from './imgs/Cat.png'
-import dog from './imgs/Dog.png'
-import fish from './imgs/Fish.png'
-import mixPot from './imgs/MIXPOT 1.png'
-import mixBackground from './imgs/Rectangle 12348.png'
+import pig from './imgs/PIG 5.webp'
+import bird from './imgs/Bird.webp'
+import cat from './imgs/Cat.webp'
+import dog from './imgs/Dog.webp'
+import fish from './imgs/Fish.webp'
+import mixPot from './imgs/MIXPOT 1.webp'
+import mixBackground from './imgs/Rectangle 12348.webp'
 import { useHistory } from 'react-router-use-history';
 import { ButtonContainer, ScrollBox } from "@pixi/ui";
 const MixTest = () => {

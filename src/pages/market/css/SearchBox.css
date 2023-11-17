@@ -2,16 +2,17 @@
     border: solid black 0.06rem;
     border-radius: 1rem;
     background-color: #f2f2f2;
-    width: 13.85rem;
+    width: 15rem;
     height: 37.1rem;
     display: flex;
     justify-content: center;
-    margin-right: 3rem;
+    margin-right: 1rem;
 }
 .searchbox-wrap{
     display: flex;
     flex-direction: column;
     gap: 2.3rem;
+    align-items: center;
 }
 .searchbox-input{
     margin-top: 0.5rem;
@@ -20,6 +21,22 @@
     width: 12.3rem;
     height: 2.8rem;
     text-align: center;
+}
+.searchbox-input-Btn{
+    background-color: #FFFFFF;
+    border: solid black 0.1rem;
+    border-radius: 1rem;
+    width: 2rem;
+    height: 2rem;
+    justify-content: center;
+    align-items: center;
+}
+.searchbox-input-Btn:hover{
+    background-color: #a8a8a8;
+}
+.searchbox-input-image{
+    width: 1rem;
+    height: 1rem;
 }
 .searchbox-animal{
     font-weight: bold;

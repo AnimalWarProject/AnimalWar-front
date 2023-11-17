@@ -1,7 +1,7 @@
 import {useEffect, useRef} from "react";
 import * as PIXI from "pixi.js";
-import mixBackground from "./imgs/Rectangle 12348.png";
-import inThePot from "./imgs/INTHEPOT 1.png"
+import mixBackground from "./imgs/Rectangle 12348.webp";
+import inThePot from "./imgs/INTHEPOT 1.webp"
 import {useHistory} from "react-router-use-history";
 
 const MixStart = () => {

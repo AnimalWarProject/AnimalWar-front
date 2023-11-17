@@ -1,7 +1,7 @@
 import {useEffect, useRef} from "react";
-import failMix from './imgs/FAILMIX 1.png'
+import failMix from './imgs/FAILMIX 1.webp'
 import * as PIXI from "pixi.js";
-import mixBackground from "./imgs/Rectangle 12348.png";
+import mixBackground from "./imgs/Rectangle 12348.webp";
 import {ButtonContainer} from "@pixi/ui";
 import {useHistory} from "react-router-use-history";
 

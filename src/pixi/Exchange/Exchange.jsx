@@ -7,7 +7,6 @@ import foodImg from '../../../src/common/imgs/Food.webp';
 import ironImg from '../../../src/common/imgs/Iron.webp';
 import woodImg from '../../../src/common/imgs/Wood.webp';
 import goldImg from '../../../src/common/imgs/Gold.webp';
-import axios from 'axios';
 import { ButtonContainer } from '@pixi/ui';
 import { ToastContainer, toast } from 'react-toastify';
 import { useHistory } from 'react-router-use-history';
@@ -18,12 +17,10 @@ const Exchange = () => {
     const canvasRef = useRef(null);
     const canvasWidth = 960;
     const canvasHeight = 640;
-
     const [wood, setWood] = useState();
     const [iron, setIron] = useState();
     const [food, setFood] = useState();
     const [gold, setGold] = useState();
-
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const token = 'Bearer ' + localStorage.getItem('accessToken');
@@ -56,13 +53,15 @@ const Exchange = () => {
         }
     }
 
-    useEffect(() => {
-        if (!isDataLoaded) {
-            getTokenData();
-        }
-    }, [isDataLoaded]);
+    // useEffect(() => { // 유즈이펙트는 무조건 1개
+
+    // }, [isDataLoaded]);
 
     useEffect(() => {
+        if (!isDataLoaded) { //  지속적으로 호출해서 수정
+            getTokenData();
+            setIsDataLoaded(true)
+        }
         if (isDataLoaded) {
             const app = new PIXI.Application({
                 width: canvasWidth,
