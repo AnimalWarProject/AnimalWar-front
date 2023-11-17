@@ -1,23 +1,46 @@
+import { useEffect, useState } from "react";
+import { api, apiNoToken } from "../../../network/api";
 import "../css/BoardDetail.css"
 import testImg from "../imgs/가챠테스트.jpeg"
 
 const BoardDetail = () => {
 
+
+    const params = new URLSearchParams(window.location.search);
+    let id = params.get("id");
+
+    const [post, setPost] = useState([]);
+
+    const getData = async () => {
+        const { data: post } = await apiNoToken(`api/v1/post/search/${id}`, 'GET');
+        setPost(post)
+        console.log(post);
+    }
+
+    useEffect(() => {
+        getData();
+
+    }, [])
+
+    const handlePost = async () => {
+        const accessToken = localStorage.getItem('accessToken');
+        const { data: user } = await api('/api/v1/user', 'GET', null, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+    }
+
     return (<>
         <div className="BoardContainer">
             <div className="TitleContainer">
-                어제 레전드 새 뽑음
+                {post.title}
             </div>
             <div style={{ display: "flex" }}>
                 <div className="Side2Container">
                     <div className="ContentContainer">
-                        이거 가루다인가 좋은거임?
-                        1트만에 뽑았는데
-
-
+                        {post.content}
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <img className="BoardImgResize" src={testImg}></img>
+                        <img className="BoardImgResize" src={post.postImage}></img>
 
                     </div>
 
