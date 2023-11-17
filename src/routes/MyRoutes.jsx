@@ -29,8 +29,9 @@ import GameResult from "../pixi/battle/components/GameResult";
 import Place from '../pixi/place/Place';
 import Board from '../pages/board/components/Board';
 import BoardDetail from '../pages/board/components/BoardDetail';
-import Mix from "../pixi/Mix/Mix";
+import MixPIXI from "../pixi/Mix/MixPIXI";
 import DrawLoading from "../pixi/draw/components/DrawLoading";
+import Mix from "../pixi/Mix/Mix";
 
 const MyRoutes = () => {
     return (
@@ -40,6 +41,7 @@ const MyRoutes = () => {
                 <Route path="/draw" element={<DrawPage />} />
                 <Route path="/draw/loading" element={<DrawLoading />} />
                 <Route path="/draw/result" element={<DrawResult />} />
+                <Route path="/mixPIXI" element={<MixPIXI />}></Route>
                 <Route path="/mix" element={<Mix />}></Route>
                 <Route path="/mix2" element={<MixStart />}></Route>
                 <Route path="/mix3" element={<MixFail />}></Route>
@@ -47,8 +49,6 @@ const MyRoutes = () => {
                 <Route path="/upgrade" element={<UpGradePage />} />
                 <Route path="/upgrade/loading" element={<UpGradeLoading />} />
                 <Route path="/upgrade/result" element={<UpGradeResult />} />
-                <Route path="/mix" element={<Mix />}></Route>
-                <Route path="/mixTest" element={<Mix />}></Route>
                 <Route path="/terrain" element={<TerrainPage />} />
                 <Route Path="/exchange" element={<Exchange />} />
                 <Route path="/match" element={<Match />} />
