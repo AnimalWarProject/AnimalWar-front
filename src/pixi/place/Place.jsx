@@ -263,6 +263,7 @@ const Place = ({ userUUID }) => {
                 const circle = new PIXI.Graphics();
                 circle.beginFill(0xffffff); // 흰색 채우기
                 circle.lineStyle(1, 0x000000); // 검은색 테두리
+
                 const circleSize = 70; // 동그라미 크기 설정
                 circle.drawCircle(initialX + 45, initialY + index * yOffset + 40, circleSize / 2);
                 circle.endFill();
