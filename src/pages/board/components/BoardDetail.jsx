@@ -11,9 +11,13 @@ const BoardDetail = () => {
     let id = params.get("id");
 
     const [post, setPost] = useState({});
+    //이건 리뷰
     const [review, setReview] = useState("");
+    //이건 대댓글
+    const [reply, setReply] = useState("");
     const [profile, setProfile] = useState({});
     const [count, setCount] = useState(0);
+
 
     //리뷰 답글 토글
     const [showReplyInputs, setShowReplyInputs] = useState([]);
@@ -78,6 +82,26 @@ const BoardDetail = () => {
             // 오류 처리
         });
     }
+
+    const handleReply = async () => {
+        const accessToken = localStorage.getItem('accessToken');
+
+        axios.post(`http://localhost:8000/api/v1/post/reply/${id}`, {
+            content: reply,
+            profileImage: profile.profileImage
+        }, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            params: {
+
+            }
+        }).then((resp) => {
+            // 응답 처리
+            setCount(count + 1);
+
+        }).catch((error) => {
+            // 오류 처리
+        });
+    }
     return (<>
         <div className="BoardContainer">
             <div className="TitleContainer">
@@ -119,10 +143,12 @@ const BoardDetail = () => {
                                 showReplyInputs[index] && (
                                     <div className="ReReview">
                                         {/* 여기에 답글 입력란이 들어갑니다. */}
-                                        <form>
+                                        <form onSubmit={(e) => e.preventDefault()}>
 
-                                            <input className="ReReviewInput" type="text" placeholder="답글을 작성하세요..." />
-                                            <button className="ReReviewButton">답글 제출</button>
+                                            <input className="ReReviewInput" type="text"
+                                                onChange={(e) => { setReply(e.target.value); }}
+                                                placeholder="답글을 작성하세요..." />
+                                            <button className="ReReviewButton" type="submit" onClick={handleReply}>답글 제출</button>
                                         </form>
                                     </div>
                                 )
