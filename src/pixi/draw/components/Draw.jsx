@@ -11,20 +11,44 @@ import axios from "axios";
 const Draw = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
+    // todo : useEffect 밖에있어서 빈값이 먼저 들어간다.
     const accessToken = localStorage.getItem('accessToken');
-    const [userInfo, setUserInfo] = useState({}); // todo : useEffect 밖에있어서 빈값이 먼저 들어간다.
+    const [userInfo, setUserInfo] = useState({
+        attackPower :0,
+        battlePoint : 0,
+        defensePower :0,
+        food : 0,
+        gold : 0,
+        id : "",
+        iron :0,
+        land : 0,
+        landForm : "",
+        life :0,
+        mountain:0,
+        nickName:"",
+        profileImage :"",
+        sea: 0,
+        species :"",
+        uuid: "",
+        wood : 0
+    }); // todo : 유저의 정보
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/v1/user`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        }).then((response) => {
-            setUserInfo(response.data)
-            console.log("저장 : " + JSON.stringify(response.data))
-        }).catch((err) => {
-            console.log(err + "에러 발생 유저인포")
-        })
+        // axios.get(`http://localhost:8000/api/v1/user`, { // axios 말고 api 사용 async await
+        //     headers: {
+        //         Authorization: `Bearer ${accessToken}`
+        //     }
+        // }).then((response) => {
+        //     console.log(response.data)
+        //     console.log(response.data.gold)
+        //     setUserInfo(response.data)
+        //     setTimeout(function (){
+        //         console.log(userInfo)
+        //     }, 3000)
+        //
+        // }).catch((err) => {
+        //     console.log(err + "에러 발생 유저인포")
+        // })
         const price = 1000; // 뽑기가격
         const canvasWidth = 960;
         const canvasHeight = 640;
@@ -124,7 +148,7 @@ const Draw = () => {
         manyButtonContainer.buttonMode = true;
         manyButtonContainer.addChild(drawManyBtn);
         manyButtonContainer.on('pointertap', () => {
-            if (userInfo.gold >= price){
+            if (userInfo.gold >= price * 10){
                 drawData.qty = 10;
                 nav('/draw/loading', {state : drawData});
             }else {
