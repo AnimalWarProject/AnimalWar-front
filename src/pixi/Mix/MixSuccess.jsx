@@ -1,8 +1,8 @@
 import {useEffect, useRef} from "react";
-import popMixSuccess from './imgs/SUCCESSMIX 1.png'
+import popMixSuccess from './imgs/SUCCESSMIX 1.webp'
 import * as PIXI from "pixi.js";
-import mixBackground from "./imgs/Rectangle 12348.png";
-import pig from './imgs/PIG 5.png'
+import mixBackground from "./imgs/Rectangle 12348.webp";
+import pig from './imgs/PIG 5.webp'
 import {ButtonContainer} from "@pixi/ui";
 import {useHistory} from "react-router-use-history";
 

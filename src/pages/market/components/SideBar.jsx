@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import "../css/SideBar.css";
+import React, { useState } from 'react';
+import '../css/SideBar.css';
 
 const SideBar = ({ onSortSelect, onGradeSelect }) => {
-
     const handleAnimalTypeClick = (isSort) => {
         onSortSelect(isSort); // 이 부분이 수정되었습니다.
     };
@@ -17,7 +16,7 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
     const [priceLowClicked, setPriceLowClicked] = useState(false);
 
     // 클릭 시 해당 버튼의 클릭 상태를 토글
-    const toggleNormalClicked = () =>{
+    const toggleNormalClicked = () => {
         if (!normalClicked) {
             setNormalClicked(true);
             onGradeSelect('NORMAL');
@@ -29,11 +28,11 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
             setNormalClicked(false);
             onGradeSelect('');
         }
-    }
-    const toggleRareClicked = () =>{
+    };
+    const toggleRareClicked = () => {
         if (!rareClicked) {
             setRareClicked(true);
-            onGradeSelect('RARE')
+            onGradeSelect('RARE');
             setNormalClicked(false);
             setSuperRareClicked(false);
             setUniqueClicked(false);
@@ -42,11 +41,11 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
             setRareClicked(false);
             onGradeSelect('');
         }
-    }
+    };
     const toggleSuperRareClicked = () => {
         if (!superRareClicked) {
             setSuperRareClicked(true);
-            onGradeSelect('SUPERRARE')
+            onGradeSelect('SUPERRARE');
             setNormalClicked(false);
             setRareClicked(false);
             setUniqueClicked(false);
@@ -55,42 +54,42 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
             setSuperRareClicked(false);
             onGradeSelect('');
         }
-    }
-    const toggleUniqueClicked = () =>{
-        if (!uniqueClicked){
+    };
+    const toggleUniqueClicked = () => {
+        if (!uniqueClicked) {
             setUniqueClicked(true);
-            onGradeSelect('UNIQUE')
+            onGradeSelect('UNIQUE');
             setNormalClicked(false);
             setRareClicked(false);
             setSuperRareClicked(false);
             setLegendClicked(false);
-        }else {
+        } else {
             setUniqueClicked(false);
             onGradeSelect('');
         }
-    }
+    };
     const toggleLegendClicked = () => {
-        if (!legendClicked){
+        if (!legendClicked) {
             setLegendClicked(true);
-            onGradeSelect('LEGEND')
+            onGradeSelect('LEGEND');
             setNormalClicked(false);
             setRareClicked(false);
             setSuperRareClicked(false);
-            setUniqueClicked(false)
-        }else {
+            setUniqueClicked(false);
+        } else {
             setLegendClicked(false);
             onGradeSelect('');
         }
-    }
+    };
 
     const togglePriceHighClicked = () => {
-        handleAnimalTypeClick('ASC')
+        handleAnimalTypeClick('ASC');
         setPriceHighClicked(!priceHighClicked);
         setPriceLowClicked(false); // 가격 낮은 순 클릭 해제
     };
 
     const togglePriceLowClicked = () => {
-        handleAnimalTypeClick('DESC')
+        handleAnimalTypeClick('DESC');
         setPriceLowClicked(!priceLowClicked);
         setPriceHighClicked(false); // 가격 높은 순 클릭 해제
     };
@@ -98,51 +97,41 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
     return (
         <>
             <div>
-                <div className={`sidebar-container ${normalClicked ? "clicked" : ""}`}>
+                <div className={`sidebar-container ${normalClicked ? 'clicked' : ''}`}>
                     <div className="sidebar-container-grade">
                         <div className="sidebar-grade-content">
                             <a
                                 href="#"
                                 onClick={toggleNormalClicked}
-                                    className={`sidebar-grade-contentBtn${
-                                    normalClicked ? " clicked" : ""
-                                }`}
+                                className={`sidebar-grade-contentBtn${normalClicked ? ' clicked' : ''}`}
                             >
                                 노말
                             </a>
                             <a
                                 href="#"
                                 onClick={toggleRareClicked}
-                                className={`sidebar-grade-contentBtn${
-                                    rareClicked ? " clicked" : ""
-                                }`}
+                                className={`sidebar-grade-contentBtn${rareClicked ? ' clicked' : ''}`}
                             >
                                 레어
                             </a>
                             <a
                                 href="#"
                                 onClick={toggleSuperRareClicked}
-                                className={`sidebar-grade-contentBtn${
-                                    superRareClicked ? " clicked" : ""
-                                }`}
+                                className={`sidebar-grade-contentBtn${superRareClicked ? ' clicked' : ''}`}
                             >
                                 슈퍼레어
                             </a>
                             <a
                                 href="#"
                                 onClick={toggleUniqueClicked}
-                                className={`sidebar-grade-contentBtn${
-                                    uniqueClicked ? " clicked" : ""
-                                }`}
+                                className={`sidebar-grade-contentBtn${uniqueClicked ? ' clicked' : ''}`}
                             >
                                 유니크
                             </a>
                             <a
                                 href="#"
                                 onClick={toggleLegendClicked}
-                                className={`sidebar-grade-contentBtn${
-                                    legendClicked ? " clicked" : ""
-                                }`}
+                                className={`sidebar-grade-contentBtn${legendClicked ? ' clicked' : ''}`}
                             >
                                 레전드
                             </a>
@@ -153,18 +142,14 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
                             <a
                                 href="#"
                                 onClick={togglePriceHighClicked}
-                                className={`sidebar-orderBy${
-                                    priceHighClicked ? " clicked" : ""
-                                }`}
+                                className={`sidebar-orderBy${priceHighClicked ? ' clicked' : ''}`}
                             >
                                 가격 높은 순
                             </a>
                             <a
                                 href="#"
                                 onClick={togglePriceLowClicked}
-                                className={`sidebar-orderBy${
-                                    priceLowClicked ? " clicked" : ""
-                                }`}
+                                className={`sidebar-orderBy${priceLowClicked ? ' clicked' : ''}`}
                             >
                                 가격 낮은 순
                             </a>

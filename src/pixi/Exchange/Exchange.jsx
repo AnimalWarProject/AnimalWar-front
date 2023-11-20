@@ -53,6 +53,7 @@ const Exchange = () => {
         }
     }
 
+
     // useEffect(() => { // 유즈이펙트는 무조건 1개
 
     // }, [isDataLoaded]);

@@ -112,7 +112,6 @@ const Draw = () => {
             drawData.type = "building";
         };
 
-
         const drawOneBtn = new PIXI.Graphics();
         drawOneBtn.beginFill(0x6AFFF6, 0.7);
         const drawOneBtnWidth = 170;
