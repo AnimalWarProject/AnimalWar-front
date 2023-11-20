@@ -46,7 +46,6 @@ const AttackerSkill = ({setFlag}) => {
     });
 
     useEffect(() => {
-
         // 기본 배경크기 설정
         const app = new PIXI.Application({
             width: 960,
@@ -102,12 +101,11 @@ const AttackerSkill = ({setFlag}) => {
                     const skillToken = localStorage.getItem('accessToken');
                     console.log(text)
                     if (text === '매칭 시작') {
-
                         if (!attackerAttackTypeSkill || !attackerDefensiveTypeSkill || !attackerUtilityTypeSkill) {
                             alert('모든 스킬을 선택해야 매칭이 됩니다.');
                             return; // 매칭 시작을 중지하고 함수를 종료
                         }
-                        const response = await api('/api/v1/user/changeAttackerSkill', 'PUT', updatedState, {
+                        const response = await api('/api/v1/skill/changeAttackerSkill', 'PUT', updatedState, {
                             headers: {
                                 Authorization: `Bearer ${skillToken}`,
                             },
@@ -133,7 +131,7 @@ const AttackerSkill = ({setFlag}) => {
                 if (text === "매칭 시작") {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/match';
+                            window.location = 'http://localhost:3000/match2';
                         } });
                 }
             };
@@ -143,14 +141,18 @@ const AttackerSkill = ({setFlag}) => {
 
             const handleClick1 = () => {
                 console.log(`${text}이(가) 클릭되었습니다.`);
-                console.log(text)
+                console.log(text);
                 if (text === "수비스킬 셋팅") {
-                    // setFlag(0);
+                    localStorage.removeItem('attackerAttackTypeSkill');
+                    localStorage.removeItem('attackerDefensiveTypeSkill');
+                    localStorage.removeItem('attackerUtilityTypeSkill');
                 }
             };
             graphics.interactive = true;
             graphics.buttonMode = true;
             graphics.on('click', handleClick1);
+
+
 
         };
         addRoundedText('공격형 스킬', 34, 15, 277, 65, 5);

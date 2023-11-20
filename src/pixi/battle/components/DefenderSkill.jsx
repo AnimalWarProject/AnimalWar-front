@@ -106,7 +106,7 @@ const DefenderSkill = ({setFlag}) => {
                             alert('모든 스킬 선택 진행시켜');
                             return;
                         }
-                        const response = await api('/api/v1/user/changeDefenderSkill', 'PUT', updatedState, {
+                        const response = await api('/api/v1/skill/changeDefenderSkill', 'PUT', updatedState, {
                             headers: {
                                 Authorization: `Bearer ${skillToken}`
                             },
@@ -143,8 +143,11 @@ const DefenderSkill = ({setFlag}) => {
 
             const handleClick1 = () => {
                 console.log(`${text}이(가) 클릭되었습니다.`);
-                if (text === '공격스킬 셋팅') {
-                    // setFlag(1);
+                console.log(text);
+                if (text === "공격스킬 셋팅") {
+                    localStorage.removeItem('defenderAttackTypeSkill');
+                    localStorage.removeItem('defenderDefensiveTypeSkill');
+                    localStorage.removeItem('defenderUtilityTypeSkill');
                 }
             };
             graphics.interactive = true;
