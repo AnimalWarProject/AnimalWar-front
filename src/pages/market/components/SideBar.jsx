@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import '../css/SideBar.css';
 
 const SideBar = ({ onSortSelect, onGradeSelect }) => {
-
     const handleAnimalTypeClick = (isSort) => {
         onSortSelect(isSort); // 이 부분이 수정되었습니다.
     };
@@ -17,7 +16,7 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
     const [priceLowClicked, setPriceLowClicked] = useState(false);
 
     // 클릭 시 해당 버튼의 클릭 상태를 토글
-    const toggleNormalClicked = () =>{
+    const toggleNormalClicked = () => {
         if (!normalClicked) {
             setNormalClicked(true);
             onGradeSelect('NORMAL');
@@ -29,11 +28,11 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
             setNormalClicked(false);
             onGradeSelect('');
         }
-    }
-    const toggleRareClicked = () =>{
+    };
+    const toggleRareClicked = () => {
         if (!rareClicked) {
             setRareClicked(true);
-            onGradeSelect('RARE')
+            onGradeSelect('RARE');
             setNormalClicked(false);
             setSuperRareClicked(false);
             setUniqueClicked(false);
@@ -42,11 +41,11 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
             setRareClicked(false);
             onGradeSelect('');
         }
-    }
+    };
     const toggleSuperRareClicked = () => {
         if (!superRareClicked) {
             setSuperRareClicked(true);
-            onGradeSelect('SUPERRARE')
+            onGradeSelect('SUPERRARE');
             setNormalClicked(false);
             setRareClicked(false);
             setUniqueClicked(false);
@@ -55,42 +54,42 @@ const SideBar = ({ onSortSelect, onGradeSelect }) => {
             setSuperRareClicked(false);
             onGradeSelect('');
         }
-    }
-    const toggleUniqueClicked = () =>{
-        if (!uniqueClicked){
+    };
+    const toggleUniqueClicked = () => {
+        if (!uniqueClicked) {
             setUniqueClicked(true);
-            onGradeSelect('UNIQUE')
+            onGradeSelect('UNIQUE');
             setNormalClicked(false);
             setRareClicked(false);
             setSuperRareClicked(false);
             setLegendClicked(false);
-        }else {
+        } else {
             setUniqueClicked(false);
             onGradeSelect('');
         }
-    }
+    };
     const toggleLegendClicked = () => {
-        if (!legendClicked){
+        if (!legendClicked) {
             setLegendClicked(true);
-            onGradeSelect('LEGEND')
+            onGradeSelect('LEGEND');
             setNormalClicked(false);
             setRareClicked(false);
             setSuperRareClicked(false);
-            setUniqueClicked(false)
-        }else {
+            setUniqueClicked(false);
+        } else {
             setLegendClicked(false);
             onGradeSelect('');
         }
-    }
+    };
 
     const togglePriceHighClicked = () => {
-        handleAnimalTypeClick('ASC')
+        handleAnimalTypeClick('ASC');
         setPriceHighClicked(!priceHighClicked);
         setPriceLowClicked(false); // 가격 낮은 순 클릭 해제
     };
 
     const togglePriceLowClicked = () => {
-        handleAnimalTypeClick('DESC')
+        handleAnimalTypeClick('DESC');
         setPriceLowClicked(!priceLowClicked);
         setPriceHighClicked(false); // 가격 높은 순 클릭 해제
     };

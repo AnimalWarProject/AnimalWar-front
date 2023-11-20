@@ -1,26 +1,100 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as PIXI from 'pixi.js';
+import { useLocation } from 'react-router';
 
-// 공격형 스킬 이미지
+// 이미지
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import Swap from '../imgs/Swap.webp';
-
+import {api} from "../../../network/api";
 
 const Battle = () => {
     const pixiContainer = useRef(null);
-    const [userProfile, setUserProfile] = useState(null);
-    const [defenderHealth, setDefenderHealth] = useState(null);
+    const [profileImage, setProfileImage] = useState(null);
     const [attackerHealth, setAttackerHealth] = useState(null);
+    const [attackerMaxHealth, setAttackerMaxHealth] = useState(null);
     const [attackerAtkPower, setAttackerAtkPower] = useState(null);
     const [attackerDefPower, setAttackerDefPower] = useState(null);
+    const [attackerAttackTypeSkill, setAttackerAttackTypeSkill] = useState(null);
+    const [attackerDefenseTypeSkill, setAttackerDefenseTypeSkill] = useState(null);
+    const [attackerUtilityTypeSkill, setAttackerUtilityTypeSkill] = useState(null);
+    const [defenderHealth, setDefenderHealth] = useState(null);
+    const [defenderMaxHealth, setDefenderMaxHealth] = useState(null);
     const [defenderAtkPower, setDefenderAtkPower] = useState(null);
     const [defenderDefPower, setDefenderDefPower] = useState(null);
+    const [defenderAttackTypeSkill, setDefenderAttackTypeSkill] = useState(null);
+    const [defenderDefenseTypeSkill, setDefenderDefenseTypeSkill] = useState(null);
+    const [defenderUtilityTypeSkill, setDefenderUtilityTypeSkill] = useState(null);
+    const [id, setId] = useState(null);
+    const [nickName, setNickName] = useState(null);
+    const [food, setFood] = useState(null);
+    const [iron, setIron] = useState(null);
+    const [gold, setGold] = useState(null);
+    const [species, setSpecies] = useState(null);
+    const [wood, setWood] = useState(null);
+
     const [battleLog, setBattleLog] = useState([])
+    const location = useLocation();
+    const data = location.state;
+    console.log(data);
 
+    const sendBattleDataToServer = async () => {
+        try {
+            const requestBody = {
+                attacker: {
+                    id: id,
+                    nickName: nickName,
+                    species: species,
+                    profileImage: profileImage,
+                    life: attackerHealth,
+                    maxLife: attackerMaxHealth,
+                    attackPower: attackerAtkPower,
+                    defensePower: attackerDefPower,
+                    attackerAttackTypeSkill: attackerAttackTypeSkill,
+                    attackerDefenseTypeSkill: attackerDefenseTypeSkill,
+                    attackerUtilityTypeSkill: attackerUtilityTypeSkill,
+                    food: food,
+                    gold : gold,
+                    iron: iron,
+                    wood: wood
+                },
+                defender: {
+                    id: id,
+                    nickName: nickName,
+                    species: species,
+                    profileImage: profileImage,
+                    life: defenderHealth,
+                    maxLife: defenderMaxHealth,
+                    attackPower: attackerAtkPower,
+                    defensePower: attackerDefPower,
+                    defenderAttackTypeSkill: defenderAttackTypeSkill,
+                    defenderDefenseTypeSkill: defenderDefenseTypeSkill,
+                    defenderUtilityTypeSkill: defenderUtilityTypeSkill,
+                    food: food,
+                    gold : gold,
+                    iron: iron,
+                    wood: wood
+                },
+            };
+            const stateToken = localStorage.getItem('stateToken');
+            const response = await api('/api/vi/battle', 'POST', requestBody, {
+                headers: {
+                    Authorization: `Bearer ${stateToken}`,
+                },
+            });
 
-    // 기본 배경크기 설정
+            if (response.ok) {
+                const battleLogs = await response.json();
+                console.log('Battle data sent successfully')
+            } else {
+                console.error('Failed to send battle data. Server response:', response.status);
+            }
+        } catch (error) {
+            console.error('Error sending battle data:', error);
+        }
+    };
 
     useEffect(() => {
+        // 기본 배경크기 설정
         const app = new PIXI.Application({
             width: 960,
             height: 640,
@@ -72,6 +146,22 @@ const Battle = () => {
         battleLogBox.drawRoundedRect(70, 250, battleLogBoxBoxWidth, battleLogBoxBoxHeight, battleLogBoxCornerRadius);
         battleLogBox.endFill();
         logContainer.addChild(battleLogBox);
+
+        const displayBattleLogs = () => {
+            for (let i = 0; i < battleLog.length; i++) {
+                const logText = new PIXI.Text(battleLog[i], {
+                    fontSize: 15,
+                    fill: 0x0f1828,
+                    align: 'justify',
+                    fontWeight: 'bolder',
+                    fontFamily: 'Arial',
+                })
+                logText.x = 80;
+                logText.y = 280 + i * 20; // Adjust Y position based on log index
+                logContainer.addChild(logText);
+            }
+        };
+
 
 
         // 공격자 수비자 상태 박스
@@ -171,10 +261,16 @@ const Battle = () => {
                 '#5B7FFF'
             );
 
-        }, []);
+        setTimeout(() => {
+            sendBattleDataToServer();
+            displayBattleLogs();
+        }, 2000);
+        }, [battleLog]);
 
 
-    return <div ref={pixiContainer} className="outlet-container"></div>;
+    return <div ref={pixiContainer} className="outlet-container"></div>
+
+
 };
 
 export default Battle;

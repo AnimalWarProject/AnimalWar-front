@@ -1,0 +1,183 @@
+body, h1, h2, h3, p, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+.warpBox {
+    width: 100%;
+    height: 100%;
+    background-image: url('../../pixi/Mix/imgs/Rectangle 12348.webp');
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    padding: 60px;
+}
+
+.innerBox {
+    width: 100%;
+    height: 100%;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    position: relative;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.activeTap {
+    position: absolute;
+    top: -52px;
+    left: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    position: absolute;
+    bottom: -52px;
+    right: 0;
+}
+
+.btn > div {
+    width: 100px;
+    height: 25px;
+    padding: 10px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: rgba(106, 255, 246, 1);
+    border-radius: 10px;
+}
+
+.activeTap > div {
+    width: 100px;
+    height: 25px;
+    padding: 10px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.activeTap > div:first-child {
+    background: #B6C1EA;
+}
+
+.activeTap > div:last-child {
+    background: #B6E4EA;
+}
+
+.gradeTap {
+    padding: 10px 20px 0 20px;
+    display: flex;
+    gap: 8px;
+}
+
+.gradeTap > div {
+    width: 147px;
+    height: 48px;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.60);
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mainBoxWrap {
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.invBox {
+    width: 377px;
+    height: 425px;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.35);
+    box-sizing: border-box;
+    padding: 10px;
+    overflow-y: scroll;
+}
+
+.invBox::-webkit-scrollbar {
+    width: 0px;
+}
+
+
+.invItem {
+    display: inline-block;
+    width: 105px;
+    height: 120px;
+    background-color: rgba(255, 255, 255, 0.60);
+    border-radius: 40px;
+    margin-right: 5px;
+    margin-top: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.invItem:nth-child(3n + 1) {
+    margin-left: 2px;
+}
+
+.invItem img {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 65%;
+}
+
+.invItem p {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 80%;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.potBox {
+    width: 422px;
+    height: 446px;
+    background-image: url('../../pixi/Mix/imgs/MIXPOT 1.webp');
+    position: relative;
+}
+
+.itemImg {
+}
+
+.potBoxItemWrap {
+    position: absolute;
+    bottom: 124px;
+    width: 75%;
+    height: 77px;
+    left: 67px;
+    display: flex;
+}
+
+.potBoxItem {
+    width: 56px;
+    height: 100%;
+    margin-right: 24px;
+    border-radius: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.potBoxItem img {
+    width: 95%;
+}
+
+.potBoxItem:last-child {
+    margin-right: 0;
+}
