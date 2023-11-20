@@ -40,7 +40,14 @@
 }
 
 .ReviewRist {
-    height: 500px;
+    /* 높이를 지정하여 스크롤 가능한 컨테이너로 만듭니다. */
+    max-height: 500px;
+
+
+    /* 원하는 높이로 조절하세요 */
+    overflow-y: scroll;
+
+    /* 세로 스크롤만 표시 */
 }
 
 .ReviewContainer {
@@ -82,4 +89,42 @@
 
 .ContentContainer {
     height: 300px;
+}
+
+.ReviewComment {
+    background-color: #FAFAFA;
+    height: 40px;
+    color: #000;
+
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.ReReview {
+    background-color: white;
+    height: 60px;
+}
+
+.ReReviewInput {
+    height: 55px;
+    width: 400px;
+
+    border: none;
+
+    color: #000;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+}
+
+.ReReviewButton {
+
+    height: auto;
+    margin-left: 10px;
 }

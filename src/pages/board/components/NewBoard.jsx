@@ -23,7 +23,6 @@ const NewBoard = () => {
             toast.error('파일 크기가 3MB를 초과하였습니다. 다른 사진을 선택해주세요.');
             return;
         }
-
         setFormData((prevData) => ({ ...prevData, postImage: file }));
         console.log(formData.postImage);
     };
@@ -62,11 +61,11 @@ const NewBoard = () => {
                 },
             });
 
-            toast.success('회원가입이 성공적으로 완료되었습니다.');
+            toast.success('게시글 작성이 성공적으로 완료되었습니다.');
             history.push("/board")
 
         } catch (error) {
-            toast.error('회원가입에 에러가 발생하였습니다.');
+            toast.error('게시글 작성에 에러가 발생하였습니다.');
         }
     };
 
@@ -92,7 +91,7 @@ const NewBoard = () => {
                             onChange={(e) => setFormData((prevData) => ({ ...prevData, content: e.target.value }))}
                         ></textarea>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <input className="NewBoardFile" type="file" onClick={handleImageUpload}  ></input>
+                            <input className="NewBoardFile" type="file" onChange={handleImageUpload}  ></input>
                             <button className="NewBoardSubmit" onClick={handleSubmit} >작성하기</button>
 
                         </div>
