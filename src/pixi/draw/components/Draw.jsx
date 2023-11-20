@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
 import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
 import oneEgg from "../imgs/AnyConv.com__ONEEGG 1.webp";
@@ -6,12 +6,26 @@ import manyEgg from "../imgs/AnyConv.com__MANYEGG 1.webp";
 import oneBuilding from "../imgs/AnyConv.com__ONEBUILDING 1.webp";
 import manyBuilding from "../imgs/AnyConv.com__MANYBUILDING 1.webp";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Draw = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
+    const accessToken = localStorage.getItem('accessToken');
+    const [userInfo, setUserInfo] = useState({}); // todo : useEffect 밖에있어서 빈값이 먼저 들어간다.
 
     useEffect(() => {
+        axios.get(`http://localhost:8000/api/v1/user`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        }).then((response) => {
+            setUserInfo(response.data)
+            console.log("저장 : " + JSON.stringify(response.data))
+        }).catch((err) => {
+            console.log(err + "에러 발생 유저인포")
+        })
+        const price = 1000; // 뽑기가격
         const canvasWidth = 960;
         const canvasHeight = 640;
         const drawData = { // 건물 or 동물 , 1 or 10
@@ -85,9 +99,15 @@ const Draw = () => {
         oneButtonContainer.buttonMode = true;
         oneButtonContainer.addChild(drawOneBtn);
         oneButtonContainer.on('pointertap', () => {
-            drawData.qty = 1;
-            nav('/draw/loading', {state : drawData});
-            // todo : user에 돈이있는지 없는지 확인
+            console.log("유저돈"+userInfo.gold)
+            console.log("유저정보"+ JSON.stringify(userInfo))
+            if (userInfo.gold >= price){
+                drawData.qty = 1;
+                nav('/draw/loading', {state : drawData});
+            }else {
+                alert("잔액부족")
+            }
+
         });
         const oneDrawText = new PIXI.Text('1회 뽑기', textStyle);
         drawOneBtn.addChild(oneDrawText);
@@ -104,9 +124,12 @@ const Draw = () => {
         manyButtonContainer.buttonMode = true;
         manyButtonContainer.addChild(drawManyBtn);
         manyButtonContainer.on('pointertap', () => {
-            drawData.qty = 10;
-            nav('/draw/loading', {state : drawData});
-            // todo : user에 돈이있는지 없는지 확인
+            if (userInfo.gold >= price){
+                drawData.qty = 10;
+                nav('/draw/loading', {state : drawData});
+            }else {
+                alert("잔액부족")
+            }
         });
         const manyDrawText = new PIXI.Text('10회 뽑기', textStyle);
         drawManyBtn.addChild(manyDrawText);

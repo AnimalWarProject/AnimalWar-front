@@ -3,23 +3,59 @@ import {useState} from "react";
 import axios from "axios";
 
 const Resister = ({selectedData, onEventInMarketCancel}) => {
-    const animalData = selectedData && selectedData.animal;
+    let data; // data 변수를 선언
+    let dataToSend;
+    if (selectedData.animal) {
+        data = selectedData.animal;
+    } else {
+        data = selectedData.building;
+    }
     const [price, setPrice] = useState('');
-    let animalBuff = useState(0)
+    const [buff, setBuff] = useState(0); // buff 상태를 useState로 초기화
     const accessToken = localStorage.getItem('accessToken');
 
-    if (!animalBuff === 0){
-        animalBuff = animalData.buff // 만약 buff 가 0이 아니면 buff값을 그대로 저장
-    }
+    //todo : data가  selectedData.animal 일때
 
-    const itemInfo = {
-        itemId: animalData.animalId,
-        name: animalData.name,
-        grade: animalData.grade,
-        species: animalData.species,
-        buff: animalBuff[0], // 배열에서 첫 번째 값을 선택하여 정수로 변환하여 보냄
+    if (buff !== 0){
+        setBuff(selectedData.upgrade);
+    }
+    const animalInfo = {
+        itemId: data.animalId,
+        name: data.name,
+        grade: data.grade,
+        attackPower:data.attackPower,
+        defencePower:data.defencePower,
+        life:data.life,
+        species: data.species,
+        imagePath:data.imagePath,
+        buff: buff, // 동물 강화 수
         price: price
     };
+
+    //todo : data가 selectedData.building 일 때  axios 나눠야함
+
+    const buildingInfo = {
+        itemId: data.buildingId,
+        name: data.name,
+        grade: data.grade,
+        attackPower: data.attackPower,
+        defencePower: data.defencePower,
+        life: data.life,
+        woodRate: data.woodRate,
+        ironRate: data.ironRate,
+        foodRate: data.foodRate,
+        imagePath: data.imagePath,
+        buildingType:data.buildingType,
+        price: price
+    };
+
+    if (animalInfo) {
+        dataToSend = animalInfo;
+    } else if (buildingInfo) {
+        dataToSend = buildingInfo;
+    } else {
+        alert("올바르지 않은 정보입니다.")
+    }
 
     const onChangePrice = (e) => {
         const inputPrice = e.target.value;
@@ -30,21 +66,37 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
             setPrice(inputPrice); // 숫자인 경우에만 값을 변경
         }
     }
-
     const onClickCancel = () =>{
         onEventInMarketCancel()
     }
     const ItemSell = () => {
-        axios.post(`http://localhost:8000/api/v1/inventory/delete`, itemInfo, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-            .then(()=>{
-                alert("삭제성공")
-            }).catch((err)=>{
-            console.log(err)
-        })
+        if (selectedData.animal) {
+            axios.post(`http://localhost:8000/api/v1/inventory/delete/animal`, animalInfo, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+                .then(()=>{
+                    alert("삭제성공")
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        } else if (selectedData.building) {
+            axios.post(`http://localhost:8000/api/v1/inventory/delete/building`, buildingInfo, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+                .then(()=>{
+                    alert("삭제성공")
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        } else {
+            alert("올바르지 않은 정보입니다.")
+        }
     }
 
     return <>
@@ -54,13 +106,13 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
                     {/*    아이템 이미지 등록 */}
                 </div>
                 <div>
-                    이름 : {animalData.name}
+                    이름 : {data.name}
                 </div>
                 <div>
-                    등급 : {animalData.grade}
+                    등급 : {data.grade}
                 </div>
                 <div>
-                    강화 수 : {selectedData.upgrade}
+                    강화 수 : {selectedData.upgrade ? selectedData.upgrade : 0 }
                 </div>
                 <div>
                     <input onChange={onChangePrice} value={price} className="register-wrap-input" placeholder="판매 금액" />

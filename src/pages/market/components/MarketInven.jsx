@@ -10,7 +10,6 @@ const MarketInven = ({onEventInMarketInven}) => {
     const [selectedItem, setSelectedItem] = useState(null);
 
     const handleItemClick = (item) => { // todo: image에 onClick걸어야 할거같다.
-        // 클릭한 아이템 정보를 상태에 저장
         setSelectedItem(item);
     };
     const onClickSell = () => {
