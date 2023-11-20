@@ -1,16 +1,12 @@
-import {ScrollBox} from "@pixi/ui";
-
+import { ScrollBox } from '@pixi/ui';
 
 class CustomScrollBox extends ScrollBox {
-
-
     constructor(options, disableScrolling) {
         super(options);
         this.options = options || {};
         this.disableScrolling = disableScrolling;
-        this.makeScrollable()
+        this.makeScrollable();
     }
-
 
     onMouseScroll(event) {
         if (!this.disableScrolling) {

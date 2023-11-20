@@ -61,7 +61,7 @@ const ProfileBox = () => {
             default:
                 return { icon: 'Default', text: '알 수 없음' };
         }
-    };
+    }
 
     const getLandFormIcon = (landForm) => {
         switch (landForm) {
@@ -83,21 +83,29 @@ const ProfileBox = () => {
     return (
         <div className="profile-box">
             <div className="profile-item">
-                <img src={icons[getSpeciesIcon(profile.species).icon]} alt="species" />
-                <span>{getSpeciesIcon(profile.species).text}</span>
-
-                <img src={icons[getLandFormIcon(profile.landForm).icon]} alt="landForm" />
-                <span>{getLandFormIcon(profile.landForm).text}</span>
+                <div>
+                    <img src={icons[getSpeciesIcon(profile.species).icon]} alt="species" />
+                    <span>{getSpeciesIcon(profile.species).text}</span>
+                </div>
+                <div>
+                    <img src={icons[getLandFormIcon(profile.landForm).icon]} alt="landForm" />
+                    <span>{getLandFormIcon(profile.landForm).text}</span>
+                </div>
             </div>
             <div className="stats-item">
-                <img src={icons.AttackPower} alt="attackPower" />
-                <span>{profile.attackPower}</span>
+                <div>
+                    <img src={icons.AttackPower} alt="attackPower" />
+                    <span>{profile.attackPower}</span>
+                </div>
+                <div>
+                    <img src={icons.DefensePower} alt="defensePower" />
+                    <span>{profile.defensePower}</span>
+                </div>
+                <div>
+                    <img src={icons.Life} alt="Life" />
+                    <span>{profile.life}</span>
+                </div>
 
-                <img src={icons.DefensePower} alt="defensePower" />
-                <span>{profile.defensePower}</span>
-
-                <img src={icons.Life} alt="Life" />
-                <span>{profile.life}</span>
             </div>
             <div className="rate-item">
                 <img src={icons.Rate} alt="ratePerHour" />
