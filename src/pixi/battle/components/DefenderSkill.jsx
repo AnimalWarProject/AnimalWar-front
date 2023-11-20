@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import * as PIXI from "pixi.js";
 import Transparency from '../imgs/Transparency.png';
 import backgroundImage from '../imgs/Rectangle 12290.png';
@@ -28,9 +28,11 @@ import DoItAgain from '../imgs/DoItAgain.webp';
 import OffenseDefenseShift from '../imgs/OffenseDefenseShift.webp';
 import StrongAndWeak from '../imgs/StrongAndWeak.webp';
 import Swap from '../imgs/Swap.webp';
+import {api} from "../../../network/api";
 
 
-const AttackSkill = () => {
+const DefenderSkill = ({setFlag}) => {
+
     const pixiContainer = useRef(null);
     let clickedContainer = null;
     let clickedContainer1 = null;
@@ -38,7 +40,11 @@ const AttackSkill = () => {
     let testArr = [];
     let testArr1 = [];
     let testArr2 = [];
-
+    const [selectedSkill, setSelectedSkill] = useState({
+        defenderAttackTypeSkill: '',
+        defenderDefensiveTypeSkill: '',
+        defenderUtilityTypeSkill: ''
+    });
 
     useEffect(() => {
         // 기본 배경크기 설정
@@ -54,8 +60,6 @@ const AttackSkill = () => {
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
-
-
 
         // 유형별 스킬 크기 및 위치 조정
         const addRoundedText = (text, x, y, width, height, cornerRadius, fontSize, fontWeight) => {
@@ -80,13 +84,56 @@ const AttackSkill = () => {
             app.stage.addChild(message);
 
 
-            const handleClick0 = () => {
+            const handleClick0 = async () => {
                 console.log(`${text}이(가) 클릭되었습니다.`);
+
+                const defenderAttackTypeSkill = localStorage.getItem('defenderAttackTypeSkill');
+                const defenderDefensiveTypeSkill = localStorage.getItem('defenderDefensiveTypeSkill');
+                const defenderUtilityTypeSkill = localStorage.getItem('defenderUtilityTypeSkill');
+
+                try {
+                    const updatedState = {
+                        defenderAttackTypeSkill,
+                        defenderDefensiveTypeSkill,
+                        defenderUtilityTypeSkill
+                    };
+                    const skillToken = localStorage.getItem('accessToken');
+
+                    if (text === '저장하기') {
+                        if (!defenderAttackTypeSkill ||
+                        !defenderDefensiveTypeSkill ||
+                        !defenderUtilityTypeSkill){
+                            alert('모든 스킬 선택 진행시켜');
+                            return;
+                        }
+                        const response = await api('/api/v1/skill/changeDefenderSkill', 'PUT', updatedState, {
+                            headers: {
+                                Authorization: `Bearer ${skillToken}`
+                            },
+                        });
+
+                        // API 호출이 성공했는지 확인 (API 응답에 따라 조정해야 할 수 있음)
+                        if (response.status === 200) {
+                            console.log('공격자 스킬이 성공적으로 업데이트되었습니다.');
+                            setSelectedSkill(response);
+                            localStorage.removeItem('defenderAttackTypeSkill');
+                            localStorage.removeItem('defenderDefensiveTypeSkill');
+                            localStorage.removeItem('defenderUtilityTypeSkill');
+                        } else {
+                            console.log('공격자 스킬 업데이트 실패. 서버 응답:', response.status);
+                        }
+                    }else {
+                        setFlag(1)
+                    }
+                } catch (error) {
+                    console.error('API 호출 중 오류 발생:', error);
+                }
 
                 if (text === '저장하기') {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/home';
+                            // window.location.href = 'http://localhost:3000/home';
+                            window.location = 'https://www.naver.com/';
                         } });
                 }
             };
@@ -96,12 +143,11 @@ const AttackSkill = () => {
 
             const handleClick1 = () => {
                 console.log(`${text}이(가) 클릭되었습니다.`);
-
-                if (text === '공격스킬 셋팅') {
-                    // '전투 시작'이 클릭된 경우 리다이렉션 수행
-                    gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/battle';
-                        } });
+                console.log(text);
+                if (text === "공격스킬 셋팅") {
+                    localStorage.removeItem('defenderAttackTypeSkill');
+                    localStorage.removeItem('defenderDefensiveTypeSkill');
+                    localStorage.removeItem('defenderUtilityTypeSkill');
                 }
             };
             graphics.interactive = true;
@@ -114,9 +160,7 @@ const AttackSkill = () => {
         addRoundedText('유틸형 스킬', 653, 15, 277, 65, 5);
         addRoundedText('저장하기',  800, 590, 126, 39, 20, 18, 'bold');
         addRoundedText('공격스킬 셋팅',  40, 590, 150, 39, 20, 18, 'bold');
-        addRoundedText('수비스킬 셋팅',  200, 590, 150, 39, 20, 18, 'bold');
-
-
+        // addRoundedText('수비스킬 셋팅',  200, 590, 150, 39, 20, 18, 'bold');
 
 
         // 공격형 스킬 큰 박스를 담을 컨테이너
@@ -211,6 +255,7 @@ const AttackSkill = () => {
                         .beginFill(boxColor, alpha)
                         .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox)
                         .endFill();
+                    localStorage.setItem('defenderAttackTypeSkill', skillName);
                     if (clickedContainer) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer.children[0].clear();
@@ -326,6 +371,7 @@ const AttackSkill = () => {
                         .beginFill(boxColor1, alpha1)
                         .drawRoundedRect(0, 6, 243, 95, cornerRadiusBox1)
                         .endFill();
+                    localStorage.setItem('defenderDefensiveTypeSkill', skillName);
                     if (clickedContainer1) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer1.children[0].clear();
@@ -431,6 +477,7 @@ const AttackSkill = () => {
                         .beginFill(boxColor2, alpha2)
                         .drawRoundedRect(1, 6, 243, 95, cornerRadiusBox2)
                         .endFill();
+                    localStorage.setItem('defenderUtilityTypeSkill', skillName);
                     if (clickedContainer2) {
                         // 기존에 클릭된 다른 컨테이너의 클릭을 해제
                         clickedContainer2.children[0].clear();
@@ -596,7 +643,7 @@ const AttackSkill = () => {
         addUtilitySkillBox(
             DoItAgain,
             '다시하기',
-            '공격자, 수비자',
+            '상대방과 자신의 체력을       100% 회복',
             '#FFFFFF'
         );
         addUtilitySkillBox(
@@ -614,7 +661,7 @@ const AttackSkill = () => {
         );
         addUtilitySkillBox(
             Swap,
-            '다시하기',
+            '바꿔치기',
             '상대방과 나의 체력 교체,     나의 현재 체력의 10% 감소',
             '#FFFFFF'
         );
@@ -672,4 +719,4 @@ const AttackSkill = () => {
     return <div ref={pixiContainer} className="outlet-container"></div>;
 };
 
-export default AttackSkill;
+export default DefenderSkill;
