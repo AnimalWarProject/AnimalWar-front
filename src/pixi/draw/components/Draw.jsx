@@ -6,32 +6,19 @@ import manyEgg from "../imgs/AnyConv.com__MANYEGG 1.webp";
 import oneBuilding from "../imgs/AnyConv.com__ONEBUILDING 1.webp";
 import manyBuilding from "../imgs/AnyConv.com__MANYBUILDING 1.webp";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import {api} from "../../../network/api";
 
 const Draw = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
-    const accessToken = localStorage.getItem('accessToken');
-    const [userInfo, setUserInfo] = useState({}); // todo : useEffect 밖에있어서 빈값이 먼저 들어간다.
-
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/v1/user`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        }).then((response) => {
-            setUserInfo(response.data)
-            console.log("저장 : " + JSON.stringify(response.data))
-        }).catch((err) => {
-            console.log(err + "에러 발생 유저인포")
-        })
-        const price = 1000; // 뽑기가격
         const canvasWidth = 960;
         const canvasHeight = 640;
         const drawData = { // 건물 or 동물 , 1 or 10
             type: "animal",
             qty: 1
         };
+
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
             fontSize: 18,
@@ -97,16 +84,25 @@ const Draw = () => {
         oneButtonContainer.interactive = true;
         oneButtonContainer.buttonMode = true;
         oneButtonContainer.addChild(drawOneBtn);
-        oneButtonContainer.on('pointertap', () => {
-            console.log("유저돈"+userInfo.gold)
-            console.log("유저정보"+ JSON.stringify(userInfo))
-            if (userInfo.gold >= price){
-                drawData.qty = 1;
-                nav('/draw/loading', {state : drawData});
-            }else {
-                alert("잔액부족")
-            }
+        oneButtonContainer.on('pointertap', async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const { data: userResponse } = await api('/api/v1/user', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                const updatedGold = userResponse.gold; // 받아온 최신 데이터로 업데이트
+                const price = 1000; // 뽑기 가격
 
+                if (updatedGold >= price) {
+                    // 수행할 작업
+                    drawData.qty = 1;
+                    nav('/draw/loading', {state : drawData});
+                } else {
+                    alert("잔액 부족");
+                }
+            } catch (error) {
+                console.error('Failed to fetch user data:', error);
+            }
         });
         const oneDrawText = new PIXI.Text('1회 뽑기', textStyle);
         drawOneBtn.addChild(oneDrawText);
@@ -122,12 +118,24 @@ const Draw = () => {
         manyButtonContainer.interactive = true;
         manyButtonContainer.buttonMode = true;
         manyButtonContainer.addChild(drawManyBtn);
-        manyButtonContainer.on('pointertap', () => {
-            if (userInfo.gold >= price){
-                drawData.qty = 10;
-                nav('/draw/loading', {state : drawData});
-            }else {
-                alert("잔액부족")
+        manyButtonContainer.on('pointertap', async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const { data: userResponse } = await api('/api/v1/user', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                const updatedGold = userResponse.gold; // 받아온 최신 데이터로 업데이트
+                const price = 1000; // 뽑기 가격
+
+                if (updatedGold >= price * 10) {
+                    // 수행할 작업
+                    drawData.qty = 10;
+                    nav('/draw/loading', {state : drawData});
+                } else {
+                    alert("잔액 부족");
+                }
+            } catch (error) {
+                console.error('Failed to fetch user data:', error);
             }
         });
         const manyDrawText = new PIXI.Text('10회 뽑기', textStyle);

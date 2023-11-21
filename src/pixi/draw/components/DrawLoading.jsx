@@ -15,7 +15,10 @@ const DrawLoading = () => {
     const type = drawData.type;
     const [profile, setProfile] = useState(null);
     const accessToken = localStorage.getItem('accessToken');
+
+
     useEffect(() => {
+
         axios.get("http://localhost:8000/api/v1/user", {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -29,16 +32,12 @@ const DrawLoading = () => {
             .catch((error) => {
                 console.log('Failed to fetch user profile:', error);
             });
-    }, [accessToken]);
 
-
-    useEffect(() => {
         if (profile !== null) {
             const drawRequest = {
-                cnt: qty,
+                count: qty,
                 userUUID: profile
             };
-            console.log("리퀘스트 : " + drawRequest.userUUID + drawRequest.cnt);
 
             const canvasWidth = 960;
             const canvasHeight = 640;
@@ -96,21 +95,24 @@ const DrawLoading = () => {
             randomEggSprite.interactive = true;
             randomEggSprite.buttonMode = true;
             if (type ==='animal'){
-                randomEggSprite.on('pointertap', () => {
-                    axios.post("http://localhost:8000/api/v1/user/animal", drawRequest,{
+                randomEggSprite.on('pointertap', async () => {
+                    await axios.post("http://localhost:8000/api/v1/user/draw", drawRequest,{
                         headers: {
                             Authorization: `Bearer ${accessToken}`
                         }
                     })
                         .then(() => {
-                            alert("차감 완료 ")
+                            // alert("차감 완료 ")
                         })
                         .catch((err)=>{
                             console.log("데이터 전송 실패" + err)
                         })
-                    axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest)
+                    await axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest, {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`
+                        }
+                    })
                         .then((response) => {
-                            console.log("loading data : ", response.data);
                             nav('/draw/result', {state: response.data});
                         })
                         .catch((error) => {
@@ -118,10 +120,24 @@ const DrawLoading = () => {
                         });
                 });
             }else {
-                randomEggSprite.on('pointertap', () => {
-                    axios.post("http://localhost:8000/api/v1/draw/building", drawRequest)
+                randomEggSprite.on('pointertap', async () => {
+                    await axios.post("http://localhost:8000/api/v1/user/draw", drawRequest,{
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`
+                        }
+                    })
+                        .then(() => {
+                            // alert("차감 완료 ")
+                        })
+                        .catch((err)=>{
+                            console.log("데이터 전송 실패" + err)
+                        })
+                    await axios.post("http://localhost:8000/api/v1/draw/building", drawRequest, {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`
+                        }
+                    })
                         .then((response) => {
-                            console.log("loading data : ", response.data);
                             nav('/draw/result', {state: response.data});
                         })
                         .catch((error) => {
@@ -138,20 +154,16 @@ const DrawLoading = () => {
 
             profileBox.addChild(randomEggSprite);
 
-            // Create variables for animation
             let rotationSpeed = 0.01; // 회전 속도
             let direction = 1; // 1은 우측, -1은 좌측
 
             app.ticker.add(() => {
-                // 회전 방향에 따라 기울이기
                 randomEggSprite.rotation += rotationSpeed * direction;
 
-                // 좌우로 기울이다가 일정 각도에 도달하면 방향을 바꿈
                 if (randomEggSprite.rotation >= 0.2 || randomEggSprite.rotation <= -0.2) {
                     direction *= -1;
                 }
             });
-
             function animateFirework(firework) {
                 // 확대 애니메이션 및 투명도 효과
                 firework.scale.x += 0.01;
@@ -163,8 +175,6 @@ const DrawLoading = () => {
                     app.stage.removeChild(firework);
                 }
             }
-
-            // Cleanup on component unmount
             return () => {
                 app.destroy();
             };

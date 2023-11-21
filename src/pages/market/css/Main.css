@@ -19,10 +19,15 @@
 .main-list-content{
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 11.4rem;
     height: 9.6rem;
     border: solid black 0.06rem;
     margin: 0 2.8rem 2.2rem 0;
+}
+.main-list-image{
+    width: 120px;
+    height: 100px;
 }
 .page-button{
     width: 2rem;
