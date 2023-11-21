@@ -13,10 +13,13 @@ import RareButtonImage from './imgs/RareButton.webp';
 import SuperrareButtonImage from './imgs/SuperrareButton.webp';
 import UniqueButtonImage from './imgs/UniqueButton.webp';
 import LegendButtonImage from './imgs/LegendButton.webp';
+import PlaceButtonImage from './imgs/PlaceButton.webp';
+import SaveButtonImage from './imgs/SaveButton.webp';
 
 const Place = ({ userUUID }) => {
     const pixiContainer = useRef(null);
     const [placedItems, setPlacedItems] = useState([]);
+    const [buttonImage, setButtonImage] = useState(PlaceButtonImage);
     const [activeTab, setActiveTab] = useState('animals');
     const [inventory, setInventory] = useState({ buildings: [], animals: [] });
     const [tileData, setTileData] = useState([]);
@@ -48,6 +51,18 @@ const Place = ({ userUUID }) => {
             console.error('Failed to save item placement:', error);
         }
     }, [placedItems]);
+
+    const handleSaveButtonClick = useCallback(async () => {
+        if (buttonImage === SaveButtonImage) {
+            // 저장 로직 수행
+            handleSavePlacement();
+            setButtonImage(PlaceButtonImage);
+            // 필요한 경우 여기에 출력된 내용을 숨기는 로직 추가
+        } else {
+            setButtonImage(SaveButtonImage);
+            // 필요한 경우 여기에 useEffect 부분의 로직 추가
+        }
+    }, [buttonImage, handleSavePlacement]);
 
     const handleGradeButtonClick = (grade) => {
         let englishGrade;
@@ -166,8 +181,7 @@ const Place = ({ userUUID }) => {
 
     const getDroppedTile = useCallback(
         (x, y) => {
-            // x, y 좌표를 사용하여 타일 찾기
-            // tileData 배열에서 가장 가까운 타일을 찾습니다.
+            // tileData 배열에서 가장 가까운 타일을 찾기
             let closestTile = null;
             let minDistance = Infinity;
 
@@ -186,7 +200,7 @@ const Place = ({ userUUID }) => {
         [tileData]
     );
 
-    // 드래그 시작 함수
+    // 드래그 시작 - 일단 테스트목적으로 동물만 이미지
     const onDragStart = useCallback((item, event) => {
         const draggableImage = new PIXI.Sprite(
             PIXI.Texture.from(`/objectImgs/animals/${item.animal.species.toLowerCase()}/${item.animal.imagePath}`)
@@ -194,31 +208,51 @@ const Place = ({ userUUID }) => {
         draggableImage.anchor.set(0.5);
         draggableImage.x = event.data.global.x;
         draggableImage.y = event.data.global.y;
-        draggableImage.zIndex = 10; // z-index 설정
+        draggableImage.zIndex = 10;
         appRef.current.stage.addChild(draggableImage);
 
         setDraggingItem({
             ...item,
             image: draggableImage,
-            offsetX: event.data.global.x - draggableImage.x,
-            offsetY: event.data.global.y - draggableImage.y,
+            offsetX: event.data.global.x - event.data.global.x,
+            offsetY: event.data.global.y - event.data.global.y,
             dragging: true,
         });
+        console.log('Drag Start - draggingItem set', { ...draggingItem });
     }, []);
 
-    // 드래그 중 위치 업데이트 함수
+    // 드래그 중 위치 업데이트
     const onDragMove = useCallback(
         (event) => {
             if (draggingItem && draggingItem.dragging) {
-                const newPosition = event.data.global;
-                draggingItem.image.x = newPosition.x - draggingItem.offsetX;
-                draggingItem.image.y = newPosition.y - draggingItem.offsetY;
+                const newPosition = {
+                    x: event.data.global.x - draggingItem.offsetX,
+                    y: event.data.global.y - draggingItem.offsetY,
+                };
+
+                // 새로운 상태 객체 생성
+                const newDraggingItem = {
+                    ...draggingItem,
+                    position: newPosition,
+                };
+
+                // 상태 업데이트
+                setDraggingItem(newDraggingItem);
+                console.log('드래그 되는중', newDraggingItem);
             }
         },
-        [draggingItem]
+        [draggingItem, setDraggingItem]
     );
 
-    // 드래그 종료 함수
+    useEffect(() => {
+        if (draggingItem && draggingItem.dragging) {
+            // draggingItem 상태가 변경될 때 필요한 작업 수행
+            // 예: draggingItem의 새로운 위치를 기반으로 UI 업데이트
+            console.log('draggingItem updated', draggingItem);
+        }
+    }, [draggingItem]);
+
+    // 드래그 종료
     const onDragEnd = useCallback(() => {
         console.log('Drag End - Event Triggered');
         if (draggingItem && draggingItem.dragging) {
@@ -289,7 +323,11 @@ const Place = ({ userUUID }) => {
                 animalText.x = 710;
                 animalText.y = 35;
                 animalTabBox.current.addChild(animalText);
-                animalTabBox.current.on('pointerdown', () => handleTabSelect('animals'));
+                animalTabBox.current.on('pointerdown', (event) => {
+                    event.stopPropagation();
+                    handleTabSelect('animals');
+                });
+
                 app.stage.addChild(animalTabBox.current);
 
                 buildingTabBox.current = new PIXI.Graphics();
@@ -301,30 +339,27 @@ const Place = ({ userUUID }) => {
                 buildingText.x = 860;
                 buildingText.y = 35;
                 buildingTabBox.current.addChild(buildingText);
-                buildingTabBox.current.on('pointerdown', () => handleTabSelect('buildings'));
+                buildingTabBox.current.on('pointerdown', (event) => {
+                    event.stopPropagation();
+                    handleTabSelect('buildings');
+                });
                 app.stage.addChild(buildingTabBox.current);
 
                 updateTabStyle(activeTab);
 
+                // container에 대한 pointermove 이벤트 리스너
                 container
                     .on('pointerdown', (event) => {
-                        if (draggingItem) {
-                            return; // 드래그 중인 아이템이 있으면 여기서 함수 종료
-                        }
                         startPosition = event.data.getLocalPosition(container.parent);
                         container.alpha = 0.5;
+                        event.stopPropagation(); // 이벤트 전파 중단
                     })
                     .on('pointerup', () => {
                         startPosition = null;
                         container.alpha = 1;
                     })
                     .on('pointermove', (event) => {
-                        if (draggingItem) {
-                            return; // 드래그 중인 아이템이 있으면 여기서 함수 종료
-                        }
-
-                        // 드래그 중인 아이템이 없을 때만 실행되는 로직
-                        if (startPosition) {
+                        if (startPosition && !draggingItem) {
                             const newPosition = event.data.getLocalPosition(container.parent);
                             container.x += newPosition.x - startPosition.x;
                             container.y += newPosition.y - startPosition.y;
@@ -345,29 +380,29 @@ const Place = ({ userUUID }) => {
 
     useEffect(() => {
         if (appRef.current) {
-            const saveButton = new PIXI.Graphics();
-            saveButton.beginFill(0x0e84d1); // 버튼 색상 설정
-            saveButton.drawRect(0, 0, 100, 50); // 버튼 크기 및 위치 설정
-            saveButton.endFill();
-            saveButton.x = 600; // X 좌표
-            saveButton.y = 600; // Y 좌표
-            saveButton.interactive = true;
-            saveButton.buttonMode = true;
-
-            const buttonText = new PIXI.Text('저장하기', { fill: 0xffffff });
-            buttonText.x = 10; // 텍스트 위치 조정
-            buttonText.y = 10;
-            saveButton.addChild(buttonText);
-
-            saveButton.on('pointerdown', handleSavePlacement);
-
-            appRef.current.stage.addChild(saveButton);
+            appRef.current.stage.sortableChildren = true;
+            let saveButton = appRef.current.stage.getChildByName('saveButton');
+            if (!saveButton) {
+                saveButton = new PIXI.Sprite(PIXI.Texture.from(buttonImage));
+                saveButton.interactive = true;
+                saveButton.buttonMode = true;
+                saveButton.x = 50; // 위치 조정
+                saveButton.y = 50; // 위치 조정
+                saveButton.scale.set(0.5);
+                saveButton.name = 'saveButton';
+                saveButton.on('pointerdown', handleSaveButtonClick);
+                appRef.current.stage.addChild(saveButton);
+                console.log(appRef.current);
+                console.log(saveButton);
+            } else {
+                saveButton.texture = PIXI.Texture.from(buttonImage);
+                saveButton.off('pointerdown').on('pointerdown', handleSaveButtonClick);
+            }
         }
-    }, [appRef, handleSavePlacement]);
+    }, [appRef, handleSaveButtonClick, buttonImage]);
 
     useEffect(() => {
         if (appRef.current && activeTab) {
-            // 기존 아이템 삭제
             clearInventoryDisplay();
 
             const handlePrevButtonClick = () => {
@@ -392,7 +427,7 @@ const Place = ({ userUUID }) => {
                 button.y = 465;
                 button.scale.set(0.25);
                 button.on('pointerdown', handlePrevButtonClick);
-                button.name = 'prevButton'; // Assign a name to the button for identification
+                button.name = 'prevButton';
                 return button;
             };
 
@@ -405,7 +440,7 @@ const Place = ({ userUUID }) => {
                 button.y = 465;
                 button.scale.set(0.25);
                 button.on('pointerdown', handleNextButtonClick);
-                button.name = 'nextButton'; // Assign a name to the button for identification
+                button.name = 'nextButton';
                 return button;
             };
 
@@ -414,7 +449,6 @@ const Place = ({ userUUID }) => {
                 prevButton = createPrevButton();
                 appRef.current.stage.addChild(prevButton);
             } else {
-                // If button already exists, just update the event listener
                 prevButton.off('pointerdown').on('pointerdown', handlePrevButtonClick);
             }
 
@@ -423,7 +457,6 @@ const Place = ({ userUUID }) => {
                 nextButton = createNextButton();
                 appRef.current.stage.addChild(nextButton);
             } else {
-                // If button already exists, just update the event listener
                 nextButton.off('pointerdown').on('pointerdown', handleNextButtonClick);
             }
 
@@ -434,9 +467,9 @@ const Place = ({ userUUID }) => {
 
             const filteredItems = selectedInventory.filter((item) => {
                 if (selectedGrade === 'ALL') {
-                    return true; // 모든 등급 표시
+                    return true;
                 } else {
-                    return item.animal.grade === selectedGrade; // 선택한 등급만 표시
+                    return item.animal.grade === selectedGrade;
                 }
             });
 
@@ -499,27 +532,29 @@ const Place = ({ userUUID }) => {
 
                 listBox.on('pointerdown', (event) => {
                     console.log('pointerdown event triggered', item);
-                    event.stopPropagation();
                     onDragStart(item, event);
                 });
 
                 // 드래그 이벤트 리스너 등록
+                // appRef.current.stage에 대한 pointermove 이벤트 리스너
                 appRef.current.stage.on('pointermove', (event) => {
-                    if (!draggingItem) {
-                        return; // 드래그 중인 아이템이 없으면 여기서 함수 종료
+                    if (draggingItem && draggingItem.dragging) {
+                        console.log('드래그 됩니다');
+                        onDragMove(event); // 드래그 중인 객체 처리
                     }
-                    onDragMove(event);
                 });
                 appRef.current.stage.on('pointerup', (event) => {
                     if (!draggingItem) {
-                        return; // 드래그 중인 아이템이 없으면 여기서 함수 종료
+                        return;
                     }
+                    event.stopPropagation();
                     onDragEnd(event);
                 });
                 appRef.current.stage.on('pointerupoutside', (event) => {
                     if (!draggingItem) {
-                        return; // 드래그 중인 아이템이 없으면 여기서 함수 종료
+                        return;
                     }
+                    event.stopPropagation();
                     onDragEnd(event);
                 });
                 appRef.current.stage.addChild(listBox);
@@ -536,7 +571,7 @@ const Place = ({ userUUID }) => {
                 'uniqueButton',
                 'legendButton',
             ];
-            // 각 버튼 이미지를 PIXI.Texture로 변환
+
             const allButtonTexture = PIXI.Texture.from(AllButtonImage);
             const normalButtonTexture = PIXI.Texture.from(NormalButtonImage);
             const rareButtonTexture = PIXI.Texture.from(RareButtonImage);
@@ -544,10 +579,9 @@ const Place = ({ userUUID }) => {
             const uniqueButtonTexture = PIXI.Texture.from(UniqueButtonImage);
             const legendButtonTexture = PIXI.Texture.from(LegendButtonImage);
 
-            // Grade 버튼을 생성하고 이미지 텍스처를 할당
             const createGradeButton = (grade, x, y, identifier) => {
                 if (!appRef.current.stage.getChildByName(identifier)) {
-                    const button = new PIXI.Sprite(); // 이미지 스프라이트 생성
+                    const button = new PIXI.Sprite();
                     button.anchor.set(0.5);
                     button.x = x;
                     button.y = y;
@@ -558,7 +592,6 @@ const Place = ({ userUUID }) => {
 
                     let buttonTexture;
 
-                    // 각 Grade에 맞는 이미지 텍스처를 할당
                     switch (grade) {
                         case '전체':
                             buttonTexture = allButtonTexture;
@@ -582,16 +615,17 @@ const Place = ({ userUUID }) => {
                             break;
                     }
 
-                    button.texture = buttonTexture; // 이미지 텍스처를 버튼에 할당
+                    button.texture = buttonTexture;
 
-                    // 이벤트 리스너 추가
-                    button.on('pointerdown', () => handleGradeButtonClick(grade));
+                    button.on('pointerdown', (event) => {
+                        event.stopPropagation();
+                        handleGradeButtonClick(grade);
+                    });
 
                     appRef.current.stage.addChild(button);
                 }
             };
 
-            // Grade 버튼 생성 코드는 기존과 동일하게 유지
             const grades = ['전체', '노말', '레어', '슈퍼레어', '유니크', '레전드'];
             for (let i = 0; i < grades.length; i++) {
                 createGradeButton(grades[i], 703 + i * 45, 540, buttonIdentifiers[i]);
