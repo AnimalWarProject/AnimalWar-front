@@ -97,6 +97,17 @@ const DrawLoading = () => {
             randomEggSprite.buttonMode = true;
             if (type ==='animal'){
                 randomEggSprite.on('pointertap', () => {
+                    axios.post("http://localhost:8000/api/v1/user/animal", drawRequest,{
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`
+                        }
+                    })
+                        .then(() => {
+                            alert("차감 완료 ")
+                        })
+                        .catch((err)=>{
+                            console.log("데이터 전송 실패" + err)
+                        })
                     axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest)
                         .then((response) => {
                             console.log("loading data : ", response.data);

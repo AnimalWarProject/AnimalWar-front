@@ -29,10 +29,13 @@ import GameResult from "../pixi/battle/components/GameResult";
 import Place from '../pixi/place/Place';
 import Board from '../pages/board/components/Board';
 import BoardDetail from '../pages/board/components/BoardDetail';
+
+import NewBoard from '../pages/board/components/NewBoard';
+
 import Mix from "../pixi/Mix/Mix";
 import DrawLoading from "../pixi/draw/components/DrawLoading";
-import SkillSelect from "../pixi/battle/components/SkillSelect";
 
+import SkillSelect from "../pixi/battle/components/SkillSelect";
 const MyRoutes = () => {
     return (
         <Routes>
@@ -60,16 +63,15 @@ const MyRoutes = () => {
                 <Route path="/exchange" element={<Exchange />}></Route>
                 <Route path="/place" element={<Place />}></Route>
                 <Route path="/battle" element={<SkillSelect />}></Route>
-
             </Route>
             <Route element={<BasicTemplate />}>
                 <Route path="/market" element={<MarketPage />} />
                 <Route path="/rank" element={<RankingPage />} />
-
                 <Route path="/my" element={<MyPage />} />
                 <Route path="/userInfo" element={<UserInfo />} />
                 <Route path="/board" element={<Board />} />
-                <Route path="/BoardDetail" element={<BoardDetail />} />
+                <Route path="/boardDetail" element={<BoardDetail />} />
+                <Route path="/newBoard" element={<NewBoard />} />
             </Route>
             <Route element={<BorderTemplate />}>
                 <Route path="/" element={<LoginPage />} />
