@@ -1,8 +1,10 @@
 import '../css/Resister.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 
 const Resister = ({selectedData, onEventInMarketCancel}) => {
+    const [userInfo, setUserInfo] = useState({})
     let data; // data 변수를 선언
     let dataToSend;
     if (selectedData.animal) {
@@ -14,12 +16,25 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
     const [buff, setBuff] = useState(0); // buff 상태를 useState로 초기화
     const accessToken = localStorage.getItem('accessToken');
 
+    useEffect(() => {
+        axios.get(`http://localhost:8000/api/v1/user`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        }).then((response) => {
+            setUserInfo(response.data)
+        }).catch((err) => {
+            console.log(err + "에러 발생 유저인포")
+        })
+    }, []);
+
     //todo : data가  selectedData.animal 일때
 
     if (buff !== 0){
         setBuff(selectedData.upgrade);
     }
     const animalInfo = {
+        userid: userInfo.uuid,
         itemId: data.animalId,
         name: data.name,
         grade: data.grade,
@@ -35,6 +50,7 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
     //todo : data가 selectedData.building 일 때  axios 나눠야함
 
     const buildingInfo = {
+        userid: userInfo.uuid,
         itemId: data.buildingId,
         name: data.name,
         grade: data.grade,
@@ -70,6 +86,8 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         onEventInMarketCancel()
     }
     const ItemSell = () => {
+        console.log(selectedData)
+        console.log(JSON.stringify(selectedData))
         if (selectedData.animal) {
             axios.post(`http://localhost:8000/api/v1/inventory/delete/animal`, animalInfo, {
                 headers: {
@@ -77,11 +95,11 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
                 }
             })
                 .then(()=>{
-                    alert("삭제성공")
                 })
                 .catch((err)=>{
                     console.log(err)
                 })
+
         } else if (selectedData.building) {
             axios.post(`http://localhost:8000/api/v1/inventory/delete/building`, buildingInfo, {
                 headers: {
@@ -89,7 +107,6 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
                 }
             })
                 .then(()=>{
-                    alert("삭제성공")
                 })
                 .catch((err)=>{
                     console.log(err)
@@ -97,13 +114,18 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         } else {
             alert("올바르지 않은 정보입니다.")
         }
+        onEventInMarketCancel()
     }
 
     return <>
         <div className="register-container">
             <div className="register-wrap">
                 <div className="register-wrap-item">
-                    {/*    아이템 이미지 등록 */}
+                    {selectedData.animal ? ( // 동물인 경우 이미지 렌더링
+                        <img className="register-wrap-image" src={`${INVImg}/animals/${animalInfo.species}/${data.imagePath}`} alt="" />
+                    ) : (
+                        <img className="register-wrap-image" src={`${INVImg}/buildings/${data.imagePath}`} alt="" /> // 건물인 경우 이미지 렌더링
+                    )}
                 </div>
                 <div>
                     이름 : {data.name}
