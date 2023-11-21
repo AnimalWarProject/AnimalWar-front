@@ -1,155 +1,145 @@
-import back from "../image/Rectangle 12374.webp";
 import {useEffect, useRef, useState} from "react";
-import * as PIXI from "pixi.js";
-import {useNavigate} from "react-router-dom";
-import moru from "../image/ANVIL 1.webp";
+import {api} from "../../../network/api";
+import "../css/UpGrade.css";
 const UpGrade = () => {
-    const canvasRef = useRef(null);
-    const nav = useNavigate();
-    const grade = ["노말", "레어", "슈퍼레어", "유니크", "레전드"];
+    const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
+    const [data, setData] = useState([]);
+    const [potImgUrl, setPotImgUrl] = useState([]);
+    const [initialOwnedQuantity, setInitialOwnedQuantity] = useState([]) // TODO ownedQuantity을 초기화 해주기 위해서
+    const [ownedQuantity, setOwnedQuantity] = useState([initialOwnedQuantity]);
+    const [selectedAnimal, setSelectedAnimal] = useState([[]]);
+
+    const [englishGrade, setEnglishGrade] = useState('NORMAL');
+    const [entityType , setEntityType] = useState('animals')
+    const [gradeTap, setGradeTap] = useState(['노말', '레어','슈퍼레어','유니크', '레전드'])
+
+    // Feat : 동물/건물 탭
+    const goToEntityType = (entityType) => {
+        setEntityType(entityType)
+    };
+
+    // Feat : 등급 탭
+    const gradeHandler = (e) => {
+        switch (e) {
+            case '노말':
+                setEnglishGrade('NORMAL')
+                // 항아리 리셋
+                break
+            case '레어':
+                setEnglishGrade('RARE')
+                break
+            case '슈퍼레어':
+                setEnglishGrade('SUPERRARE')
+                break
+            case '유니크':
+                setEnglishGrade('UNIQUE')
+                break
+            case '레전드':
+                setEnglishGrade('LEGEND')
+                break
+            default:
+                setEnglishGrade('NORMAL');
+                break;
+        }
+    }
+
+    const getData = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const { data: INVdata } = await api(`http://localhost:8000/api/v1/inventory/${entityType}`, 'GET', null, { // /grade?grade=${englishGrade}
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            setData(INVdata);
+            setInitialOwnedQuantity(INVdata.map(item => item.ownedQuantity)) // 초기값 : 가지고 있는 동물 수
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+        }
+    };
+
+    // Feat : 선택한 동물 항아리에 넣기
+    const getPotHandler = (idx) => {
+
+        const selectedAnimal = data[idx];
+
+        const imgUrl = entityType === 'animals'
+            ? `${INVImg}/${entityType}/${data[idx].animal.species}/${data[idx].animal.imagePath}`
+            : `${INVImg}/${entityType}/${data[idx].building.imagePath}`
+
+        const ownedQuantityMinus1 = data[idx].ownedQuantity = data[idx].ownedQuantity -1
+
+        if(data[idx].ownedQuantity !== 0 && selectedAnimal.length < 1) {
+            setSelectedAnimal((preAnimal) => [...preAnimal, selectedAnimal])
+            // setPotImgUrl((prevPotImgUrl) => [...prevPotImgUrl, imgUrl]);
+            // setOwnedQuantity((preOwnedQuantity) => [...preOwnedQuantity, ownedQuantityMinus1])
+            selectedAnimal.ownedQuantity[idx] = selectedAnimal.ownedQuantity[idx]-1
+            console.log(selectedAnimal)
+        }
+
+        // TODO 클릭한 동물에 대한 정보를 저장해서 맵돌려서 보여주기(이미지주소랑 ownedQuantity만 저장하면 나중에 다시 인벤토리에서 삭제해줄 때 동물id 찾기 어렵기 때문에.. 전체 동물 데이터를 가지고 있어야해)
+        //  항아리와 합성 결과값에 사용
+
+        console.log(ownedQuantity);
+    }
+
+    const deletePotHandler = () => {
+        setPotImgUrl([]);
+    }
 
     useEffect(() => {
-        const canvasWidth = 960;
-        const canvasHeight = 640;
+        getData();
+    }, [entityType, englishGrade]);
 
-        const textStyle = new PIXI.TextStyle({ // 글꼴
-            fill: 0x0f1828,
-            fontSize: 18,
-            fontFamily: 'Arial',
-            fontWeight: "bold",
-        });
+    return (
+        <div className="outlet-container" style={{ width: '960px', height: '640px', borderRadius: '0.5rem' }}>
+            <div className="outlet-container-wrapBox">
+                <div className="outlet-container-innerBox">
+                    <div className="outlet-container-activeTap">
+                        <div onClick={() => goToEntityType('animals')}><p>동물</p></div>
+                        <div onClick={() => goToEntityType('buildings')}><p>건물</p></div>
+                    </div>
+                    <div className="btn">
+                        <div><p>합성하기</p></div>
+                    </div>
+                    <div className="gradeTap" onClick={() => deletePotHandler()}>
+                        {/* Feat : 등급별 조회*/}
+                        {gradeTap.map((item, idx) => (
+                            <div key={idx}>
+                                <div onClick={() => gradeHandler(item)}>{item}</div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="mainBoxWrap">
+                        <div className="mainBoxWrap-invBox">
+                            {data.map((item, idx) => (
+                                // Feat : 인벤토리 보여주기
+                                <div key={idx} className="mainBoxWrap-invItem" onClick={() => getPotHandler(idx)}>
+                                    <p>{data[idx].ownedQuantity}</p>
+                                    <img
+                                        src={
+                                            entityType === 'animals'
+                                                ? `${INVImg}/${entityType}/${data[idx].animal.species}/${data[idx].animal.imagePath}`
+                                                : `${INVImg}/${entityType}/${data[idx].building.imagePath}`
+                                        }/>
+                                </div>
+                            ))}
+                        </div>
 
-        const app = new PIXI.Application({
-            backgroundColor: 0x1099bb,
-            width: canvasWidth,
-            height: canvasHeight,
-        });
+                        <div className="potBox" onClick={() => deletePotHandler()}>
+                            <div className="potBoxItemWrap">
+                                {/* Feat : 선택한 동물 항아리에 나옴..*/}
+                                {potImgUrl.map((item, idx) => (
+                                    <div key={idx} className="potBoxItem">
+                                        <img src={item} alt={`pot-item-${idx}`} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
 
-        if (canvasRef.current) {
-            canvasRef.current.appendChild(app.view);
-        }
-
-        const background = PIXI.Sprite.from(back); // 뒷 배경사진
-        background.width = app.screen.width;
-        background.height = app.screen.height;
-        app.stage.addChild(background);
-
-        const profileBox = new PIXI.Graphics(); // 큰 틀
-        profileBox.beginFill(0xffffff, 0.5);
-        const profileWidth = canvasWidth * 0.85;
-        const profileHeight = canvasHeight * 0.85;
-        profileBox.drawRoundedRect(70, 40, profileWidth, profileHeight, 40);
-
-        const profileInnerBox = new PIXI.Graphics(); // 작은 틀
-        profileInnerBox.beginFill(0xffffff, 0.5);
-        const InnerBoxWidth = 377;
-        const InnerBoxHeight = 448;
-        profileBox.drawRoundedRect(80, 120, InnerBoxWidth, InnerBoxHeight, 40);
-
-        for (let i = 0; i < 5; i++) { // 등급 칸 & 텍스트
-            const inventory = new PIXI.Graphics();
-            inventory.beginFill(0xffffff, 0.5);
-            const InventoryWidth = 140;
-            const InventoryHeight = 55;
-            inventory.drawRoundedRect(100 + (i * 150), 50, InventoryWidth, InventoryHeight, 40);
-
-            const gradeText = new PIXI.Text(grade[i], textStyle);
-            inventory.addChild(gradeText);
-            gradeText.anchor.set(0.5); // 글자 중심
-            gradeText.x = 170 + ( i * 150 ); // X 위치 조정
-            gradeText.y = 80;  // Y 위치 조정
-            profileBox.addChild(inventory);
-            profileBox.addChild(gradeText);
-        }
-
-        const descriptionBox = new PIXI.Graphics(); // 설명 칸
-        descriptionBox.beginFill(0xffffff, 0.5);
-        const descriptionBoxWidth = 390;
-        const descriptionBoxHeight = 85;
-        profileBox.drawRoundedRect(470, 480, descriptionBoxWidth, descriptionBoxHeight, 40);
-        const descriptionText = new PIXI.Text('설명 설명 설명', textStyle)
-        descriptionBox.addChild(descriptionText);
-        descriptionText.anchor.set(0.5);
-        descriptionText.x = 660;
-        descriptionText.y = 525;
-        profileBox.addChild(descriptionBox);
-        profileBox.addChild(descriptionText);
-
-        for (let j = 0; j < 3; j++) { // 인벤토리 칸
-            for (let i = 0; i < 3; i++) {
-                const inventory = new PIXI.Graphics();
-                inventory.beginFill(0xffffff, 0.5);
-                const InventoryWidth = 105;
-                const InventoryHeight = 122;
-                profileBox.drawRoundedRect(95 + (i * 120), 150 + (j * 135), InventoryWidth, InventoryHeight, 40);
-            }
-        }
-
-        const AnimalBtn = new PIXI.Graphics(); // 동물버튼
-        AnimalBtn.beginFill(0xF698ED, 1);
-        const AnimalBtnWidth = 110;
-        const AnimalBtnHeight = 35;
-        AnimalBtn.drawRoundedRect(80, 3, AnimalBtnWidth, AnimalBtnHeight, 10);
-        const animalDrawText = new PIXI.Text('동물', textStyle);
-        AnimalBtn.addChild(animalDrawText);
-        animalDrawText.x = 135;
-        animalDrawText.y = 20;
-        animalDrawText.anchor.set(0.5)
-        const animalButtonContainer = new PIXI.Container();
-        animalButtonContainer.interactive = true;
-        animalButtonContainer.buttonMode = true;
-        animalButtonContainer.addChild(AnimalBtn);
-
-        const BuildingBtn = new PIXI.Graphics(); // 건물버튼
-        BuildingBtn.beginFill(0xFF594F, 1);
-        const BuildingBtnWidth = 110;
-        const BuildingBtnHeight = 35;
-        BuildingBtn.drawRoundedRect(200, 3, BuildingBtnWidth, BuildingBtnHeight, 10);
-        const BuildingDrawText = new PIXI.Text('건물', textStyle);
-        BuildingBtn.addChild(BuildingDrawText);
-        BuildingDrawText.x = 255;
-        BuildingDrawText.y = 20;
-        BuildingDrawText.anchor.set(0.5)
-        const buildingButtonContainer = new PIXI.Container();
-        buildingButtonContainer.interactive = true;
-        buildingButtonContainer.buttonMode = true;
-        buildingButtonContainer.addChild(BuildingBtn);
-
-        const upGradeBtn = new PIXI.Graphics(); // 강화하기버튼
-        upGradeBtn.beginFill(0xFF594F, 1);
-        const drawBuildingBtnWidth = 150;
-        const drawBuildingBtnHeight = 40;
-        upGradeBtn.drawRoundedRect(720, 590, drawBuildingBtnWidth, drawBuildingBtnHeight, 40);
-        const upGradeDrawText = new PIXI.Text('강화하기', textStyle);
-        upGradeBtn.addChild(upGradeDrawText);
-        upGradeDrawText.x = 760;
-        upGradeDrawText.y = 600;
-        const upGradeButtonContainer = new PIXI.Container();
-        upGradeButtonContainer.interactive = true;
-        upGradeButtonContainer.buttonMode = true;
-        upGradeButtonContainer.addChild(upGradeBtn);
-        upGradeButtonContainer.on('pointertap', () => {
-            nav('/upgrade/loading');
-        });
-
-
-        const moruImage = PIXI.Texture.from(moru);
-        const imageSprite = new PIXI.Sprite(moruImage);
-        imageSprite.width = 392;
-        imageSprite.height = 366;
-        imageSprite.x = 490;
-        imageSprite.y = 110;
-        profileBox.addChild(imageSprite);
-
-
-
-        app.stage.addChild(profileBox);
-        app.stage.addChild(animalButtonContainer);
-        app.stage.addChild(buildingButtonContainer);
-        app.stage.addChild(upGradeButtonContainer);
-    }, []);
-
-    return <div ref={canvasRef} className="outlet-container"></div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default UpGrade;

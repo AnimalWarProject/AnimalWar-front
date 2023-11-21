@@ -1,8 +1,6 @@
 import classes from '../../common/components/Mix.module.css';
 import { api } from "../../network/api";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
 
 const Mix = () => {
     const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;

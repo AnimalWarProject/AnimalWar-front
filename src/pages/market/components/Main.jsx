@@ -1,9 +1,10 @@
 import "../css/Main.css" ;
 import {useEffect, useRef, useState} from "react";
 import axios from "axios";
-const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
+
 
 const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) => {
+    const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
     const [sortedData, setSortedData] = useState([]);
     const itemsPerRow = 3; // 한 행당 표시할 항목 수
     const containerRef = useRef();

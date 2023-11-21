@@ -2,8 +2,8 @@ import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
 import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
 import { useLocation, useNavigate } from 'react-router-dom';
-const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 const DrawResult = () => {
+    const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
     const canvasRef = useRef(null);
     const location = useLocation();
     const resultData = location.state;
