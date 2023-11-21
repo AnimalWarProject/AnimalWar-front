@@ -35,59 +35,55 @@ const Battle = () => {
     const [battleLog, setBattleLog] = useState([])
     const location = useLocation();
     const data = location.state;
+    console.log("here")
     console.log(data);
 
     const sendBattleDataToServer = async () => {
+
         try {
             const requestBody = {
                 attacker: {
-                    id: id,
-                    nickName: nickName,
-                    species: species,
-                    profileImage: profileImage,
-                    life: attackerHealth,
-                    maxLife: attackerMaxHealth,
-                    attackPower: attackerAtkPower,
-                    defensePower: attackerDefPower,
-                    attackerAttackTypeSkill: attackerAttackTypeSkill,
-                    attackerDefenseTypeSkill: attackerDefenseTypeSkill,
-                    attackerUtilityTypeSkill: attackerUtilityTypeSkill,
-                    food: food,
-                    gold : gold,
-                    iron: iron,
-                    wood: wood
+                    id: data.state.state.attacker.id,
+                    nickName: data.state.state.attacker.nickName,
+                    species: data.state.state.attacker.species,
+                    profileImage: data.state.state.attacker.profileImage,
+                    life: data.state.state.attacker.life,
+                    maxLife: data.state.state.attacker.maxLife,
+                    attackPower: data.state.state.attacker.attackPower,
+                    defensePower: data.state.state.attacker.defensePower,
+                    stringAttackTypeSkill: data.state.state.attacker.attackerAttackTypeSkill,
+                    stringDefenseTypeSkill: data.state.state.attacker.attackerDefenseTypeSkill,
+                    stringUtilityTypeSkill: data.state.state.attacker.attackerUtilityTypeSkill,
+                    food: data.state.state.attacker.food,
+                    gold : data.state.state.attacker.gold,
+                    iron: data.state.state.attacker.iron,
+                    wood: data.state.state.attacker.wood
                 },
                 defender: {
-                    id: id,
-                    nickName: nickName,
-                    species: species,
-                    profileImage: profileImage,
-                    life: defenderHealth,
-                    maxLife: defenderMaxHealth,
-                    attackPower: attackerAtkPower,
-                    defensePower: attackerDefPower,
-                    defenderAttackTypeSkill: defenderAttackTypeSkill,
-                    defenderDefenseTypeSkill: defenderDefenseTypeSkill,
-                    defenderUtilityTypeSkill: defenderUtilityTypeSkill,
-                    food: food,
-                    gold : gold,
-                    iron: iron,
-                    wood: wood
+                    id: data.state.state.depender.id,
+                    nickName: data.state.state.depender.nickName,
+                    species: data.state.state.depender.species,
+                    profileImage: data.state.state.depender.profileImage,
+                    life: data.state.state.depender.life,
+                    maxLife: data.state.state.depender.maxLife,
+                    attackPower: data.state.state.depender.attackPower,
+                    defensePower: data.state.state.depender.defensePower,
+                    stringAttackTypeSkill: data.state.state.depender.defenderAttackTypeSkill,
+                    stringDefenseTypeSkill: data.state.state.depender.defenderDefenseTypeSkill,
+                    stringUtilityTypeSkill: data.state.state.depender.defenderUtilityTypeSkill,
+                    food: data.state.state.depender.food,
+                    gold : data.state.state.depender.gold,
+                    iron: data.state.state.depender.iron,
+                    wood: data.state.state.depender.wood
                 },
             };
             const stateToken = localStorage.getItem('stateToken');
-            const response = await api('/api/vi/battle', 'POST', requestBody, {
+            const response = await api('/api/v1/battle', 'POST', requestBody, {
                 headers: {
                     Authorization: `Bearer ${stateToken}`,
                 },
             });
-
-            if (response.ok) {
-                const battleLogs = await response.json();
-                console.log('Battle data sent successfully')
-            } else {
-                console.error('Failed to send battle data. Server response:', response.status);
-            }
+            console.log(response)
         } catch (error) {
             console.error('Error sending battle data:', error);
         }
@@ -158,7 +154,7 @@ const Battle = () => {
                 })
                 logText.x = 80;
                 logText.y = 280 + i * 20; // Adjust Y position based on log index
-                logContainer.addChild(logText);
+                battleLogBox.addChild(logText);
             }
         };
 

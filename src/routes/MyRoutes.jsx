@@ -55,8 +55,6 @@ const MyRoutes = () => {
                 <Route path="/match" element={<Match />} />
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
-                {/*<Route path="/battle" element={<AttackerSkill />}></Route>*/}
-                {/*<Route path="/battle1" element={<DefenderSkill />}></Route>*/}
                 <Route path="/battle2" element={<Battle />}></Route>
                 <Route path="/battle3" element={<GameResult />}></Route>
                 <Route path="/exchange" element={<Exchange />}></Route>
