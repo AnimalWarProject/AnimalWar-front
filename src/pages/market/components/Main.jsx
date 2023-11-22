@@ -23,7 +23,7 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
                 type: item.type,
                 buff: item.buff,
                 price: item.price
-            };
+            };// todo : api 교체
             axios.post(`http://localhost:8000/api/v1/user/buyitem`, buyInfo,{
                 headers: {
                     Authorization: `Bearer ${accessToken}`
@@ -45,8 +45,7 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
                 type: item.type,
                 buff: item.buff,
                 price: item.price
-            };
-
+            };// todo : api 교체
             axios.post(`http://localhost:8000/api/v1/user/cancelitem`, cancelInfo,{
                 headers: {
                     Authorization: `Bearer ${accessToken}`
@@ -64,7 +63,7 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
             itemId:item.itemId,
             price:item.price
         };
-        if (item.btnState === false){
+        if (item.btnState === false){// todo : api 교체
             axios.post(`http://localhost:8000/api/v1/user/price`, takeInfo, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
@@ -80,7 +79,7 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
         }
     }
 
-    useEffect(() => {
+    useEffect(() => {// todo : api 교체
         axios.get(`http://localhost:8000/api/v1/user`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -93,7 +92,7 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
         const fetchData = async () => {
             let response = [];
             try {
-                if (selectedAnimalType === "" && searchWord === "") {
+                if (selectedAnimalType === "" && searchWord === "") {// todo : api 교체
                     response = await axios.get(`http://localhost:8000/api/v1/market/all`);
                 } else if (searchWord !== "") {
                     response = await axios.post(`http://localhost:8000/api/v1/market/search/${searchWord}`);

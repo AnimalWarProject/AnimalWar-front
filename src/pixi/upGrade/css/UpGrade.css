@@ -1,11 +1,8 @@
-body, h1, h2, h3, p, ul, li {
-    margin: 0;
-    padding: 0;
-}
 .outlet-container-wrapBox{
     width: 100%;
     height: 100%;
     background-image: url("../image/Rectangle 12374.webp");
+    background-repeat: no-repeat;
     border-radius: 0.5rem;
     box-sizing: border-box;
     padding: 60px;
@@ -20,6 +17,14 @@ body, h1, h2, h3, p, ul, li {
     box-sizing: border-box;
 }
 .outlet-container-activeTap{
+    width: 160px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    background-color: #61dafb;
     position: absolute;
     top: -52px;
     left: 0;
@@ -27,41 +32,19 @@ body, h1, h2, h3, p, ul, li {
     gap: 10px;
 }
 .btn{
+    background-color: #ffa500;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    width: 250px;
+    height: 45px;
     position: absolute;
     bottom: -52px;
     right: 0;
 }
-.btn > div {
-    width: 100px;
-    height: 25px;
-    padding: 10px 30px;
-    border-radius: 10px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background: rgba(106, 255, 246, 1);
-    border-radius: 10px;
-}
-.outlet-container-activeTap > div {
-    width: 100px;
-    height: 25px;
-    padding: 10px 30px;
-    border-radius: 10px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-.outlet-container-activeTap > div:first-child {
-    background: #B6C1EA;
-}
-
-.outlet-container-activeTap > div:last-child {
-    background: #B6E4EA;
-}
+/*.outlet-container-activeTap > div:last-child {*/
+/*    background: #B6E4EA;*/
+/*}*/
 .gradeTap {
     padding: 10px 20px 0 20px;
     display: flex;
@@ -78,52 +61,31 @@ body, h1, h2, h3, p, ul, li {
     align-items: center;
     justify-content: center;
 }
-
-.mainBoxWrap {
-    margin-left: 20px;
-    display: flex;
-    justify-content: space-between;
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.mainBoxWrap-invBox{
+.upgrade_invBox{
     width: 377px;
     height: 425px;
     border-radius: 40px;
-    background: rgba(255, 255, 255, 0.35);
+    background-color: rgba(255, 255, 255, 0.35);
     box-sizing: border-box;
-    padding: 10px;
-    overflow-y: scroll;
-    display: block;
-    justify-content: center;
-    align-items: center;
+    padding-top: 10px;
+    margin: 15px 0 0 35px;
 }
-.mainBoxWrap-invBox::-webkit-scrollbar {
-    width: 0rem ; /* 스크롤바의 너비 */
+.mainBoxWrap {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    overflow-y: scroll;
+    width: 280px;
+    height: 380px;
+}
+.mainBoxWrap::-webkit-scrollbar {
+    width: 0px;
 }
 .mainBoxWrap-invItem{
-    display: inline-block;
-    width: 100px;
-    height: 120px;
-    background-color: rgba(255, 255, 255, 0.60);
-    border-radius: 40px;
-    margin-right: 5px;
-    margin-top: 10px;
-    position: relative;
-    cursor: pointer;
+    display: flex;
+    flex-direction: row;
 }
-.mainBoxWrap-invItem:nth-child(3n + 1) {
-    margin-left: 2px;
-}
-.mainBoxWrap-invItem img {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 65%;
-}
-
 .mainBoxWrap-invItem p {
     position: absolute;
     top: 10px;
@@ -133,15 +95,33 @@ body, h1, h2, h3, p, ul, li {
     font-weight: 600;
     font-size: 18px;
 }
+.upgrade-inven-content{
+    background-color: #ffffff;
+    border-radius: 30px;
+    border: solid black 0.06rem;
+    width: 4.2rem;
+    height: 4rem;
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+.upgrade-inven-content.selected {
+    background-color: #dccd33;
+    border: solid white 0.06rem;
+}
+.upgrade-inven-content-image{
+    width: 60px;
+    height: 58px;
+}
 .potBox {
     display: flex;
-    margin: 10px 0 10px 20px;
-    width: 422px;
-    height: 446px;
-    background-image: url("../image/ANVIL 1.webp");
+    margin: 30px 20px 10px 20px;
+    width: 490px;
+    height: 380px;
+    background-image: url("../image/ANVIL 1.png");
     position: relative;
-}
-.itemImg {
 }
 .potBoxItemWrap {
     position: absolute;
@@ -152,19 +132,16 @@ body, h1, h2, h3, p, ul, li {
     display: flex;
 }
 .potBoxItem {
-    width: 56px;
+    width: 65px;
     height: 100%;
-    margin-right: 24px;
-    border-radius: 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.potBoxItem img {
-    width: 95%;
+.potBox-image{
+    background-color: #FFFFFF;
+    width: 90px;
+    height: 80px;
+    margin: 90px 10px 0 293px ;
 }
-.potBoxItem:last-child {
-    margin-right: 0;
-}
-

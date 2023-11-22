@@ -1,9 +1,11 @@
 import '../css/Resister.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {api} from "../../../network/api";
 const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 
 const Resister = ({selectedData, onEventInMarketCancel}) => {
+    const accessToken = localStorage.getItem('accessToken');
     const [userInfo, setUserInfo] = useState({})
     let data; // data 변수를 선언
     let dataToSend;
@@ -14,21 +16,20 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
     }
     const [price, setPrice] = useState('');
     const [buff, setBuff] = useState(0); // buff 상태를 useState로 초기화
-    const accessToken = localStorage.getItem('accessToken');
 
-    useEffect(() => {
-        axios.get(`http://localhost:8000/api/v1/user`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
+    useEffect( () => {
+        const fetchUserData = async () => {
+            try {
+                const { data: INVdata } = await api(`/api/v1/user`, 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                setUserInfo(INVdata);
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
             }
-        }).then((response) => {
-            setUserInfo(response.data)
-        }).catch((err) => {
-            console.log(err + "에러 발생 유저인포")
-        })
+        };
+        fetchUserData();
     }, []);
-
-    //todo : data가  selectedData.animal 일때
 
     if (buff !== 0){
         setBuff(selectedData.upgrade);
@@ -46,8 +47,6 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         buff: buff, // 동물 강화 수
         price: price
     };
-
-    //todo : data가 selectedData.building 일 때  axios 나눠야함
 
     const buildingInfo = {
         userid: userInfo.uuid,
@@ -85,9 +84,7 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
     const onClickCancel = () =>{
         onEventInMarketCancel()
     }
-    const ItemSell = () => {
-        console.log(selectedData)
-        console.log(JSON.stringify(selectedData))
+    const ItemSell = () => { // todo : api 교체
         if (selectedData.animal) {
             axios.post(`http://localhost:8000/api/v1/inventory/delete/animal`, animalInfo, {
                 headers: {
@@ -100,7 +97,7 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
                     console.log(err)
                 })
 
-        } else if (selectedData.building) {
+        } else if (selectedData.building) {// todo : api 교체
             axios.post(`http://localhost:8000/api/v1/inventory/delete/building`, buildingInfo, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`

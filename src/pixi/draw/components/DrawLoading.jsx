@@ -16,10 +16,8 @@ const DrawLoading = () => {
     const [profile, setProfile] = useState(null);
     const accessToken = localStorage.getItem('accessToken');
 
-
     useEffect(() => {
-
-        axios.get("http://localhost:8000/api/v1/user", {
+        axios.get("http://localhost:8000/api/v1/user", {// todo : api 교체 market에 해놓음
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
@@ -95,7 +93,7 @@ const DrawLoading = () => {
             randomEggSprite.interactive = true;
             randomEggSprite.buttonMode = true;
             if (type ==='animal'){
-                randomEggSprite.on('pointertap', async () => {
+                randomEggSprite.on('pointertap', async () => {// todo : api 교체
                     await axios.post("http://localhost:8000/api/v1/user/draw", drawRequest,{
                         headers: {
                             Authorization: `Bearer ${accessToken}`
@@ -120,7 +118,7 @@ const DrawLoading = () => {
                         });
                 });
             }else {
-                randomEggSprite.on('pointertap', async () => {
+                randomEggSprite.on('pointertap', async () => {// todo : api 교체
                     await axios.post("http://localhost:8000/api/v1/user/draw", drawRequest,{
                         headers: {
                             Authorization: `Bearer ${accessToken}`

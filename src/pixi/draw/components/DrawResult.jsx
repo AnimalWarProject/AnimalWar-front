@@ -52,7 +52,7 @@ const DrawResult = () => {
 
                 const textStyle = new PIXI.TextStyle({
                     fill: 0x0f1828,
-                    fontSize: 18,
+                    fontSize: 24,
                     fontFamily: 'Arial',
                     fontWeight: 'bold',
                 });
@@ -79,9 +79,27 @@ const DrawResult = () => {
                 text.x = x + itemWidth / 2;
                 text.y = y + itemHeight * 0.9;
 
+                const outResultBtn = new PIXI.Graphics();
+                outResultBtn.beginFill(0x3CFBFF, 0.7);
+                const outResultBtnWidth = 130;
+                const outResultBtnHeight = 36;
+                outResultBtn.drawRoundedRect(700, 595, outResultBtnWidth, outResultBtnHeight, 10);
+                const outResultText = new PIXI.Text('돌아가기', textStyle);
+                outResultBtn.addChild(outResultText);
+                outResultText.x = 730;
+                outResultText.y = 605;
+                const outResultContainer = new PIXI.Container();
+                outResultContainer.interactive = true;
+                outResultContainer.buttonMode = true;
+                outResultContainer.addChild(outResultBtn);
+                outResultContainer.on('pointertap', () => {
+                    nav('/draw');
+                });
+
                 profileBox.addChild(profileInnerBox);
                 profileBox.addChild(imageSprite);
                 profileBox.addChild(text);
+                profileBox.addChild(outResultContainer);
 
             });
 
