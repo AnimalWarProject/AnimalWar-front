@@ -16,6 +16,8 @@ const Battle = () => {
     const data = location.state;
     const [attackerLife, setAttackerLife] = useState(data.state.state.attacker.life);
     const [defenderLife, setDefenderLife] = useState(data.state.state.depender.life);
+    const [attackerNickName, setAttackerNickName] = useState(data.state.state.attacker.nickName);
+    const [defenderNickName, setDefenderNickName] = useState(data.state.state.depender.nickName);
 
     const sendBattleDataToServer = async () => {
         try {
@@ -109,14 +111,14 @@ const Battle = () => {
             <div className="battleLogBackGroundInner">
                 {/* 공격자와 수비자 상자 */}
                 <div>
-                    <h3>Attacker</h3>
+                    <h3>Attacker : {attackerNickName}</h3>
                     <p>Life: {attackerLife}</p>
-                    <HealthBar currentHealth={attackerLife} maxHealth={data.state.state.attacker.maxLife} barColor="green" />
+                    <HealthBar currentHealth={attackerLife} maxHealth={data.state.state.attacker.maxLife} barColor="#FC5740" />
                 </div>
                 <div>
-                    <h3>Defender</h3>
+                    <h3>Defender : {defenderNickName}</h3>
                     <p>Life: {defenderLife}</p>
-                    <HealthBar currentHealth={defenderLife} maxHealth={data.state.state.attacker.maxLife} barColor="red" />
+                    <HealthBar currentHealth={defenderLife} maxHealth={data.state.state.attacker.maxLife} barColor="#5B7FFF" />
                 </div>
 
                 <div className="battleLogBoxOut">
