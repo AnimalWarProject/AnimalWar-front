@@ -39,6 +39,7 @@ import SkillSelect from "../pixi/battle/components/SkillSelect";
 const MyRoutes = () => {
     return (
         <Routes>
+
             <Route element={<GameTemplate />}>
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
