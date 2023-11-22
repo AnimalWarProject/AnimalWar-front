@@ -17,7 +17,7 @@ const MarketInven = ({onEventInMarketInven}) => {
         onEventInMarketInven(selectedItem)
     }
 
-    const fetchData = (type) => {
+    const fetchData = (type) => {// todo : api 교체
         let url = '';
         if (type === 'animals') {
             url = "http://localhost:8000/api/v1/inventory/animals";
@@ -61,9 +61,9 @@ const MarketInven = ({onEventInMarketInven}) => {
             <div className="marketinven-section-sell">
                 <button onClick={onClickSell} className="marketinven-section-sellBtn">판매하기</button>
             </div>
+
             <div className="marketinven-section">
                 {rows.map((row, rowIndex) => (
-
                     <div className="marketinven-wrap" key={rowIndex} >
                         {row.map((item, index) => (
                             <div

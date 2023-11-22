@@ -2,8 +2,8 @@ import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
 import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
 import { useLocation, useNavigate } from 'react-router-dom';
-const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 const DrawResult = () => {
+    const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
     const canvasRef = useRef(null);
     const location = useLocation();
     const resultData = location.state;
@@ -52,7 +52,7 @@ const DrawResult = () => {
 
                 const textStyle = new PIXI.TextStyle({
                     fill: 0x0f1828,
-                    fontSize: 18,
+                    fontSize: 24,
                     fontFamily: 'Arial',
                     fontWeight: 'bold',
                 });
@@ -79,9 +79,27 @@ const DrawResult = () => {
                 text.x = x + itemWidth / 2;
                 text.y = y + itemHeight * 0.9;
 
+                const outResultBtn = new PIXI.Graphics();
+                outResultBtn.beginFill(0x3CFBFF, 0.7);
+                const outResultBtnWidth = 130;
+                const outResultBtnHeight = 36;
+                outResultBtn.drawRoundedRect(700, 595, outResultBtnWidth, outResultBtnHeight, 10);
+                const outResultText = new PIXI.Text('돌아가기', textStyle);
+                outResultBtn.addChild(outResultText);
+                outResultText.x = 730;
+                outResultText.y = 605;
+                const outResultContainer = new PIXI.Container();
+                outResultContainer.interactive = true;
+                outResultContainer.buttonMode = true;
+                outResultContainer.addChild(outResultBtn);
+                outResultContainer.on('pointertap', () => {
+                    nav('/draw');
+                });
+
                 profileBox.addChild(profileInnerBox);
                 profileBox.addChild(imageSprite);
                 profileBox.addChild(text);
+                profileBox.addChild(outResultContainer);
 
             });
 
