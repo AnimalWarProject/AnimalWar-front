@@ -3,6 +3,7 @@ import { api } from "../../network/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
+import {DebugUtils} from "pixi-spine";
 
 const Mix = () => {
     const [data, setData] = useState([]);
@@ -22,30 +23,45 @@ const Mix = () => {
             });
             setData(INVdata);
             setInitialOwnedQuantity(INVdata.map(item => item.ownedQuantity)) // 초기값 : 가지고 있는 동물 수
-            // console.log("ownedQuantity   " + INVdata[key].ownedQuantity)
+            console.log(INVdata)
         } catch (error) {
             console.error('Failed to fetch user profile:', error);
         }
     };
 
     const goToMixStartHandler = () => {
-        try {
-            const accessToken = localStorage.getItem('accessToken');
-            api(`http://localhost:8000/api/v1/mix`, 'POST', {
-                accessToken : accessToken,
-                entityType : entityType,
-                grade : englishGrade,
-                // private String accessToken;
-                // private EntityType entityType;
-                // private Grade grade;
-                // selectedAnimal
-            }, {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            });
-            navigate('/mix2');
-        } catch (error) {
-            console.error('Failed to fetch user profile:', error);
-        }
+
+        const accessToken = localStorage.getItem('accessToken');
+        const modifiedEntityType = entityType.slice(0, -1).toUpperCase(); // 맨 마지막 -s를 빼고 대문자로 변환
+
+        const animalArr = selectedAnimal.map(animal => animal.data.animal.animalId); // TODO 건물 합성도 반영..
+
+        // if(selectedAnimal < 3) {
+        //
+        // }
+
+        api(`http://localhost:8000/api/v1/mix`, 'POST', {
+            accessToken : accessToken,
+            entityType : modifiedEntityType,
+            grade : englishGrade,
+            selectedUserAnimalList: animalArr,
+        }, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        }).then((res) => {
+
+            if (res.status == 200) {
+                // 실패면 1.. 성공이면 2
+                const data = res.data.data == null ? 1 : 2
+                const result = JSON.stringify(res.data.data);
+
+                localStorage.setItem('result', result);
+                navigate(`/mix2?data=${data}`)
+            }
+
+        }).catch((err) => {
+            console.log(err)
+        })
+
     };
 
 
@@ -81,26 +97,24 @@ const Mix = () => {
         }
     }
 
-    // const goToMixStart = () => {
-    //
-    // }
-
     // Feat : imgUrl 저장
     const getImgUrl = (item) => {
         return entityType === 'animals'
             ? `${process.env.PUBLIC_URL}/objectImgs/${entityType}/${item.animal.species}/${item.animal.imagePath}`
             : `${process.env.PUBLIC_URL}/objectImgs/${entityType}/${item.building.imagePath}`;
     }
+
     // Feat : 선택한 동물 항아리에 넣기
-    // TOOD
     const getPotHandler = (idx, imgUrl) => {
         if(data[idx].ownedQuantity !== 0 && selectedAnimal.length < 4) {
             // TODO 클릭하면 count -1하고 그 값을 저장
             data[idx].ownedQuantity = data[idx].ownedQuantity -1
-            setSelectedAnimal((preAnimal) => [...preAnimal, {data: data[idx], imgUrl} ]) // 선택한거 동물전체 데이터 저장
+            // 선택한 동물 전체 데이터 저장
+            setSelectedAnimal((prevAnimal) => {
+                const updatedAnimal = [...prevAnimal, { data: data[idx], imgUrl }]; // 클릭한 동물을 바로 업데이트하기 위해서 updatedAnimal에 배열을 로깅해서 사용
+                return updatedAnimal;
+            });
         }
-        console.log("selectedAnimal" + selectedAnimal)
-        console.log("data   " + data[idx])
     }
 
     const deletePotHandler = () => {
@@ -126,7 +140,7 @@ const Mix = () => {
                         <div onClick={() => goToEntityType('animals')}><p>동물</p></div>
                         <div onClick={() => goToEntityType('buildings')}><p>건물</p></div>
                     </div>
-                    <div className={classes.btn} onClick={() => goToMixStartHandler()}>
+                    <div className={classes.btn} onClick={selectedAnimal.length < 4 ? () => null : goToMixStartHandler()}>
                         <div><p>합성하기</p></div>
                     </div>
                     <div className={classes.gradeTap} onClick={() => deletePotHandler()}>
