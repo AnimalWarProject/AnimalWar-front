@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import "../css/MarketInven.css";
 import axios from "axios";
+const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 
 const MarketInven = ({onEventInMarketInven}) => {
     const [data, setData] = useState([]); // 건물, 동물 데이터
@@ -16,7 +17,7 @@ const MarketInven = ({onEventInMarketInven}) => {
         onEventInMarketInven(selectedItem)
     }
 
-    const fetchData = (type) => {
+    const fetchData = (type) => {// todo : api 교체
         let url = '';
         if (type === 'animals') {
             url = "http://localhost:8000/api/v1/inventory/animals";
@@ -50,6 +51,7 @@ const MarketInven = ({onEventInMarketInven}) => {
         rows.push(data.slice(i * itemsPerRow, 3 + (i * itemsPerRow)));
     }
 
+
     return (
         <div className="marketinven-container" ref={containerRef}>
             <div className="marketinven-section-title">
@@ -59,6 +61,7 @@ const MarketInven = ({onEventInMarketInven}) => {
             <div className="marketinven-section-sell">
                 <button onClick={onClickSell} className="marketinven-section-sellBtn">판매하기</button>
             </div>
+
             <div className="marketinven-section">
                 {rows.map((row, rowIndex) => (
                     <div className="marketinven-wrap" key={rowIndex} >
@@ -68,8 +71,12 @@ const MarketInven = ({onEventInMarketInven}) => {
                                 key={index}
                                 onClick={() => handleItemClick(item)}
                             >
-                                <div>{item.animal ? item.animal.name : item.building.name}</div> {/* todo: 이름대신 이미지 */}
-                                <div>{item.animal ? item.ownedQuantity : item.ownedQuantity}</div>
+                                {item.animal ? (
+                                    <img className="marketinven-content-image" src={`${INVImg}/animals/${item.animal.species}/${item.animal.imagePath}`} alt={item.name} />
+                                ) : (
+                                    <img className="marketinven-content-image" src={`${INVImg}/buildings/${item.building.imagePath}`} alt={item.name} />
+                                )}
+                                <div>{item.ownedQuantity}</div>
                             </div>
                         ))}
                     </div>

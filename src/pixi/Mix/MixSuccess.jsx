@@ -5,6 +5,7 @@ import mixBackground from "./imgs/Rectangle 12348.webp";
 import pig from './imgs/PIG 5.webp'
 import {ButtonContainer} from "@pixi/ui";
 import {useHistory} from "react-router-use-history";
+import {get} from "axios";
 
 const MixSuccess = () => {
     const canvasRef = useRef(null);
@@ -12,6 +13,11 @@ const MixSuccess = () => {
 
 
     useEffect(() => {
+        const resultData = JSON.parse(localStorage.getItem('result'));
+
+
+
+
         const canvasWidth = 960;
         const canvasHeight = 640;
 
@@ -54,6 +60,8 @@ const MixSuccess = () => {
         // app.stage.addChild(container);
 
 
+
+
         // add a bunch of sprites
         const pop = PIXI.Sprite.from(popMixSuccess);
         pop.anchor.set(0.5);
@@ -61,7 +69,19 @@ const MixSuccess = () => {
         pop.y = canvasHeight / 2 + 10; // 스프라이트를 수직 중앙에 배치
         // container.addChild(pop);
 
-        const mixSuccessResult = PIXI.Sprite.from(pig);
+
+        // TODO 이미지 경로 지정(동물)
+        const getObjectImagePath = (entityType, category, item) => {
+            return `/objectImgs/${entityType}s/${category}/${item}`;
+        };
+
+        // const getObjectImagePath = (resultData) => {
+        //         return resultData.entityType == ANIMAL?
+        //          `/objectImgs/${resultData.entityType}s/${resultData.species}/${resultData.imagePath}`
+        //     return `/objectImgs/${resultData.entityType}s/${resultData.imagePath}`;
+        // };
+
+        const mixSuccessResult = PIXI.Sprite.from(getObjectImagePath(resultData.entityType, resultData.species, resultData.imagePath));   // TODO 여기에 합성 결과 사진 반영..
         mixSuccessResult.anchor.set(0.5); // 해당 스프라이트의 앵커를 (1, 1)로 설정 = 프라이트의 오른쪽 아래 모서리가 앵커가 되어 스프라이트를 중심
         mixSuccessResult.x = canvasWidth / 2 ; // 스프라이트를 수평 중앙에 배치
         mixSuccessResult.y = canvasHeight / 2 - 30; // 스프라이트를 수직 중앙에 배치

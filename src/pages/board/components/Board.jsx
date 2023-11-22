@@ -15,6 +15,8 @@ const Board = () => {
     const [totalPages, setTotalPages] = useState();
     const [page, setPage] = useState(0); // 초기 페이지 설정
 
+    const [keyward, setKeyward] = useState("");
+
     const getData = async () => {
         // const response = await apiNoToken("/api/v1/post", "GET", null, {
         //     params: { page: 4 },
@@ -24,7 +26,7 @@ const Board = () => {
         // });
 
         axios.get('http://localhost:8000/api/v1/post', {
-            params: { page: page }
+            params: { page: page, content: keyward }
         }).then((resp) => {
             console.log(resp)
             setPostData(resp.data.content)
@@ -53,10 +55,10 @@ const Board = () => {
                     <div className="Title">
                         <div className="TitleFont">제목+내용</div>
                     </div>
-                    <form action="/" method="GET">
+                    <form onSubmit={(e) => e.preventDefault()} method="GET">
                         <div className="InputContainer">
-                            <input type="search" className="Input" />
-                            <button type="submit" className="Submit">
+                            <input type="search" className="Input" onChange={(e) => { setKeyward(e.target.value); }} />
+                            <button type="submit" className="Submit" onClick={getData}>
                                 <img className="Search" src={searchImg} alt="search" />
                             </button>
                         </div>

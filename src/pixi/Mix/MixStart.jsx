@@ -3,11 +3,28 @@ import * as PIXI from "pixi.js";
 import mixBackground from "./imgs/Rectangle 12348.webp";
 import inThePot from "./imgs/INTHEPOT 1.webp"
 import {useHistory} from "react-router-use-history";
+import {useLocation} from "react-router-dom";
 
 const MixStart = () => {
     const canvasRef = useRef(null);
+    const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
+        const dataParam = new URLSearchParams(location.search).get("data");
+
+
+        // dataParam 이 1이면 실패 니까 1이면 실패 페이지로 넘어가서 그냥 fail 하는데 다른 페이지로 넘어가기직전에 로컬스토리지 초기화
+
+
+        //
+
+        // dataParam 2이면 성공페이지로 가서 로컬스토리지에 들어있는 아이템을 보여주고(성공결과) 보여주고 다른 페이지로 넘어가기직전에 로컬스토리지 초기화
+
+        // 로컬스토리지에 담긴 성공결과
+        // const resultData = JSON.parse(localStorage.getItem('result'));
+
+
         const canvasWidth = 960;
         const canvasHeight = 640;
         // const history = useHistory();
@@ -55,6 +72,8 @@ const MixStart = () => {
         container.addChild(pot);
         app.stage.addChild(container);
 
+
+
         // let's create a moving shape
         const thing = new PIXI.Graphics();
         app.stage.addChild(thing);
@@ -86,17 +105,14 @@ const MixStart = () => {
 
         // Feat : 합성 항이리 클릭 후 결과 반영
         // TODO : DB연결 후 확인 필요(화면에 넘어오는 거 보고 HttpStatus 반영 필요)
-        // pot.interactive = true;
-        // pot.on('pointertap', () => {
-        //     // 화면에서 합성실패(error)가 나오면 "/mix2"
-        //     if(HttpStatus ==='NOT_FOUND') {
-        //         history.push("/mix3");
-        //     } else { // 합성 성공
-        //         history.push("/mix4");
-        //     }
-        // });
-
-
+        pot.interactive = true;
+        pot.on('pointertap', () => {
+            if(dataParam == 1) {
+                history.push("/mix3"); // 합성실패
+            } else { // 합성 성공
+                history.push("/mix4"); // 합성성공
+            }
+        });
     });
 
 
