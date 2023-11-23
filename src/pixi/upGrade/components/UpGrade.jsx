@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../css/UpGrade.css";
-import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {api} from "../../../network/api";
 const UpGrade = () => {
     const accessToken = localStorage.getItem('accessToken');
     const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
@@ -10,7 +11,7 @@ const UpGrade = () => {
     const gradeTap = ['노말', '레어','슈퍼레어','유니크', '레전드']
     const [selectedItemIndex, setSelectedItemIndex] = useState(null); // 선택된 아이템의 인덱스
     const [selectedItem, setSelectedItem] = useState(null);
-
+    const nav = useNavigate();
     // Feat : 등급 탭
     const gradeHandler = (e) => {
         switch (e) {
@@ -33,19 +34,19 @@ const UpGrade = () => {
                 setEnglishGrade('NORMAL');
                 break;
         }
+
     }
 
-    const getData = async () => {// todo : api 교체
-        axios.get(`http://localhost:8000/api/v1/inventory/animals`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-            .then((response) => {
-                setData(response.data)
-            }).catch((err) => {
-            console.log(err + "에러발생")
-        })
+
+    const getData = async () => {
+        try {
+            const { data: response } = await api(`/api/v1/inventory/animals`, 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            setData(response);
+        } catch (error) {
+            console.log(error + "에러발생");
+        }
     };
     const handleItemClick = (item, idx) => {
         if (item.ownedQuantity !== 0 && !item.selected) {
@@ -72,6 +73,14 @@ const UpGrade = () => {
         }
     };
 
+    const onClickUpgrade = () => {
+        if (selectedItem.upgrade < 9){
+            nav('/upgrade/loading', {state : selectedItem})
+        }else {
+            alert("강화 최고치.")
+        }
+    }
+
     useEffect(() => {
         getData();
     }, [englishGrade]);
@@ -88,7 +97,7 @@ const UpGrade = () => {
                     <div className="outlet-container-activeTap">
                         동물
                     </div>
-                    <button className="btn">강화하기</button>
+                    <button onClick={onClickUpgrade} className="btn">강화하기</button>
                     <div className="gradeTap" >
                         {gradeTap.map((item, idx) => (
                             <div key={idx}>
