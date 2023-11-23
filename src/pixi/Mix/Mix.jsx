@@ -36,9 +36,6 @@ const Mix = () => {
 
         const animalArr = selectedAnimal.map(animal => animal.data.animal.animalId); // TODO 건물 합성도 반영..
 
-        // if(selectedAnimal < 3) {
-        //
-        // }
 
         api(`http://localhost:8000/api/v1/mix`, 'POST', {
             accessToken : accessToken,
@@ -63,7 +60,6 @@ const Mix = () => {
         })
 
     };
-
 
 
 
