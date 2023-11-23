@@ -1,6 +1,5 @@
 import '../css/Resister.css';
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {api} from "../../../network/api";
 const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 
@@ -84,30 +83,31 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
     const onClickCancel = () =>{
         onEventInMarketCancel()
     }
-    const ItemSell = () => { // todo : api 교체
+    const ItemSell = () => {
         if (selectedData.animal) {
-            axios.post(`http://localhost:8000/api/v1/inventory/delete/animal`, animalInfo, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
+            const fetchAimalInfo = async () => {
+                try {
+                    const { data: response } = await api(`/api/v1/inventory/delete/animal`, 'POST', animalInfo, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                } catch (error) {
+                    console.error(error);
                 }
-            })
-                .then(()=>{
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
+            };
+            fetchAimalInfo();
 
-        } else if (selectedData.building) {// todo : api 교체
-            axios.post(`http://localhost:8000/api/v1/inventory/delete/building`, buildingInfo, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
+        } else if (selectedData.building) {
+
+            const fetchAimalInfo = async () => {
+                try {
+                    const { data: response } = await api(`/api/v1/inventory/delete/building`, 'POST', buildingInfo, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                } catch (error) {
+                    console.error(error);
                 }
-            })
-                .then(()=>{
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
+            };
+            fetchAimalInfo();
         } else {
             alert("올바르지 않은 정보입니다.")
         }

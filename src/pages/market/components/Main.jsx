@@ -1,6 +1,6 @@
 import "../css/Main.css" ;
 import {useEffect, useRef, useState} from "react";
-import axios from "axios";
+import {api} from "../../../network/api";
 
 
 const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) => {
@@ -12,8 +12,6 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
     const accessToken = localStorage.getItem('accessToken');
 
     const onClickBuy = (item) => {
-        console.log("아이템 구매 : " + item)
-        console.log("아이템 구매 : " + JSON.stringify(item))
         if (userInfo.gold >= item.price){
             const buyInfo = { // request
                 userId: item.userId,
@@ -23,16 +21,19 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
                 type: item.type,
                 buff: item.buff,
                 price: item.price
-            };// todo : api 교체
-            axios.post(`http://localhost:8000/api/v1/user/buyitem`, buyInfo,{
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
+            };
+            const fetchBuyInfo = async () => {
+                try {
+                    const { data: response } = await api(`/api/v1/user/buyitem`, 'POST', buyInfo, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                    alert("구매완료")
+                } catch (error) {
+                    console.error(error);
                 }
-            }).then((response) => {
-                alert("구매완료")
-            }).catch((err) => {
-                console.log("오류 발생 : " + err)
-            })
+            };
+            fetchBuyInfo();
+
         }
     };
     const onClickCancel = (item) => { // 취소버튼
@@ -45,16 +46,19 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
                 type: item.type,
                 buff: item.buff,
                 price: item.price
-            };// todo : api 교체
-            axios.post(`http://localhost:8000/api/v1/user/cancelitem`, cancelInfo,{
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
+            };
+
+            const fetchCancelInfo = async () => {
+                try {
+                    const { data: response } = await api(`/api/v1/user/cancelitem`, 'POST', cancelInfo, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                    alert("취소완료")
+                } catch (error) {
+                    console.error(error);
                 }
-            }).then((response) => {
-                alert("취소완료")
-            }).catch((err) => {
-                console.log("오류 발생 : " + err)
-            })
+            };
+            fetchCancelInfo();
         }
 
     }
@@ -63,41 +67,46 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
             itemId:item.itemId,
             price:item.price
         };
-        if (item.btnState === false){// todo : api 교체
-            axios.post(`http://localhost:8000/api/v1/user/price`, takeInfo, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
+        if (item.btnState === false){
+
+            const fetchTakeInfo = async () => {
+                try {
+                    const { data: response } = await api(`/api/v1/user/price`, 'POST', takeInfo, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                    alert("수령")
+                } catch (error) {
+                    console.error(error);
                 }
-            ).then((response) => {
-                alert("수령 완료")
-            }).catch((err) => {
-                console.log("오류 발생 : " + err)
-            })
+            };
+            fetchTakeInfo();
         }else {
             alert("수령 대상자가 아닙니다.")
         }
     }
 
-    useEffect(() => {// todo : api 교체
-        axios.get(`http://localhost:8000/api/v1/user`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const { data: response } = await api(`/api/v1/user`, 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                setUserInfo(response);
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
             }
-        }).then((response) => {
-            setUserInfo(response.data)
-        }).catch((err) => {
-            console.log(err + "에러 발생 유저인포")
-        })
+        };
+        fetchUserData();
+
         const fetchData = async () => {
             let response = [];
             try {
-                if (selectedAnimalType === "" && searchWord === "") {// todo : api 교체
-                    response = await axios.get(`http://localhost:8000/api/v1/market/all`);
+                if (selectedAnimalType === "" && searchWord === "") {
+                    response = await api(`/api/v1/market/all`, 'GET');
                 } else if (searchWord !== "") {
-                    response = await axios.post(`http://localhost:8000/api/v1/market/search/${searchWord}`);
+                    response = await api(`/api/v1/market/search/${searchWord}`, 'POST');
                 } else if (selectedAnimalType !== "") {
-                    response = await axios.post(`http://localhost:8000/api/v1/market/filter/${selectedAnimalType}`);
+                    response = await api(`/api/v1/market/filter/${selectedAnimalType}`, 'POST');
                 }
                 if (selectedGrade) {
                     const filteredData = response.data.filter(item => item.grade === selectedGrade);

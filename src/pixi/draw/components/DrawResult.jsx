@@ -57,10 +57,6 @@ const DrawResult = () => {
                     fontWeight: 'bold',
                 });
 
-
-                console.log("item : " + JSON.stringify(item))
-                console.log("이름 : " + item.name + ", " + "species : " + item.type + ", " + item.name )
-
                 let imagePath = `${INVImg}/animals/${item.type}/${item.imagePath}`;
                 if (item.type === 1) {
                     imagePath = `${INVImg}/buildings/${item.imagePath}`;
@@ -72,7 +68,6 @@ const DrawResult = () => {
                 imageSprite.y = 110 + rowIndex * (itemHeight + 10); // 이미지 y 좌표
                 imageSprite.width = 140; // 이미지 너비
                 imageSprite.height = 120; // 이미지 높이
-
 
                 const text = new PIXI.Text(item.name, textStyle);
                 text.anchor.set(0.5);

@@ -5,6 +5,7 @@ import randomEgg from '../imgs/AnyConv.com__RANDOMEGG 2.webp';
 import randomBuilding from '../imgs/AnyConv.com__RandomBuilding.webp';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import {api} from "../../../network/api";
 
 const DrawLoading = () => {
     const canvasRef = useRef(null);
@@ -17,20 +18,18 @@ const DrawLoading = () => {
     const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/v1/user", {// todo : api 교체 market에 해놓음
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-            .then((response) => {
-                if (response.data.uuid !== null) {
-                    setProfile(response.data.uuid);
-                }
-            })
-            .catch((error) => {
-                console.log('Failed to fetch user profile:', error);
-            });
 
+        const fetchUserData = async () => {
+            try {
+                const { data: response } = await api(`/api/v1/user`, 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                    setProfile(response.uuid);
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
+            }
+        };
+        fetchUserData();
         if (profile !== null) {
             const drawRequest = {
                 count: qty,
@@ -45,16 +44,13 @@ const DrawLoading = () => {
                 height: canvasHeight,
             });
 
-
             if (canvasRef.current) {
                 canvasRef.current.appendChild(app.view);
             }
-
             const background = PIXI.Sprite.from(back);
             background.width = app.screen.width;
             background.height = app.screen.height;
             app.stage.addChild(background);
-
 
             const profileBox = new PIXI.Graphics(); // 큰 틀
             profileBox.beginFill(0xffffff, 0.5);
@@ -81,7 +77,6 @@ const DrawLoading = () => {
             oneDrawText.y = 450;
             app.stage.addChild(profileBox);
 
-
             const randomEggTexture = PIXI.Texture.from(randomEgg); // randomEgg 이미지
             const randomEggSprite = new PIXI.Sprite(randomEggTexture);
             // 설정된 중심점을 중앙으로 이동
@@ -94,53 +89,54 @@ const DrawLoading = () => {
             randomEggSprite.buttonMode = true;
             if (type ==='animal'){
                 randomEggSprite.on('pointertap', async () => {// todo : api 교체
-                    await axios.post("http://localhost:8000/api/v1/user/draw", drawRequest,{
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
+
+                    const fetchUserDraw = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/user/draw`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                        } catch (error) {
+                            console.error('Failed to fetch user profile:', error);
                         }
-                    })
-                        .then(() => {
-                            // alert("차감 완료 ")
-                        })
-                        .catch((err)=>{
-                            console.log("데이터 전송 실패" + err)
-                        })
-                    await axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
-                        }
-                    })
-                        .then((response) => {
-                            nav('/draw/result', {state: response.data});
-                        })
-                        .catch((error) => {
+                    };
+                    fetchUserDraw();
+                    const fetchDrawAnimal = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/draw/animal`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                            nav('/draw/result', {state: response});
+                        } catch (error) {
                             console.error("데이터 가져오기 실패: ", error);
-                        });
+                        }
+                    };
+                    fetchDrawAnimal();
                 });
             }else {
                 randomEggSprite.on('pointertap', async () => {// todo : api 교체
-                    await axios.post("http://localhost:8000/api/v1/user/draw", drawRequest,{
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
+
+                    const fetchUserDraw = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/user/draw`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                        } catch (error) {
+                            console.error('Failed to fetch user profile:', error);
                         }
-                    })
-                        .then(() => {
-                            // alert("차감 완료 ")
-                        })
-                        .catch((err)=>{
-                            console.log("데이터 전송 실패" + err)
-                        })
-                    await axios.post("http://localhost:8000/api/v1/draw/building", drawRequest, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
-                        }
-                    })
-                        .then((response) => {
-                            nav('/draw/result', {state: response.data});
-                        })
-                        .catch((error) => {
+                    };
+                    fetchUserDraw();
+
+                    const fetchDrawBuilding = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/draw/building`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                            nav('/draw/result', {state: response});
+                        } catch (error) {
                             console.error("데이터 가져오기 실패: ", error);
-                        });
+                        }
+                    };
+                    fetchDrawBuilding();
                 });
             }
 
