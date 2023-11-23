@@ -15,9 +15,6 @@ const MixSuccess = () => {
     useEffect(() => {
         const resultData = JSON.parse(localStorage.getItem('result'));
 
-
-
-
         const canvasWidth = 960;
         const canvasHeight = 640;
 
@@ -51,48 +48,28 @@ const MixSuccess = () => {
         profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
         app.stage.addChild(profileBox);
 
-        // 성공 이미지
-        // const container = new PIXI.Container();
-        // container.x = 455;
-        // container.y = 270;
-        // container.width = 615;
-        // container.height = 507;
-        // app.stage.addChild(container);
-
-
-
-
-        // add a bunch of sprites
         const pop = PIXI.Sprite.from(popMixSuccess);
         pop.anchor.set(0.5);
         pop.x = canvasWidth / 2 -20; // 스프라이트를 수평 중앙에 배치
         pop.y = canvasHeight / 2 + 10; // 스프라이트를 수직 중앙에 배치
-        // container.addChild(pop);
 
 
-        // TODO 이미지 경로 지정(동물)
-        const getObjectImagePath = (entityType, category, item) => {
-            return `/objectImgs/${entityType}s/${category}/${item}`;
+        // 이미지 경로 지정
+        const getObjectImagePath = (resultData) => {
+                return resultData.entityType == 'ANIMAL'?
+                 `/objectImgs/${resultData.entityType}s/${resultData.species}/${resultData.imagePath}`
+                 : `/objectImgs/${resultData.entityType}s/${resultData.imagePath}`;
         };
 
-        // const getObjectImagePath = (resultData) => {
-        //         return resultData.entityType == ANIMAL?
-        //          `/objectImgs/${resultData.entityType}s/${resultData.species}/${resultData.imagePath}`
-        //     return `/objectImgs/${resultData.entityType}s/${resultData.imagePath}`;
-        // };
-
-        const mixSuccessResult = PIXI.Sprite.from(getObjectImagePath(resultData.entityType, resultData.species, resultData.imagePath));   // TODO 여기에 합성 결과 사진 반영..
+        const mixSuccessResult = PIXI.Sprite.from(getObjectImagePath(resultData));
         mixSuccessResult.anchor.set(0.5); // 해당 스프라이트의 앵커를 (1, 1)로 설정 = 프라이트의 오른쪽 아래 모서리가 앵커가 되어 스프라이트를 중심
         mixSuccessResult.x = canvasWidth / 2 ; // 스프라이트를 수평 중앙에 배치
         mixSuccessResult.y = canvasHeight / 2 - 30; // 스프라이트를 수직 중앙에 배치
         mixSuccessResult.width = 230;
         mixSuccessResult.height = 246;
-        // container.addChild(mixSuccessResult);
 
         profileBox.addChild(pop)
         profileBox.addChild(mixSuccessResult)
-
-
 
 
         // Feat 또 합성하기 버튼
@@ -111,14 +88,8 @@ const MixSuccess = () => {
         mixStartBtn.onPress.connect(() => {
             history.push("/mix");
         });
-
         background.addChild(mixStartBtn);
-
-    })
-
-
-
-
+    }, [])
 
     return <div ref={canvasRef}></div>;
 }

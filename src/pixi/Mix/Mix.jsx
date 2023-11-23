@@ -34,17 +34,15 @@ const Mix = () => {
         const accessToken = localStorage.getItem('accessToken');
         const modifiedEntityType = entityType.slice(0, -1).toUpperCase(); // 맨 마지막 -s를 빼고 대문자로 변환
 
-        const animalArr = selectedAnimal.map(animal => animal.data.animal.animalId); // TODO 건물 합성도 반영..
+        const selectedArr = selectedAnimal.map(selectedData =>
+            modifiedEntityType == 'ANIMAL'?  selectedData.data.animal.animalId : selectedData.data.building.buildingId);
 
-        // if(selectedAnimal < 3) {
-        //
-        // }
 
         api(`http://localhost:8000/api/v1/mix`, 'POST', {
             accessToken : accessToken,
             entityType : modifiedEntityType,
             grade : englishGrade,
-            selectedUserAnimalList: animalArr,
+            selectedList: selectedArr,
         }, {
             headers: { Authorization: `Bearer ${accessToken}` },
         }).then((res) => {
@@ -112,8 +110,10 @@ const Mix = () => {
             // 선택한 동물 전체 데이터 저장
             setSelectedAnimal((prevAnimal) => {
                 const updatedAnimal = [...prevAnimal, { data: data[idx], imgUrl }]; // 클릭한 동물을 바로 업데이트하기 위해서 updatedAnimal에 배열을 로깅해서 사용
+                console.log(updatedAnimal)
                 return updatedAnimal;
             });
+
         }
     }
 
@@ -140,7 +140,7 @@ const Mix = () => {
                         <div onClick={() => goToEntityType('animals')}><p>동물</p></div>
                         <div onClick={() => goToEntityType('buildings')}><p>건물</p></div>
                     </div>
-                    <div className={classes.btn} onClick={selectedAnimal.length < 4 ? () => null : goToMixStartHandler()}>
+                    <div className={classes.btn} onClick={selectedAnimal.length === 4 ? () => goToMixStartHandler() : null}>
                         <div><p>합성하기</p></div>
                     </div>
                     <div className={classes.gradeTap} onClick={() => deletePotHandler()}>
