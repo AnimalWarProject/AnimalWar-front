@@ -20,44 +20,198 @@ const Place = ({ userUUID }) => {
     const pixiContainer = useRef(null);
     const draggingItemRef = useRef(null);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [removeList, setRemoveList] = useState([]);
     const [placedItems, setPlacedItems] = useState([]);
-    const [buttonImage, setButtonImage] = useState(PlaceButtonImage);
     const [activeTab, setActiveTab] = useState('animals');
     const [inventory, setInventory] = useState({ buildings: [], animals: [] });
     const [tileData, setTileData] = useState([]);
     const [textures, setTextures] = useState({});
+    const containerRef = useRef(null);
+
     const [selectedGrade, setSelectedGrade] = useState('ALL');
     const [startIndex, setStartIndex] = useState(0);
+    const inventorySpritesRef = useRef([]);
+
+    const currentDraggingTileRef = useRef(null);
     const appRef = useRef(null);
     const animalTabBox = useRef(null);
+    const ListContainer = useRef(null);
     const buildingTabBox = useRef(null);
+    const changeableButtonRef = useRef(null);
+
+    const placeButtonTexture = PIXI.Texture.from(PlaceButtonImage);
+    const saveButtonTexture = PIXI.Texture.from(SaveButtonImage);
     const itemsPerPage = 4;
 
-    const handleSaveButtonClick = useCallback(async () => {
-        if (isEditMode) {
-            // 편집 모드일 때: 아이템 저장 로직 실행
-            try {
-                const payload = placedItems.map((item) => ({
+    const calculateMinIsoValues = (tileData, tileSize) => {
+        return tileData.reduce(
+            (minVals, data) => {
+                const isoX = ((data.x - data.y) * tileSize.width) / 2;
+                const isoY = ((data.x + data.y) * tileSize.height) / 4;
+                return {
+                    x: Math.min(minVals.x, isoX),
+                    y: Math.min(minVals.y, isoY),
+                };
+            },
+            { x: Infinity, y: Infinity }
+        );
+    };
+
+    const addToRemoveList = useCallback((tileId) => {
+        setRemoveList((prevList) => {
+            const updatedList = [...prevList, tileId];
+            return updatedList;
+        });
+    }, []);
+
+    // 아이템 제거 함수
+    const removeInventoryObject = useCallback((inventoryObjectSprite) => {
+        containerRef.current.removeChild(inventoryObjectSprite);
+
+        const objectId = inventoryObjectSprite.objectId;
+        const objectType = inventoryObjectSprite.objectType;
+
+        setInventory((prevInventory) => {
+            const updatedInventory = { ...prevInventory };
+            const inventoryKey = objectType === 'ANIMAL' ? 'animals' : 'buildings';
+
+            updatedInventory[inventoryKey] = updatedInventory[inventoryKey].map((invItem) => {
+                if (invItem.id === objectId) {
+                    return { ...invItem, placeableQuantity: invItem.placeableQuantity + 1 };
+                }
+                return invItem;
+            });
+
+            return updatedInventory;
+        });
+    }, []);
+
+    const updateInventory = useCallback(async (updateRequest) => {
+        try {
+            const response = await api('/api/v1/inventory/updateInventory', 'POST', updateRequest, {});
+            return response;
+        } catch (error) {
+            console.error('Failed to update inventory:', error);
+        }
+    }, []);
+
+    const createUpdateInventoryRequest = useCallback(
+        (item) => {
+            const placedCount = placedItems.filter(
+                (placedItem) => placedItem.id === item.id && placedItem.type === item.type
+            ).length;
+            setTimeout(5000);
+            const removedCount = removeList.filter((tileId) => {
+                const tile = tileData.find((t) => t.id === tileId);
+                return tile && tile.objectId === item.id && tile.objectType === item.type;
+            }).length;
+
+            console.log(tileData);
+
+            const itemId = item.type === 'animals' ? item.animal.animalId : item.building.buildingId;
+
+            const updateItem = {
+                itemId: itemId,
+                placedQuantity: item.placedQuantity + placedCount - removedCount,
+                entityType: item.type === 'animals' ? 'ANIMAL' : 'BUILDING',
+            };
+
+            return {
+                animalItems: item.type === 'animals' ? [updateItem] : [],
+                buildingItems: item.type === 'buildings' ? [updateItem] : [],
+            };
+        },
+        [placedItems, removeList, tileData]
+    );
+
+    const updatePlace = useCallback(async () => {
+        try {
+            //배치가됨
+            const updateRequests = placedItems.map((item) => createUpdateInventoryRequest(item));
+            //삭제가됨
+            // const updateRequests = removeList.map((item) => createUpdateInventoryRequest(item));
+
+            setTimeout(1000);
+            console.log('테라인에 보낼때', removeList);
+            const payload = {
+                placeItems: placedItems.map((item) => ({
                     tileId: item.tileId,
                     objectId: item.id,
                     objectType: item.objectType,
-                }));
+                })),
+                removeItems: removeList,
+            };
 
-                await api(`/api/v1/terrain/placeItems`, 'POST', payload, {});
+            //테라인한테 쏘기
+            await api(`/api/v1/terrain/place`, 'POST', payload, {});
+            console.log('테라인에 보낸 이후', removeList);
 
-                alert('아이템이 성공적으로 배치되었습니다.');
-                setPlacedItems([]);
-            } catch (error) {
-                console.error('Failed to save item placement:', error);
+            //유저한테 쏘기
+            for (const request of updateRequests) {
+                await updateInventory(request);
             }
 
-            setButtonImage(PlaceButtonImage);
-        } else {
-            // 편집 모드가 아닐 때: 편집 모드로 전환
-            setButtonImage(SaveButtonImage);
+            placedItems.forEach((placedItem) => {
+                const matchingSprite = inventorySpritesRef.current.find(
+                    (sprite) => sprite.objectId === placedItem.id && sprite.tileId === placedItem.tileId
+                );
+                if (matchingSprite) {
+                    matchingSprite.tint = 0xffffff;
+                }
+            });
+
+            setPlacedItems([]);
+            // setRemoveList([]);
+            console.log('업뎃완료');
+        } catch (error) {
+            console.error('Failed to update terrain:', error);
         }
-        setIsEditMode(!isEditMode); // 편집 모드 토글
-    }, [placedItems, isEditMode]);
+    }, [placedItems, removeList, updateInventory, createUpdateInventoryRequest]);
+
+    function usePrevious(value) {
+        const ref = useRef();
+        useEffect(() => {
+            ref.current = value;
+        });
+        return ref.current;
+    }
+
+    const prevIsEditMode = usePrevious(isEditMode);
+
+    const handleSaveButtonClick = useCallback(() => {
+        setIsEditMode((prevMode) => !prevMode);
+    }, []);
+
+    //저장하기 버튼 누르는 부분
+    useEffect(() => {
+        if (changeableButtonRef.current) {
+            changeableButtonRef.current.texture = isEditMode ? saveButtonTexture : placeButtonTexture;
+        }
+
+        if (prevIsEditMode && !isEditMode) {
+            updatePlace();
+        }
+    }, [isEditMode, prevIsEditMode, placeButtonTexture, saveButtonTexture, updatePlace]);
+
+    const cancelPlacement = useCallback(() => {
+        const restoredInventory = { ...inventory };
+        restoredInventory.animals = restoredInventory.animals.map((animal) => ({
+            ...animal,
+            placeableQuantity:
+                animal.placeableQuantity +
+                placedItems.filter((item) => item.id === animal.id && item.type === 'ANIMAL').length,
+        }));
+        restoredInventory.buildings = restoredInventory.buildings.map((building) => ({
+            ...building,
+            placeableQuantity:
+                building.placeableQuantity +
+                placedItems.filter((item) => item.id === building.id && item.type === 'BUILDING').length,
+        }));
+        setInventory(restoredInventory);
+
+        setPlacedItems([]);
+        setRemoveList([]);
+    }, [inventory, placedItems]);
 
     const handleGradeButtonClick = (grade) => {
         let englishGrade;
@@ -120,7 +274,11 @@ const Place = ({ userUUID }) => {
             const response = await api(`/api/v1/inventory/${type}`, 'GET', {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
-            setInventory((prev) => ({ ...prev, [type]: response.data }));
+            const updatedData = response.data.map((item) => ({
+                ...item,
+                placeableQuantity: item.ownedQuantity - item.placedQuantity,
+            }));
+            setInventory((prev) => ({ ...prev, [type]: updatedData }));
         } catch (error) {
             console.error('Error fetching inventory:', error);
         }
@@ -152,8 +310,16 @@ const Place = ({ userUUID }) => {
     const getObjectImagePath = useCallback(
         (item) => {
             if (activeTab === 'animals') {
+                if (!item.animal || !item.animal.species) {
+                    console.error('Invalid animal item:', item);
+                    return '';
+                }
                 return `/objectImgs/animals/${item.animal.species.toLowerCase()}/${item.animal.imagePath}`;
             } else if (activeTab === 'buildings') {
+                if (!item.building || !item.building.imagePath) {
+                    console.error('Invalid building item:', item);
+                    return '';
+                }
                 return `/objectImgs/buildings/${item.building.imagePath}`;
             }
             return '';
@@ -161,139 +327,228 @@ const Place = ({ userUUID }) => {
         [activeTab]
     );
 
-    // 인벤토리 아이템의 수량을 업데이트하는 함수
-    const updateInventoryItemQuantity = useCallback((item) => {
-        setInventory((prevInventory) => {
-            const inventoryType = item.type; // 'animals' 또는 'buildings'
-            const updatedItems = prevInventory[inventoryType].map((invItem) => {
-                if (invItem.id === item.id) {
-                    return { ...invItem, quantity: invItem.quantity - 1 };
-                }
-                return invItem;
-            });
-            return { ...prevInventory, [inventoryType]: updatedItems };
-        });
-    }, []);
+    const getTileObjectImagePath = useCallback(
+        (objectType, objectId) => {
+            const uppercaseObjectType = objectType.toUpperCase();
 
-    const getDroppedTile = useCallback(
-        (x, y) => {
-            // tileData 배열에서 가장 가까운 타일을 찾기
-            let closestTile = null;
-            let minDistance = Infinity;
+            const object =
+                uppercaseObjectType === 'ANIMAL'
+                    ? inventory.animals.find((animal) => animal.id === objectId)
+                    : inventory.buildings.find((building) => building.id === objectId);
 
-            tileData.forEach((tile) => {
-                const dx = x - tile.x;
-                const dy = y - tile.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < minDistance) {
-                    closestTile = tile;
-                    minDistance = distance;
-                }
-            });
+            if (!object) return '';
 
-            return closestTile;
+            const imagePath =
+                uppercaseObjectType === 'ANIMAL'
+                    ? `/objectImgs/animals/${object.animal.species.toLowerCase()}/${object.animal.imagePath}`
+                    : `/objectImgs/buildings/${object.building.imagePath}`;
+
+            return imagePath;
         },
-        [tileData]
+        [inventory.animals, inventory.buildings]
     );
+
+    // highlightTile 함수 정의
+    const highlightTile = (tile) => {
+        tile.tint = 0xff0000;
+    };
+
+    // unhighlightTile 함수 정의
+    const unhighlightTile = (tile) => {
+        tile.tint = 0xffffff;
+    };
 
     // 드래그 시작
     const onDragStart = useCallback(
         (item, event) => {
-            let imagePath, itemType;
+            const isInventoryItem = item.animal || item.building;
 
-            if (activeTab === 'animals') {
-                imagePath = `/objectImgs/animals/${item.animal.species.toLowerCase()}/${item.animal.imagePath}`;
-                itemType = 'animals';
-            } else if (activeTab === 'buildings') {
-                imagePath = `/objectImgs/buildings/${item.building.imagePath}`;
-                itemType = 'buildings';
+            if (isInventoryItem) {
+                if (draggingItemRef.current && draggingItemRef.current.dragging) {
+                    appRef.current.stage.removeChild(draggingItemRef.current.image);
+                }
+
+                // 인벤토리 아이템을 새로운 드래깅 아이템으로 설정
+                const draggableImage = new PIXI.Sprite(PIXI.Texture.from(getObjectImagePath(item)));
+                draggableImage.anchor.set(0.5);
+                draggableImage.x = event.data.global.x;
+                draggableImage.y = event.data.global.y;
+                draggableImage.scale.set(0.3);
+                draggableImage.zIndex = 2;
+                appRef.current.stage.addChild(draggableImage);
+
+                draggingItemRef.current = {
+                    item: { ...item, type: activeTab },
+                    image: draggableImage,
+                    offsetX: event.data.global.x - draggableImage.x,
+                    offsetY: event.data.global.y - draggableImage.y,
+                    dragging: true,
+                };
             }
-
-            const draggableImage = new PIXI.Sprite(PIXI.Texture.from(imagePath));
-            draggableImage.anchor.set(0.5);
-            draggableImage.x = event.data.global.x;
-            draggableImage.y = event.data.global.y;
-            draggableImage.zIndex = 10;
-            appRef.current.stage.addChild(draggableImage);
-
-            draggingItemRef.current = {
-                item: { ...item, type: itemType },
-                image: draggableImage,
-                offsetX: event.data.global.x - draggableImage.x,
-                offsetY: event.data.global.y - draggableImage.y,
-                dragging: true,
-            };
         },
-        [activeTab]
+        [getObjectImagePath, activeTab]
     );
 
-    // 드래그 중 위치 업데이트 함수
+    // 오른쪽 마우스 클릭 시 드래깅 아이템 제거
+    document.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+
+        if (draggingItemRef.current && draggingItemRef.current.dragging) {
+            appRef.current.stage.removeChild(draggingItemRef.current.image);
+            draggingItemRef.current = null;
+        }
+    });
+
+    // 드래그 중 위치 업데이트
     const onDragMove = useCallback((event) => {
         if (draggingItemRef.current && draggingItemRef.current.dragging) {
+            // 드래그 중인 아이템의 새로운 위치를 계산
             const newPosition = {
                 x: event.data.global.x - draggingItemRef.current.offsetX,
                 y: event.data.global.y - draggingItemRef.current.offsetY,
             };
 
+            // 드래그 중인 아이템의 위치 업데이트
             draggingItemRef.current.image.x = newPosition.x;
             draggingItemRef.current.image.y = newPosition.y;
         }
-        console.log('드래그 중 정보', draggingItemRef.current);
     }, []);
 
     // 드래그 종료
     const onDragEnd = useCallback(() => {
         if (draggingItemRef.current && draggingItemRef.current.dragging) {
-            const droppedTile = getDroppedTile(draggingItemRef.current.image.x, draggingItemRef.current.image.y);
-            if (droppedTile) {
-                const item = draggingItemRef.current.item;
-                const objectType = item.animal ? 'ANIMAL' : 'BUILDING';
+            const lastTile = currentDraggingTileRef.current;
 
-                updateInventoryItemQuantity(item);
+            if (lastTile && lastTile.id !== undefined) {
+                let itemType;
+                if (draggingItemRef.current.item.animal) {
+                    itemType = 'ANIMAL';
+                } else if (draggingItemRef.current.item.building) {
+                    itemType = 'BUILDING';
+                }
 
+                const itemId = draggingItemRef.current.item.id;
+                const tileObjectImagePath = getTileObjectImagePath(itemType, itemId);
+
+                const currentItem = draggingItemRef.current.item;
+
+                if (currentItem.placeableQuantity > 0) {
+                    setInventory((prevInventory) => ({
+                        ...prevInventory,
+                        [activeTab]: prevInventory[activeTab].map((invItem) =>
+                            invItem.id === currentItem.id
+                                ? { ...invItem, placeableQuantity: invItem.placeableQuantity - 1 }
+                                : invItem
+                        ),
+                    }));
+                }
+
+                const objectSprite = new PIXI.Sprite(PIXI.Texture.from(tileObjectImagePath));
+                objectSprite.anchor.set(0.3);
+                const tileSize = {
+                    width: textures[lastTile.landForm].width,
+                    height: textures[lastTile.landForm].height,
+                };
+                const minIsoValues = calculateMinIsoValues(tileData, tileSize);
+                objectSprite.x = ((lastTile.x - lastTile.y) * tileSize.width) / 2 - minIsoValues.x;
+                objectSprite.y = ((lastTile.x + lastTile.y) * tileSize.height) / 4 - minIsoValues.y - 130;
+                objectSprite.anchor.set(0.5);
+                objectSprite.scale.set(0.5);
+                objectSprite.tint = 0x808080;
+                objectSprite.zIndex = 2;
+                objectSprite.objectId = itemId;
+                objectSprite.tileId = lastTile.id;
+                objectSprite.interactive = true;
+                objectSprite.buttonMode = true;
+                objectSprite.on('pointerdown', (event) => {
+                    event.stopPropagation();
+
+                    if (isEditMode && objectSprite.tint !== 0x808080) {
+                        addToRemoveList(objectSprite.tileId);
+                        console.log('objectSprite 클릭시', removeList);
+                        removeInventoryObject(objectSprite);
+                    }
+                });
+                containerRef.current.addChild(objectSprite);
+
+                inventorySpritesRef.current.push(objectSprite);
+
+                // 아이템이 배치된 것으로 상태 업데이트
                 setPlacedItems((prevItems) => [
                     ...prevItems,
                     {
-                        ...item,
-                        tileId: droppedTile.id,
-                        objectType: objectType,
+                        ...draggingItemRef.current.item,
+                        tileId: lastTile.id,
+                        objectType: itemType,
                     },
                 ]);
+            } else {
+                console.error('Invalid or no tile was dragged over');
             }
+
             appRef.current.stage.removeChild(draggingItemRef.current.image);
-            draggingItemRef.current = null;
+            draggingItemRef.current.dragging = false;
         }
-    }, [getDroppedTile, updateInventoryItemQuantity]);
+    }, [
+        setPlacedItems,
+        currentDraggingTileRef,
+        textures,
+        getTileObjectImagePath,
+        tileData,
+        activeTab,
+        isEditMode,
+        removeInventoryObject,
+        addToRemoveList,
+        removeList,
+    ]);
+
+    const createTile = useCallback(
+        (tileData, container, textures, tileSize) => {
+            // 모든 타일 데이터를 기반으로 최소 x, y 좌표값을 구합니다.
+            const minIsoValues = calculateMinIsoValues(tileData, tileSize);
+
+            // 모든 타일의 위치를 조정하고 타일 위에 ID를 표시합니다.
+            tileData.forEach((data, index) => {
+                // 타일 스프라이트 생성
+                const isoX = ((data.x - data.y) * tileSize.width) / 2 - minIsoValues.x;
+                const isoY = ((data.x + data.y) * tileSize.height) / 4 - minIsoValues.y;
+                const texture = textures[data.landForm];
+
+                const sprite = new PIXI.Sprite(texture);
+                sprite.anchor.set(0.5);
+                sprite.name = `tile-${index}`;
+                sprite.interactive = true;
+                sprite.x = isoX;
+                sprite.y = isoY;
+
+                sprite.on('pointerdown', (event) => {
+                    onDragStart(data, event); // data 객체를 이벤트 핸들러로 전달
+                });
+
+                // 타일 위에 마우스가 올라가는 이벤트
+                sprite.on('pointerover', () => {
+                    if (draggingItemRef.current && draggingItemRef.current.dragging) {
+                        highlightTile(sprite);
+                        currentDraggingTileRef.current = data;
+                    }
+                });
+
+                // 타일에서 마우스가 벗어나는 이벤트
+                sprite.on('pointerout', () => {
+                    unhighlightTile(sprite);
+                });
+
+                container.addChild(sprite);
+            });
+        },
+        [onDragStart]
+    );
 
     useEffect(() => {
         fetchInventory('animals');
         loadTextures();
         fetchTileData();
     }, [loadTextures]);
-
-    useEffect(() => {
-        if (appRef.current) {
-            appRef.current.stage.sortableChildren = true;
-            let saveButton = appRef.current.stage.getChildByName('saveButton');
-            if (!saveButton) {
-                saveButton = new PIXI.Sprite(PIXI.Texture.from(buttonImage));
-                saveButton.interactive = true;
-                saveButton.buttonMode = true;
-                saveButton.x = 500;
-                saveButton.y = 50;
-                saveButton.scale.set(0.3);
-                saveButton.zIndex = 50;
-                saveButton.name = 'saveButton';
-                saveButton.on('pointerdown', handleSaveButtonClick);
-                appRef.current.stage.addChild(saveButton);
-                console.log(appRef.current);
-                console.log(saveButton);
-            } else {
-                saveButton.texture = PIXI.Texture.from(buttonImage);
-                saveButton.off('pointerdown').on('pointerdown', handleSaveButtonClick);
-            }
-        }
-    }, [appRef, handleSaveButtonClick, buttonImage]);
 
     useEffect(() => {
         if (appRef.current && activeTab) {
@@ -386,10 +641,10 @@ const Place = ({ userUUID }) => {
                 let nameTextContent, quantityTextContent;
                 if (activeTab === 'animals') {
                     nameTextContent = `${item.animal.name} (강화: ${item.upgrade})`;
-                    quantityTextContent = `수량: ${item.ownedQuantity}`;
+                    quantityTextContent = `배치가능수량: ${item.placeableQuantity}`;
                 } else if (activeTab === 'buildings') {
                     nameTextContent = `${item.building.name}`;
-                    quantityTextContent = `수량: ${item.ownedQuantity}`;
+                    quantityTextContent = `배치가능수량: ${item.placeableQuantity}`;
                 }
 
                 const nameText = new PIXI.Text(nameTextContent, {
@@ -429,8 +684,9 @@ const Place = ({ userUUID }) => {
                 imageCircle.isInventoryItem = true;
 
                 listBox.on('pointerdown', (event) => {
-                    console.log('pointerdown event triggered', item);
-                    onDragStart(item, event);
+                    if (item.placeableQuantity > 0) {
+                        onDragStart(item, event);
+                    }
                 });
 
                 appRef.current.stage.addChild(listBox);
@@ -462,14 +718,15 @@ const Place = ({ userUUID }) => {
             const createGradeButton = (grade, x, y, identifier) => {
                 if (!appRef.current.stage.getChildByName(identifier)) {
                     const button = new PIXI.Sprite();
+
                     button.anchor.set(0.5);
                     button.x = x;
                     button.y = y;
                     button.scale.set(0.095);
                     button.interactive = true;
                     button.buttonMode = true;
-                    button.name = identifier;
                     button.visible = isEditMode;
+                    button.name = identifier;
 
                     let buttonTexture;
 
@@ -527,6 +784,44 @@ const Place = ({ userUUID }) => {
     ]);
 
     useEffect(() => {
+        if (appRef.current) {
+            const buttonIdentifiers = [
+                'allButton',
+                'normalButton',
+                'rareButton',
+                'superRareButton',
+                'uniqueButton',
+                'legendButton',
+            ];
+
+            buttonIdentifiers.forEach((identifier) => {
+                const button = appRef.current.stage.getChildByName(identifier);
+                if (button) {
+                    button.visible = isEditMode;
+                }
+            });
+
+            if (animalTabBox.current) {
+                animalTabBox.current.visible = isEditMode;
+                animalTabBox.current.children.forEach((child) => {
+                    child.visible = isEditMode;
+                });
+            }
+
+            if (buildingTabBox.current) {
+                buildingTabBox.current.visible = isEditMode;
+                buildingTabBox.current.children.forEach((child) => {
+                    child.visible = isEditMode;
+                });
+            }
+
+            if (ListContainer.current) {
+                ListContainer.current.visible = isEditMode;
+            }
+        }
+    }, [isEditMode]);
+
+    useEffect(() => {
         if (Object.keys(textures).length === 3 && tileData.length > 0) {
             if (!appRef.current) {
                 const app = new PIXI.Application({
@@ -537,8 +832,8 @@ const Place = ({ userUUID }) => {
                 });
                 pixiContainer.current.appendChild(app.view);
                 appRef.current = app;
-                const container = new PIXI.Container();
-                app.stage.addChild(container);
+                containerRef.current = new PIXI.Container();
+                appRef.current.stage.addChild(containerRef.current);
                 app.stage.sortableChildren = true;
                 const tileSize = {
                     width: textures.LAND.width,
@@ -551,33 +846,72 @@ const Place = ({ userUUID }) => {
                 }
 
                 if (tileData.length > 0 && Object.keys(textures).length === 3) {
-                    createTile(tileData, container, textures, tileSize);
+                    const minIsoValues = calculateMinIsoValues(tileData, tileSize);
+
+                    createTile(tileData, containerRef.current, textures, tileSize, minIsoValues);
+
+                    const newSprites = [];
+
+                    tileData.forEach((data) => {
+                        if (data.objectId && data.objectType) {
+                            const tileObjectImagePath = getTileObjectImagePath(data.objectType, data.objectId);
+
+                            if (tileObjectImagePath) {
+                                const inventoryObjectSprite = new PIXI.Sprite(PIXI.Texture.from(tileObjectImagePath));
+                                inventoryObjectSprite.anchor.set(0.5);
+                                inventoryObjectSprite.x = ((data.x - data.y) * tileSize.width) / 2 - minIsoValues.x;
+                                inventoryObjectSprite.y =
+                                    ((data.x + data.y) * tileSize.height) / 4 - minIsoValues.y - 130;
+                                inventoryObjectSprite.scale.set(0.5);
+                                inventoryObjectSprite.zIndex = 1;
+                                inventoryObjectSprite.interactive = true;
+                                inventoryObjectSprite.buttonMode = true;
+                                inventoryObjectSprite.objectId = data.objectId;
+                                inventoryObjectSprite.tileId = data.id;
+
+                                containerRef.current.addChild(inventoryObjectSprite);
+                                newSprites.push(inventoryObjectSprite);
+                            }
+                        }
+                        inventorySpritesRef.current = newSprites;
+                    });
                 }
 
-                container.interactive = true;
-                container.buttonMode = true;
-                container.scale.set(0.5);
-                container.position.set(app.screen.width / 2, app.screen.height / 2);
+                const changeableButton = new PIXI.Sprite(placeButtonTexture);
+                changeableButton.interactive = true;
+                changeableButton.buttonMode = true;
+                changeableButton.x = 780; // 화면의 위치를 조정하여 적절한 위치에 버튼이 오도록 설정합니다.
+                changeableButton.y = 580;
+                changeableButton.scale.set(0.35);
+                changeableButtonRef.current = changeableButton;
+                appRef.current.stage.addChild(changeableButton);
+
+                changeableButton.on('pointertap', handleSaveButtonClick);
+
+                containerRef.current.interactive = true;
+                containerRef.current.buttonMode = true;
+                containerRef.current.scale.set(0.5);
+                containerRef.current.position.set(app.screen.width / 2, app.screen.height / 2);
 
                 let startPosition = null;
 
-                const ListContainer = new PIXI.Graphics();
-                ListContainer.beginFill(0xffffff, 0.8);
-                ListContainer.drawRoundedRect(0, 70, 400, 500, 20);
-                ListContainer.x = app.screen.width - 300;
-                ListContainer.y = 0;
-                ListContainer.visible = isEditMode;
-                app.stage.addChild(ListContainer);
+                ListContainer.current = new PIXI.Graphics();
+                ListContainer.current.beginFill(0xffffff, 0.8);
+                ListContainer.current.drawRoundedRect(0, 70, 400, 500, 20);
+                ListContainer.current.x = app.screen.width - 300;
+                ListContainer.current.y = 0;
+                ListContainer.current.visible = isEditMode;
+                app.stage.addChild(ListContainer.current);
 
                 animalTabBox.current = new PIXI.Graphics();
                 animalTabBox.current.beginFill(0xffffff, 0.8);
                 animalTabBox.current.drawRoundedRect(660, 20, 150, 50, 20);
                 animalTabBox.current.interactive = true;
+                animalTabBox.current.visible = isEditMode;
                 animalTabBox.current.buttonMode = true;
                 const animalText = new PIXI.Text('동물', { fill: 0x000000, fontSize: 24 });
                 animalText.x = 710;
                 animalText.y = 35;
-                animalTabBox.current.visible = isEditMode;
                 animalText.visible = isEditMode;
                 animalTabBox.current.addChild(animalText);
                 animalTabBox.current.on('pointerdown', (event) => {
@@ -592,10 +926,10 @@ const Place = ({ userUUID }) => {
                 buildingTabBox.current.drawRoundedRect(810, 20, 150, 50, 20);
                 buildingTabBox.current.interactive = true;
                 buildingTabBox.current.buttonMode = true;
+                buildingTabBox.current.visible = isEditMode;
                 const buildingText = new PIXI.Text('건물', { fill: 0x000000, fontSize: 24 });
                 buildingText.x = 860;
                 buildingText.y = 35;
-                buildingTabBox.current.visible = isEditMode;
                 buildingText.visible = isEditMode;
                 buildingTabBox.current.addChild(buildingText);
                 buildingTabBox.current.on('pointerdown', (event) => {
@@ -607,11 +941,11 @@ const Place = ({ userUUID }) => {
                 updateTabStyle(activeTab);
 
                 // container에 대한 이벤트 핸들러 설정
-                container
+                containerRef.current
                     .on('pointerdown', (event) => {
-                        if (!draggingItemRef.current) {
-                            startPosition = event.data.getLocalPosition(container.parent);
-                            container.alpha = 0.5;
+                        if (!draggingItemRef.current || !draggingItemRef.current.dragging) {
+                            startPosition = event.data.getLocalPosition(containerRef.current.parent);
+                            containerRef.current.alpha = 0.5;
                         }
                     })
                     .on('pointerup', (event) => {
@@ -619,17 +953,18 @@ const Place = ({ userUUID }) => {
                             onDragEnd(event);
                         } else {
                             startPosition = null;
-                            container.alpha = 1;
+                            containerRef.current.alpha = 1;
                         }
                     })
+
                     .on('pointermove', (event) => {
                         if (draggingItemRef.current && draggingItemRef.current.dragging) {
                             onDragMove(event); // 드래그 중인 객체 이동 처리
                         } else if (startPosition) {
                             // 타일맵 이동 처리
-                            const newPosition = event.data.getLocalPosition(container.parent);
-                            container.x += newPosition.x - startPosition.x;
-                            container.y += newPosition.y - startPosition.y;
+                            const newPosition = event.data.getLocalPosition(containerRef.current.parent);
+                            containerRef.current.x += newPosition.x - startPosition.x;
+                            containerRef.current.y += newPosition.y - startPosition.y;
                             startPosition = newPosition;
                         }
                     });
@@ -638,39 +973,38 @@ const Place = ({ userUUID }) => {
                     event.preventDefault();
                     const direction = event.deltaY > 0 ? -1 : 1;
                     const factor = 0.05;
-                    const newScale = container.scale.x + factor * direction;
-                    container.scale.set(newScale, newScale);
+                    const newScale = containerRef.current.scale.x + factor * direction;
+                    containerRef.current.scale.set(newScale, newScale);
                 });
             }
         }
-    }, [textures, tileData, activeTab, handleTabSelect, onDragEnd, onDragMove, isEditMode]);
+    }, [
+        textures,
+        tileData,
+        activeTab,
+        handleTabSelect,
+        onDragEnd,
+        onDragMove,
+        handleSaveButtonClick,
+        isEditMode,
+        placeButtonTexture,
+        createTile,
+        getTileObjectImagePath,
+    ]);
 
-    const createTile = (tileData, container, textures, tileSize) => {
-        // 모든 타일 데이터를 기반으로 최소 x, y 좌표값을 구합니다.
-        const minIsoValues = tileData.reduce(
-            (minVals, data) => {
-                const isoX = ((data.x - data.y) * tileSize.width) / 2;
-                const isoY = ((data.x + data.y) * tileSize.height) / 4;
-                return {
-                    x: Math.min(minVals.x, isoX),
-                    y: Math.min(minVals.y, isoY),
-                };
-            },
-            { x: Infinity, y: Infinity }
-        );
-
-        // 최소값을 바탕으로 모든 타일의 위치를 조정합니다.
-        tileData.forEach((data) => {
-            const isoX = ((data.x - data.y) * tileSize.width) / 2 - minIsoValues.x;
-            const isoY = ((data.x + data.y) * tileSize.height) / 4 - minIsoValues.y;
-            const texture = textures[data.landForm];
-            const sprite = new PIXI.Sprite(texture);
-            sprite.anchor.set(0.5);
-            sprite.x = isoX;
-            sprite.y = isoY;
-            container.addChild(sprite);
+    useEffect(() => {
+        inventorySpritesRef.current.forEach((sprite) => {
+            sprite.removeAllListeners('pointerdown');
+            sprite.on('pointerdown', (event) => {
+                event.stopPropagation();
+                if (isEditMode) {
+                    addToRemoveList(sprite.tileId);
+                    console.log('inventorySprite클릭시', removeList);
+                    removeInventoryObject(sprite);
+                }
+            });
         });
-    };
+    }, [isEditMode, removeInventoryObject, addToRemoveList, removeList]);
 
     return <div ref={pixiContainer} className="outlet-container"></div>;
 };
