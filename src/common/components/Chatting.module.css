@@ -56,6 +56,14 @@
     align-items: center;
     gap: 1em;
 }
+.myMessage {
+    align-self: flex-end;
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+    text-align: right/* 아이템들을 오른쪽에서부터 시작하도록 설정 */
+}
+
+
 
 .profileImg  {
     width: 50px; /* 고정된 너비 */

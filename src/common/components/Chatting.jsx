@@ -146,7 +146,7 @@ const Chatting = () => {
                     <div className={classes.message_title}>GOOD CHATTING PLZ!</div>
 
                     {greetings.map((item, idx) => (
-                        <div key={idx} className={classes.message_container}>
+                        <div key={idx} className={`${classes.message_container} ${item.uuid === UUID ? classes.myMessage : ''}`}>
                             <img className={classes.profileImg}
                                 // style={{  width: '50px', height: '50px', objectFit: 'cover'}}
                                 src={profileImage}
