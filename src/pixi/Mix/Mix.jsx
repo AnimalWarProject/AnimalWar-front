@@ -64,7 +64,6 @@ const Mix = () => {
 
 
 
-
     // Feat : 동물/건물 탭
     const goToEntityType = (entityType) => {
         setEntityType(entityType)

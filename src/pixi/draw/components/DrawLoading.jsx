@@ -5,6 +5,7 @@ import randomEgg from '../imgs/AnyConv.com__RANDOMEGG 2.webp';
 import randomBuilding from '../imgs/AnyConv.com__RandomBuilding.webp';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import {api} from "../../../network/api";
 
 const DrawLoading = () => {
     const canvasRef = useRef(null);
@@ -15,30 +16,25 @@ const DrawLoading = () => {
     const type = drawData.type;
     const [profile, setProfile] = useState(null);
     const accessToken = localStorage.getItem('accessToken');
+
     useEffect(() => {
-        axios.get("http://localhost:8000/api/v1/user", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
+
+        const fetchUserData = async () => {
+            try {
+                const { data: response } = await api(`/api/v1/user`, 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                    setProfile(response.uuid);
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
             }
-        })
-            .then((response) => {
-                if (response.data.uuid !== null) {
-                    setProfile(response.data.uuid);
-                }
-            })
-            .catch((error) => {
-                console.log('Failed to fetch user profile:', error);
-            });
-    }, [accessToken]);
-
-
-    useEffect(() => {
+        };
+        fetchUserData();
         if (profile !== null) {
             const drawRequest = {
-                cnt: qty,
+                count: qty,
                 userUUID: profile
             };
-            console.log("리퀘스트 : " + drawRequest.userUUID + drawRequest.cnt);
 
             const canvasWidth = 960;
             const canvasHeight = 640;
@@ -48,16 +44,13 @@ const DrawLoading = () => {
                 height: canvasHeight,
             });
 
-
             if (canvasRef.current) {
                 canvasRef.current.appendChild(app.view);
             }
-
             const background = PIXI.Sprite.from(back);
             background.width = app.screen.width;
             background.height = app.screen.height;
             app.stage.addChild(background);
-
 
             const profileBox = new PIXI.Graphics(); // 큰 틀
             profileBox.beginFill(0xffffff, 0.5);
@@ -84,7 +77,6 @@ const DrawLoading = () => {
             oneDrawText.y = 450;
             app.stage.addChild(profileBox);
 
-
             const randomEggTexture = PIXI.Texture.from(randomEgg); // randomEgg 이미지
             const randomEggSprite = new PIXI.Sprite(randomEggTexture);
             // 설정된 중심점을 중앙으로 이동
@@ -96,26 +88,55 @@ const DrawLoading = () => {
             randomEggSprite.interactive = true;
             randomEggSprite.buttonMode = true;
             if (type ==='animal'){
-                randomEggSprite.on('pointertap', () => {
-                    axios.post("http://localhost:8000/api/v1/draw/animal", drawRequest)
-                        .then((response) => {
-                            console.log("loading data : ", response.data);
-                            nav('/draw/result', {state: response.data});
-                        })
-                        .catch((error) => {
+                randomEggSprite.on('pointertap', async () => {// todo : api 교체
+
+                    const fetchUserDraw = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/user/draw`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                        } catch (error) {
+                            console.error('Failed to fetch user profile:', error);
+                        }
+                    };
+                    fetchUserDraw();
+                    const fetchDrawAnimal = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/draw/animal`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                            nav('/draw/result', {state: response});
+                        } catch (error) {
                             console.error("데이터 가져오기 실패: ", error);
-                        });
+                        }
+                    };
+                    fetchDrawAnimal();
                 });
             }else {
-                randomEggSprite.on('pointertap', () => {
-                    axios.post("http://localhost:8000/api/v1/draw/building", drawRequest)
-                        .then((response) => {
-                            console.log("loading data : ", response.data);
-                            nav('/draw/result', {state: response.data});
-                        })
-                        .catch((error) => {
+                randomEggSprite.on('pointertap', async () => {// todo : api 교체
+
+                    const fetchUserDraw = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/user/draw`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                        } catch (error) {
+                            console.error('Failed to fetch user profile:', error);
+                        }
+                    };
+                    fetchUserDraw();
+
+                    const fetchDrawBuilding = async () => {
+                        try {
+                            const { data: response } = await api(`/api/v1/draw/building`, 'POST', drawRequest, {
+                                headers: { Authorization: `Bearer ${accessToken}` },
+                            });
+                            nav('/draw/result', {state: response});
+                        } catch (error) {
                             console.error("데이터 가져오기 실패: ", error);
-                        });
+                        }
+                    };
+                    fetchDrawBuilding();
                 });
             }
 
@@ -127,20 +148,16 @@ const DrawLoading = () => {
 
             profileBox.addChild(randomEggSprite);
 
-            // Create variables for animation
             let rotationSpeed = 0.01; // 회전 속도
             let direction = 1; // 1은 우측, -1은 좌측
 
             app.ticker.add(() => {
-                // 회전 방향에 따라 기울이기
                 randomEggSprite.rotation += rotationSpeed * direction;
 
-                // 좌우로 기울이다가 일정 각도에 도달하면 방향을 바꿈
                 if (randomEggSprite.rotation >= 0.2 || randomEggSprite.rotation <= -0.2) {
                     direction *= -1;
                 }
             });
-
             function animateFirework(firework) {
                 // 확대 애니메이션 및 투명도 효과
                 firework.scale.x += 0.01;
@@ -152,8 +169,6 @@ const DrawLoading = () => {
                     app.stage.removeChild(firework);
                 }
             }
-
-            // Cleanup on component unmount
             return () => {
                 app.destroy();
             };

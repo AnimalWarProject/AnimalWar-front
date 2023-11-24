@@ -1,8 +1,76 @@
 import '../css/Resister.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {api} from "../../../network/api";
+const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 
 const Resister = ({selectedData, onEventInMarketCancel}) => {
+    const accessToken = localStorage.getItem('accessToken');
+    const [userInfo, setUserInfo] = useState({})
+    let data; // data 변수를 선언
+    let dataToSend;
+    if (selectedData.animal) {
+        data = selectedData.animal;
+    } else {
+        data = selectedData.building;
+    }
     const [price, setPrice] = useState('');
+    const [buff, setBuff] = useState(0); // buff 상태를 useState로 초기화
+
+    useEffect( () => {
+        const fetchUserData = async () => {
+            try {
+                const { data: INVdata } = await api(`/api/v1/user`, 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                setUserInfo(INVdata);
+            } catch (error) {
+                console.error('Failed to fetch user profile:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
+
+    if (buff !== 0){
+        setBuff(selectedData.upgrade);
+    }
+    const animalInfo = {
+        userid: userInfo.uuid,
+        itemId: data.animalId,
+        name: data.name,
+        grade: data.grade,
+        attackPower:data.attackPower,
+        defencePower:data.defencePower,
+        life:data.life,
+        species: data.species,
+        imagePath:data.imagePath,
+        buff: buff, // 동물 강화 수
+        price: price
+    };
+
+    const buildingInfo = {
+        userid: userInfo.uuid,
+        itemId: data.buildingId,
+        name: data.name,
+        grade: data.grade,
+        attackPower: data.attackPower,
+        defencePower: data.defencePower,
+        life: data.life,
+        woodRate: data.woodRate,
+        ironRate: data.ironRate,
+        foodRate: data.foodRate,
+        imagePath: data.imagePath,
+        buildingType:data.buildingType,
+        price: price
+    };
+
+    if (animalInfo) {
+        dataToSend = animalInfo;
+    } else if (buildingInfo) {
+        dataToSend = buildingInfo;
+    } else {
+        alert("올바르지 않은 정보입니다.")
+    }
+
     const onChangePrice = (e) => {
         const inputPrice = e.target.value;
         if (isNaN(inputPrice)) {
@@ -12,31 +80,58 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
             setPrice(inputPrice); // 숫자인 경우에만 값을 변경
         }
     }
-
     const onClickCancel = () =>{
         onEventInMarketCancel()
     }
     const ItemSell = () => {
-        // market controller에 insert , UUID userId, Long itemId,  String name, String grade,  String type, Integer buff, Integer price < reqeust
-        // user inven delete
-    }
+        if (selectedData.animal) {
+            const fetchAimalInfo = async () => {
+                try {
+                    const { data: response } = await api(`/api/v1/inventory/delete/animal`, 'POST', animalInfo, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+            fetchAimalInfo();
 
-    const animalData = selectedData && selectedData.animal;
+        } else if (selectedData.building) {
+
+            const fetchAimalInfo = async () => {
+                try {
+                    const { data: response } = await api(`/api/v1/inventory/delete/building`, 'POST', buildingInfo, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+            fetchAimalInfo();
+        } else {
+            alert("올바르지 않은 정보입니다.")
+        }
+        onEventInMarketCancel()
+    }
 
     return <>
         <div className="register-container">
             <div className="register-wrap">
                 <div className="register-wrap-item">
-                    {/*    아이템 등록 구간*/}
+                    {selectedData.animal ? ( // 동물인 경우 이미지 렌더링
+                        <img className="register-wrap-image" src={`${INVImg}/animals/${animalInfo.species}/${data.imagePath}`} alt="" />
+                    ) : (
+                        <img className="register-wrap-image" src={`${INVImg}/buildings/${data.imagePath}`} alt="" /> // 건물인 경우 이미지 렌더링
+                    )}
                 </div>
                 <div>
-                    이름 : {animalData.name}
+                    이름 : {data.name}
                 </div>
                 <div>
-                    등급 : {animalData.grade}
+                    등급 : {data.grade}
                 </div>
                 <div>
-                    강화 수 : {selectedData.upgrade}
+                    강화 수 : {selectedData.upgrade ? selectedData.upgrade : 0 }
                 </div>
                 <div>
                     <input onChange={onChangePrice} value={price} className="register-wrap-input" placeholder="판매 금액" />
@@ -49,5 +144,4 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         </div>
     </>;
 };
-
 export default Resister;

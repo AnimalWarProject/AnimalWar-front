@@ -95,6 +95,10 @@
     height: 4rem;
     margin: 0.5rem;
 }
+.marketinven-content-image{
+    width: 60px;
+    height: 58px;
+}
 .marketinven-content.selected {
     background-color: #dccd33;
     border: solid white 0.06rem;

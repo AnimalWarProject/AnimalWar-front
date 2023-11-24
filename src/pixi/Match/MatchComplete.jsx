@@ -4,9 +4,18 @@ import VS from './imgs/VS 1.webp';
 import test from './imgs/Rectangle 3.png';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
+import {useHistory} from "react-router-use-history";
 
 
 const MatchComplete = () => {
+
+
+    const history = useHistory();
+    useEffect(() => {
+        // setTimeout(() => history.push("/match3"), 3000)
+
+            setTimeout(() => history.push("/battle2", { state: data }), 5000)
+ }, [])
 
     const canvasRef = useRef(null);
 

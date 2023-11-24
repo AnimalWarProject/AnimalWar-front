@@ -155,7 +155,7 @@ const SignupPage = () => {
                     <div className="image-preview-container">
                         <img src={previewImage} alt="Preview" className="image-preview" />
                     </div>
-                )}
+                )}      
             </div>
         </div>
     );

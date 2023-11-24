@@ -24,6 +24,13 @@
     border-radius: 1rem;
     margin-top: 2rem;
     background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.register-wrap-image{
+    width: 230px;
+    height: 190px;
 }
 .register-wrap-input{
     width: 10rem;

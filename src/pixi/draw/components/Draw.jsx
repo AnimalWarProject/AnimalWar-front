@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef, useState} from "react";
 import * as PIXI from "pixi.js";
 import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
 import oneEgg from "../imgs/AnyConv.com__ONEEGG 1.webp";
@@ -6,11 +6,11 @@ import manyEgg from "../imgs/AnyConv.com__MANYEGG 1.webp";
 import oneBuilding from "../imgs/AnyConv.com__ONEBUILDING 1.webp";
 import manyBuilding from "../imgs/AnyConv.com__MANYBUILDING 1.webp";
 import { useNavigate } from "react-router-dom";
+import {api} from "../../../network/api";
 
 const Draw = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
-
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
@@ -18,6 +18,7 @@ const Draw = () => {
             type: "animal",
             qty: 1
         };
+
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
             fontSize: 18,
@@ -74,7 +75,6 @@ const Draw = () => {
             drawData.type = "building";
         };
 
-
         const drawOneBtn = new PIXI.Graphics();
         drawOneBtn.beginFill(0x6AFFF6, 0.7);
         const drawOneBtnWidth = 170;
@@ -84,10 +84,25 @@ const Draw = () => {
         oneButtonContainer.interactive = true;
         oneButtonContainer.buttonMode = true;
         oneButtonContainer.addChild(drawOneBtn);
-        oneButtonContainer.on('pointertap', () => {
-            drawData.qty = 1;
-            nav('/draw/loading', {state : drawData});
-            // todo : user에 돈이있는지 없는지 확인
+        oneButtonContainer.on('pointertap', async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const { data: userResponse } = await api('/api/v1/user', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                const updatedGold = userResponse.gold; // 받아온 최신 데이터로 업데이트
+                const price = 1000; // 뽑기 가격
+
+                if (updatedGold >= price) {
+                    // 수행할 작업
+                    drawData.qty = 1;
+                    nav('/draw/loading', {state : drawData});
+                } else {
+                    alert("잔액 부족");
+                }
+            } catch (error) {
+                console.error('Failed to fetch user data:', error);
+            }
         });
         const oneDrawText = new PIXI.Text('1회 뽑기', textStyle);
         drawOneBtn.addChild(oneDrawText);
@@ -103,10 +118,25 @@ const Draw = () => {
         manyButtonContainer.interactive = true;
         manyButtonContainer.buttonMode = true;
         manyButtonContainer.addChild(drawManyBtn);
-        manyButtonContainer.on('pointertap', () => {
-            drawData.qty = 10;
-            nav('/draw/loading', {state : drawData});
-            // todo : user에 돈이있는지 없는지 확인
+        manyButtonContainer.on('pointertap', async () => {
+            try {
+                const accessToken = localStorage.getItem('accessToken');
+                const { data: userResponse } = await api('/api/v1/user', 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                const updatedGold = userResponse.gold; // 받아온 최신 데이터로 업데이트
+                const price = 1000; // 뽑기 가격
+
+                if (updatedGold >= price * 10) {
+                    // 수행할 작업
+                    drawData.qty = 10;
+                    nav('/draw/loading', {state : drawData});
+                } else {
+                    alert("잔액 부족");
+                }
+            } catch (error) {
+                console.error('Failed to fetch user data:', error);
+            }
         });
         const manyDrawText = new PIXI.Text('10회 뽑기', textStyle);
         drawManyBtn.addChild(manyDrawText);
