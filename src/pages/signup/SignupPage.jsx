@@ -49,11 +49,14 @@ const SignupPage = () => {
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
+
         const maxSize = 3 * 1024 * 1024;
         if (file && file.size > maxSize) {
+
             toast.error('파일 크기가 3MB를 초과하였습니다. 다른 사진을 선택해주세요.');
             return;
         }
+
         setPreviewImage(URL.createObjectURL(file));
         setFormData((prevData) => ({ ...prevData, profileImage: file }));
     };
@@ -66,6 +69,13 @@ const SignupPage = () => {
         event.preventDefault();
         if (!formData.id || !formData.password || !formData.nickName || !formData.species) {
             toast.error('모든 입력란을 채워주세요.');
+            return;
+        }
+
+        if ((formData.id.length <= 5 && /^[0-9가-힣]+$/.test(formData.id)) || (formData.id.length <= 10 && /^[0-9a-zA-Z]{0,10}$/.test(formData.id))) {
+
+        } else {
+            toast.error('회원가입은 한글만 5자 이하, 영문만 10글자 이하입니다.');
             return;
         }
 
@@ -155,7 +165,7 @@ const SignupPage = () => {
                     <div className="image-preview-container">
                         <img src={previewImage} alt="Preview" className="image-preview" />
                     </div>
-                )}      
+                )}
             </div>
         </div>
     );

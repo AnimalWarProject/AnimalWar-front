@@ -7,6 +7,8 @@
     gap: 1rem;
     border-bottom: 0.0625rem solid #000;
     background: #fff6b4;
+
+
 }
 
 .header-container:hover {
@@ -138,14 +140,14 @@
     margin-bottom: 0;
 }
 
-.profile-section > button {
+.profile-section>button {
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
 }
 
-.profile-section > button:hover .fa-icon {
+.profile-section>button:hover .fa-icon {
     transform: rotate(360deg);
 }
 

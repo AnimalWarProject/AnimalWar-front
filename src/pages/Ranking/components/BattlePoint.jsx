@@ -31,7 +31,7 @@ const BattlePoint = () => {
 
             <div className="userList">
                 {data.map((el, index) => (
-                    <p className="power__title">{index + 1}. {el.nickName}</p>
+                    <p className="battlePoint__user">{index + 1}. {el.nickName}</p>
                 ))}
             </div>
 

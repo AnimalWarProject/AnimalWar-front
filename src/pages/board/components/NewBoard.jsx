@@ -18,6 +18,7 @@ const NewBoard = () => {
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
+
         const maxSize = 3 * 1024 * 1024;
         if (file && file.size > maxSize) {
             toast.error('파일 크기가 3MB를 초과하였습니다. 다른 사진을 선택해주세요.');
@@ -91,7 +92,7 @@ const NewBoard = () => {
                             onChange={(e) => setFormData((prevData) => ({ ...prevData, content: e.target.value }))}
                         ></textarea>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <input className="NewBoardFile" type="file" onChange={handleImageUpload}  ></input>
+                            <input className="NewBoardFile" type="file" accept="image/*" onChange={handleImageUpload}  ></input>
                             <button className="NewBoardSubmit" onClick={handleSubmit} >작성하기</button>
 
                         </div>
