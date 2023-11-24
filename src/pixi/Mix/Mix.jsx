@@ -23,7 +23,6 @@ const Mix = () => {
             });
             setData(INVdata);
             setInitialOwnedQuantity(INVdata.map(item => item.ownedQuantity)) // 초기값 : 가지고 있는 동물 수
-            console.log(INVdata)
         } catch (error) {
             console.error('Failed to fetch user profile:', error);
         }
@@ -109,7 +108,6 @@ const Mix = () => {
             // 선택한 동물 전체 데이터 저장
             setSelectedAnimal((prevAnimal) => {
                 const updatedAnimal = [...prevAnimal, { data: data[idx], imgUrl }]; // 클릭한 동물을 바로 업데이트하기 위해서 updatedAnimal에 배열을 로깅해서 사용
-                console.log(updatedAnimal)
                 return updatedAnimal;
             });
 
