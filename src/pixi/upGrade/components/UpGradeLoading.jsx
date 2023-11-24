@@ -4,24 +4,41 @@ import * as PIXI from "pixi.js";
 import upgrade1 from "../image/UPGRADE1 1.webp";
 import upgrade2 from "../image/UPGRADE1 2.webp";
 import upgrade3 from "../image/UPGRADE1 3.webp";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import {api} from "../../../network/api";
 
 const UpGradeLoading = () => {
+    const accessToken = localStorage.getItem('accessToken');
     const canvasRef = useRef(null);
     const nav = useNavigate();
     const [cycleCount, setCycleCount] = useState(0);
+    const location = useLocation();
+    const selectedData = location.state;
+    const upgradeInfo = {
+        userUUID: "",
+        itemId : selectedData.animal.animalId,
+        buff : selectedData.upgrade
+    }
+    const getData = async () => {
+        try {
+            const { data: response } = await api(`/api/v1/user/upgrade`, 'POST', upgradeInfo, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+        } catch (error) {
+            console.log(error + "에러발생");
+        }
+    };
 
     useEffect(() => {
+        getData();
         const canvasWidth = 960;
         const canvasHeight = 640;
-
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
             fontSize: 18,
             fontFamily: 'Arial',
             fontWeight: "bold",
         });
-
         const app = new PIXI.Application({
             backgroundColor: 0x1099bb,
             width: canvasWidth,
@@ -31,7 +48,6 @@ const UpGradeLoading = () => {
         if (canvasRef.current) {
             canvasRef.current.appendChild(app.view);
         }
-
         const background = PIXI.Sprite.from(back); // 뒷 배경화면
         background.width = app.screen.width;
         background.height = app.screen.height;
@@ -67,7 +83,7 @@ const UpGradeLoading = () => {
 
     useEffect(() => {
         if (cycleCount >= 3) {
-            nav("/upgrade/result");
+            nav("/upgrade/result", {state : selectedData});
         }
     }, [cycleCount, nav]);
 

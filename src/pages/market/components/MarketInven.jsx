@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import "../css/MarketInven.css";
-import axios from "axios";
+import {api} from "../../../network/api";
 const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 
 const MarketInven = ({onEventInMarketInven}) => {
@@ -20,26 +20,23 @@ const MarketInven = ({onEventInMarketInven}) => {
     const fetchData = (type) => {
         let url = '';
         if (type === 'animals') {
-            url = "http://localhost:8000/api/v1/inventory/animals";
+            url = '/api/v1/inventory/animals';
             containerRef.current.style.backgroundColor = '#A3FFF9';
         } else if (type === 'buildings') {
-            url = "http://localhost:8000/api/v1/inventory/buildings";
+            url = '/api/v1/inventory/buildings';
             containerRef.current.style.backgroundColor = '#FFD1FA';
         }
-
-        axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
+        const fetchItemData = async () => {
+            try {
+                const { data: response } = await api(url, 'GET', null, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                setData(response);
+            } catch (error) {
+                console.error(error);
             }
-        })
-            .then((response) => {
-                if (response.data !== null) {
-                    setData(response.data);
-                }
-            })
-            .catch((error) => {
-                console.log('데이터 가져오기 실패 : ', error);
-            });
+        };
+        fetchItemData();
     };
 
     useEffect(() => {
@@ -61,9 +58,9 @@ const MarketInven = ({onEventInMarketInven}) => {
             <div className="marketinven-section-sell">
                 <button onClick={onClickSell} className="marketinven-section-sellBtn">판매하기</button>
             </div>
+
             <div className="marketinven-section">
                 {rows.map((row, rowIndex) => (
-
                     <div className="marketinven-wrap" key={rowIndex} >
                         {row.map((item, index) => (
                             <div
