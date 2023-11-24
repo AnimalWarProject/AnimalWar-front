@@ -27,6 +27,7 @@ const ResourceBox = () => {
     useEffect(() => {
         getProfileData();
     }, []);
+
     return (
         <div className="resource-box">
             <div className="resource-line">
@@ -53,12 +54,3 @@ const ResourceBox = () => {
     );
 };
 export default ResourceBox;
-
-
-
-
-
-
-
-
-
