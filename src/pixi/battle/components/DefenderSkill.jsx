@@ -103,7 +103,7 @@ const DefenderSkill = ({setFlag}) => {
                         if (!defenderAttackTypeSkill ||
                         !defenderDefensiveTypeSkill ||
                         !defenderUtilityTypeSkill){
-                            alert('모든 스킬 선택 진행시켜');
+                            alert('스킬을 모두 선택해주세요.');
                             return;
                         }
                         const response = await api('/api/v1/skill/changeDefenderSkill', 'PUT', updatedState, {
@@ -133,7 +133,7 @@ const DefenderSkill = ({setFlag}) => {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
                             // window.location.href = 'http://localhost:3000/home';
-                            window.location = 'https://www.naver.com/';
+                            window.location = 'http://localhost:3000/battle';
                         } });
                 }
             };
@@ -160,8 +160,6 @@ const DefenderSkill = ({setFlag}) => {
         addRoundedText('유틸형 스킬', 653, 15, 277, 65, 5);
         addRoundedText('저장하기',  800, 590, 126, 39, 20, 18, 'bold');
         addRoundedText('공격스킬 셋팅',  40, 590, 150, 39, 20, 18, 'bold');
-        // addRoundedText('수비스킬 셋팅',  200, 590, 150, 39, 20, 18, 'bold');
-
 
         // 공격형 스킬 큰 박스를 담을 컨테이너
         const bigBoxContainer = new PIXI.Container();
@@ -175,7 +173,6 @@ const DefenderSkill = ({setFlag}) => {
         const bigBoxContainer2 = new PIXI.Container();
         app.stage.addChild(bigBoxContainer2);
 
-
         // 공격형 스킬 큰박스
         const bigBox = new PIXI.Graphics();
         bigBox.beginFill(0xffffff, 0.5);
@@ -185,7 +182,6 @@ const DefenderSkill = ({setFlag}) => {
         bigBox.drawRoundedRect(34, 90, bigBoxWidth, bigBoxHeight, cornerRadius);
         bigBox.endFill();
         bigBoxContainer.addChild(bigBox);
-
 
         // 수비형 스킬 큰박스
         const bigBox1 = new PIXI.Graphics();
@@ -197,7 +193,6 @@ const DefenderSkill = ({setFlag}) => {
         bigBox1.endFill();
         bigBoxContainer1.addChild(bigBox1);
 
-
         // 유틸형 스킬 큰박스
         const bigBox2 = new PIXI.Graphics();
         bigBox2.beginFill(0xffffff, 0.5);
@@ -207,7 +202,6 @@ const DefenderSkill = ({setFlag}) => {
         bigBox2.drawRoundedRect(653, 90, bigBoxWidth2, bigBoxHeight2, cornerRadius2);
         bigBox2.endFill();
         bigBoxContainer2.addChild(bigBox2);
-
 
         // 공격형 스킬들 설정
         const addAttackSkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha) => {

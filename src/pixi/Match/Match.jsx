@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
 import back from './imgs/Rectangle12273.png';
 import test from './imgs/Rectangle 3.png';
-import axios from 'axios';
 import { ButtonContainer } from '@pixi/ui';
 import { useHistory } from 'react-router-use-history';
 import { api } from '../../network/api';

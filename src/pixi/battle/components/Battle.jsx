@@ -2,28 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../../network/api';
 import {useLocation} from "react-router";
 import '../css/Battle.css';
-import HealthBar from "./Health";
+import AttackerHealth from "./AttackerHealth";
+import DefenderHealth from "./DefenderHealth";
+import {useHistory} from "react-router-use-history";
 
 const Battle = () => {
-    const [attackerAtkPower, setAttackerAtkPower] = useState(null);
-    const [attackerDefPower, setAttackerDefPower] = useState(null);
-    const [defenderAtkPower, setDefenderAtkPower] = useState(null);
-    const [defenderDefPower, setDefenderDefPower] = useState(null);
     const [battleLog, setBattleLog] = useState([]);
-    const [renderedLogs, setRenderedLogs] = useState([]);
-
     const location = useLocation();
     const data = location.state;
     const [attackerLife, setAttackerLife] = useState(data.state.state.attacker.life);
     const [defenderLife, setDefenderLife] = useState(data.state.state.depender.life);
-    const [attackerNickName, setAttackerNickName] = useState(data.state.state.attacker.nickName);
-    const [defenderNickName, setDefenderNickName] = useState(data.state.state.depender.nickName);
-
+    const [attackerAtkPower, setAttackerAtkPower] = useState(data.state.state.attacker.attackPower);
+    const [defenderDefPower, setDefenderDefPower] = useState(data.state.state.depender.defensePower);
+    const [attackerDefPower, setAttackerDefPower] = useState(data.state.state.attacker.defensePower);
+    const [defenderAtkPower, setDefenderAtkPower] = useState(data.state.state.depender.attackPower);
+    const speciesAtk = useState(data.state.state.attacker.species);
+    const speciesDef = useState(data.state.state.depender.species);
+    const attackerNickName = useState(data.state.state.attacker.nickName);
+    const defenderNickName = useState(data.state.state.depender.nickName);
+    const attackerImg = useState(data.state.state.attacker.profileImage);
+    const defenderImg = useState(data.state.state.depender.profileImage);
+    const time = useHistory();
     const sendBattleDataToServer = async () => {
+
         try {
             const requestBody = {
                 attacker: {
                     id: data.state.state.attacker.id,
+                    uuid: data.state.state.attacker.uuid,
                     nickName: data.state.state.attacker.nickName,
                     species: data.state.state.attacker.species,
                     profileImage: data.state.state.attacker.profileImage,
@@ -41,6 +47,7 @@ const Battle = () => {
                 },
                 defender: {
                     id: data.state.state.depender.id,
+                    uuid: data.state.state.depender.uuid,
                     nickName: data.state.state.depender.nickName,
                     species: data.state.state.depender.species,
                     profileImage: data.state.state.depender.profileImage,
@@ -69,65 +76,123 @@ const Battle = () => {
             let count = 0;
 
             if (logEntries) {
-
                 const intervalId = setInterval(() => {
-                    if (count < logEntries.length) {
-                        setBattleLog((prevState) => [...prevState, logEntries[count]]);
-                        count += 1;
+                    try {
+                        if (count < logEntries.length-1) {
+                            setBattleLog((prevState) => [...prevState, logEntries[count]]);
+                            count += 1;
+                            if (logEntries[count].includes("공격자 현재체력")){
+                                setAttackerLife(parseInt(logEntries[count].match(/-?\d+/)[0]));
+                            }
+                            if (logEntries[count].includes("수비자 현재체력")){
+                                setDefenderLife(parseInt(logEntries[count].match(/-?\d+/)[0]));
+                            }
+                            if (logEntries[count].includes("공격자가 상성입니다")){
+                                setAttackerAtkPower(parseInt(logEntries[count].match(/-?\d+/)[0]));
+                            }
+                            if (logEntries[count].includes("수비자가 상성입니다")){
+                                setDefenderDefPower(parseInt(logEntries[count].match(/-?\d+/)[0]));
+                            }
 
-                        // 로그 상자의 맨 아래로 스크롤
-                        const logBox = document.getElementById('battleLogBox');
-                        logBox.scrollTop = logBox.scrollHeight;
 
-                        setAttackerLife(logEntries[count]?.attackerLife || attackerLife);
-                        setDefenderLife(logEntries[count]?.defenderLife || defenderLife);
-                    } else {
+                            if (logEntries[count].includes(data.state.state.attacker.id + "의 공격형 스킬 버서커")){
+                                setAttackerAtkPower(attackerAtkPower * 3);
+                            }
+                            if (logEntries[count].includes(defenderNickName + "의 공격형 스킬 버서커")){
+                                setDefenderDefPower(defenderDefPower * 3);
+                            }
+                            
+                            if (logEntries[count].includes("공수교대")){
+                                const attackerAttackPower = attackerAtkPower
+                                setAttackerAtkPower(attackerDefPower);
+                                setAttackerDefPower(attackerAttackPower)
+                                const defenderDependerPower = defenderDefPower;
+                                setDefenderDefPower(defenderAtkPower);
+                                setDefenderAtkPower(defenderDependerPower)
+                            }
+                            // if (logEntries[count].includes(attackerNickName + "의 유틸형 스킬 "+ "강약약강")){
+                            //     setAttackerAtkPower(attackerAtkPower * 1.1);
+                            //     setAttackerAtkPower(attackerAtkPower * 0.9);
+                            // }
+                            // if (logEntries[count].includes(defenderNickName + "의 유틸형 스킬 "+ "강약약강")){
+                            // }
+                            // 로그 상자의 맨 아래로 스크롤
+                            const logBox = document.getElementById('battleLogBox');
+                            logBox.scrollTop = logBox.scrollHeight;
+
+                            if (logEntries[count].includes("패배")) {
+                                setTimeout(() => {
+                                    time.push('/loser' , { state: data });
+                                    } ,400)
+                            } else if (logEntries[count].includes("승리")) {
+                                setTimeout(() => {
+                                    time.push('/winner', { state: data });
+                                }, 400)
+                            }
+                        } else {
+                            clearInterval(intervalId);
+                        }
+                    }catch (e){
                         clearInterval(intervalId);
                     }
-                }, 500);
+
+                }, 600);
+
             }
         } catch (error) {
             console.error('전투 데이터 전송 오류:', error);
         }
     };
 
-
     useEffect(() => {
-        // // 공격자 및 수비자 파워 업데이트
-        // setAttackerAtkPower( /* 업데이트된 값 */ );
-        // setAttackerDefPower( /* 업데이트된 값 */ );
-        // setDefenderAtkPower( /* 업데이트된 값 */ );
-        // setDefenderDefPower( /* 업데이트된 값 */ );
 
         // 전투 로그 업데이트를 시뮬레이션
         setBattleLog(prevLogs => [...prevLogs]);
-
-        // 서버로 전투 데이터 전송
+        //
+        // // 서버로 전투 데이터 전송
         sendBattleDataToServer();
 
     }, []);
     return (
         <div className="battleLogBackGround">
             <div className="battleLogBackGroundInner">
-                {/* 공격자와 수비자 상자 */}
-                <div>
-                    <h3>Attacker : {attackerNickName}</h3>
-                    <p>Life: {attackerLife}</p>
-                    <HealthBar currentHealth={attackerLife} maxHealth={data.state.state.attacker.maxLife} barColor="#FC5740" />
-                </div>
-                <div>
-                    <h3>Defender : {defenderNickName}</h3>
-                    <p>Life: {defenderLife}</p>
-                    <HealthBar currentHealth={defenderLife} maxHealth={data.state.state.attacker.maxLife} barColor="#5B7FFF" />
-                </div>
-
                 <div className="battleLogBoxOut">
                     {/* 스킵 버튼 및 전투 로그 상자 */}
-                    {/*<button onClick={handleSkipLogs}>스킵하기</button>*/}
                     <div id="battleLogBox" className="fixed-width-log-box">
                         {battleLog.map((item, idx) => (
                             <p key={idx}>{item}</p>
                         ))}
+                    </div>
+                </div>
+
+                <div className = "stateBox1" style={{display : "flex"}}>
+                    <div style = {{paddingLeft: '10px', paddingTop: '20px'}}>
+                        <div style = {{display : 'flex', alignItems : 'center', gap : '15px'}}>
+                            <p><img src = {attackerImg} alt="Attacker" style={{ width: '70px', height: '70px' }} /></p>
+                            <AttackerHealth currentHealth={attackerLife} maxHealth={data.state.state.attacker.maxLife} barColor="#FC5740" />
+                        </div>
+                        <div style = {{paddingLeft: '13px'}}>
+                            <p>{attackerNickName} 님</p>
+                        </div>
+                        <div style = {{paddingLeft: '100px', fontSize: '15px'}}>
+                            <h3>종족: {speciesAtk} /공격력: {attackerAtkPower}</h3>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                <div className ="stateBox2">
+                    <div style ={{paddingLeft: '10px', paddingTop: '20px'}}>
+                        <div style = {{display : 'flex', alignItems : 'center', gap : '15px'}}>
+                            <p><img src = {defenderImg} alt="Defender" style={{ width: '70px', height: '70px' }} /></p>
+                            <DefenderHealth currentHealth={defenderLife} maxHealth={data.state.state.attacker.maxLife} barColor="#5B7FFF"/>
+                        </div>
+                        <div style = {{paddingLeft: '13px'}}>
+                            <p>{defenderNickName} 님</p>
+                        </div>
+                        <div style = {{paddingLeft: '100px', fontSize: '15px'}}>
+                            <h3>종족: {speciesDef} /수비력: {defenderDefPower}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
