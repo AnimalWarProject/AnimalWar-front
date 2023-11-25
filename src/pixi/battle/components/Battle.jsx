@@ -90,14 +90,16 @@ const Battle = () => {
                             if (logEntries[count].includes("공격자 상성확인되었습니다")){
                                 const upAttackPower = attackerAtkPower
                                 const upDefendPower = attackerDefPower
-                                setAttackerAtkPower(upAttackPower * 1.1);
-                                setAttackerDefPower(upDefendPower * 1.1);
+                                setAttackerAtkPower(Number((upAttackPower * 1.1).toFixed(0)));
+                                setAttackerDefPower(Number((upDefendPower * 1.1).toFixed(0)));
                             }
                             if (logEntries[count].includes("수비자 상성확인되었습니다")){
                                 const upAttackPower = defenderAtkPower
                                 const upDefendPower = defenderDefPower
-                                setDefenderAtkPower(upAttackPower * 1.1);
-                                setDefenderDefPower(upDefendPower * 1.1);
+                                // setDefenderAtkPower(upAttackPower * 1.1);
+                                // setDefenderDefPower(upDefendPower * 1.1);
+                                setDefenderAtkPower(Number((upAttackPower * 1.1).toFixed(0)));
+                                setDefenderDefPower(Number((upDefendPower * 1.1).toFixed(0)));
                             }
 
                             if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
