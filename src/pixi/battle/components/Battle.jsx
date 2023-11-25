@@ -87,29 +87,29 @@ const Battle = () => {
                             if (logEntries[count].includes("수비자 현재체력")){
                                 setDefenderLife(parseInt(logEntries[count].match(/-?\d+/)[0]));
                             }
-                            // if (logEntries[count].includes("공격자가 상성입니다")){
-                            //     const upAttackPower = attackerAtkPower
-                            //     const upDefendPower = attackerDefPower
-                            //     setAttackerAtkPower(upAttackPower * 1.1);
-                            //     setAttackerDefPower(upDefendPower * 1.1);
-                            // }
-                            // if (logEntries[count].includes("수비자가 상성입니다")){
-                            //     const upAttackPower = defenderAtkPower
-                            //     const upDefendPower = defenderDefPower
-                            //     setDefenderAtkPower(upAttackPower * 1.1);
-                            //     setDefenderDefPower(upDefendPower * 1.1);
-                            // }
+                            if (logEntries[count].includes("공격자 상성확인되었습니다")){
+                                const upAttackPower = attackerAtkPower
+                                const upDefendPower = attackerDefPower
+                                setAttackerAtkPower(upAttackPower * 1.1);
+                                setAttackerDefPower(upDefendPower * 1.1);
+                            }
+                            if (logEntries[count].includes("수비자 상성확인되었습니다")){
+                                const upAttackPower = defenderAtkPower
+                                const upDefendPower = defenderDefPower
+                                setDefenderAtkPower(upAttackPower * 1.1);
+                                setDefenderDefPower(upDefendPower * 1.1);
+                            }
 
-                            // if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
-                            //     if (data.state.state.attacker.maxLife * 0.2 >= data.state.state.attacker.life) {
-                            //         setAttackerAtkPower(attackerAtkPower * 3);
-                            //     }
-                            // }
-                            // if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
-                            //     if (data.state.state.depender.maxLife * 0.2 >= data.state.state.depender.life) {
-                            //         setDefenderDefPower(defenderDefPower * 3);
-                            //     }
-                            // }
+                            if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
+                                if (data.state.state.attacker.maxLife * 0.2 >= data.state.state.attacker.life) {
+                                    setAttackerAtkPower(attackerAtkPower * 3);
+                                }
+                            }
+                            if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
+                                if (data.state.state.depender.maxLife * 0.2 >= data.state.state.depender.life) {
+                                    setDefenderDefPower(defenderDefPower * 3);
+                                }
+                            }
                             //
                             // if (logEntries[count].includes("공수교대")){
                             //     const attackerAttackPower = attackerAtkPower
@@ -126,6 +126,8 @@ const Battle = () => {
                             //     setAttackerAtkPower(attackerAtkPower * 0.9);
                             // }
                             // if (logEntries[count].includes(defenderNickName + "의 유틸형 스킬 "+ "강약약강")){
+                            //     defenderAttackerPower(attackerAtkPower * 1.1);
+                            //     defenderDependerPower(attackerAtkPower * 0.9);
                             // }
                             // 로그 상자의 맨 아래로 스크롤
                             const logBox = document.getElementById('battleLogBox');
@@ -134,11 +136,11 @@ const Battle = () => {
                             if (logEntries[count].includes("패배")) {
                                 setTimeout(() => {
                                     time.push('/loser' , { state: data });
-                                    } ,400)
+                                    } ,4000)
                             } else if (logEntries[count].includes("승리")) {
                                 setTimeout(() => {
                                     time.push('/winner', { state: data });
-                                }, 400)
+                                }, 4000)
                             }
                         } else {
                             clearInterval(intervalId);
@@ -162,6 +164,8 @@ const Battle = () => {
         //
         // // 서버로 전투 데이터 전송
         sendBattleDataToServer();
+
+        console.log("Battle Log Data:", battleLog);
 
     }, []);
     return (
