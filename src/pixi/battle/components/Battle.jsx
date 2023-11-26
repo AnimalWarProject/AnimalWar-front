@@ -1,26 +1,35 @@
-import React, { useRef, useEffect, useState } from 'react';
-import * as PIXI from 'pixi.js';
-import { useLocation } from 'react-router';
-import backgroundImage from '../imgs/Rectangle 12290.png';
-import Swap from '../imgs/Swap.webp';
+import React, { useEffect, useState } from 'react';
 import { api } from '../../../network/api';
+import {useLocation} from "react-router";
+import '../css/Battle.css';
+import AttackerHealth from "./AttackerHealth";
+import DefenderHealth from "./DefenderHealth";
+import {useHistory} from "react-router-use-history";
 
 const Battle = () => {
-    const pixiContainer = useRef(null);
-
-    const [attackerAtkPower, setAttackerAtkPower] = useState(null);
-    const [attackerDefPower, setAttackerDefPower] = useState(null);
-    const [defenderAtkPower, setDefenderAtkPower] = useState(null);
-    const [defenderDefPower, setDefenderDefPower] = useState(null);
     const [battleLog, setBattleLog] = useState([]);
     const location = useLocation();
     const data = location.state;
-
+    const [attackerLife, setAttackerLife] = useState(data.state.state.attacker.life);
+    const [defenderLife, setDefenderLife] = useState(data.state.state.depender.life);
+    const [attackerAtkPower, setAttackerAtkPower] = useState(data.state.state.attacker.attackPower);
+    const [defenderDefPower, setDefenderDefPower] = useState(data.state.state.depender.defensePower);
+    const [attackerDefPower, setAttackerDefPower] = useState(data.state.state.attacker.defensePower);
+    const [defenderAtkPower, setDefenderAtkPower] = useState(data.state.state.depender.attackPower);
+    const speciesAtk = useState(data.state.state.attacker.species);
+    const speciesDef = useState(data.state.state.depender.species);
+    const attackerNickName = useState(data.state.state.attacker.nickName);
+    const defenderNickName = useState(data.state.state.depender.nickName);
+    const attackerImg = useState(data.state.state.attacker.profileImage);
+    const defenderImg = useState(data.state.state.depender.profileImage);
+    const time = useHistory();
     const sendBattleDataToServer = async () => {
+
         try {
             const requestBody = {
                 attacker: {
                     id: data.state.state.attacker.id,
+                    uuid: data.state.state.attacker.uuid,
                     nickName: data.state.state.attacker.nickName,
                     species: data.state.state.attacker.species,
                     profileImage: data.state.state.attacker.profileImage,
@@ -38,6 +47,7 @@ const Battle = () => {
                 },
                 defender: {
                     id: data.state.state.depender.id,
+                    uuid: data.state.state.depender.uuid,
                     nickName: data.state.state.depender.nickName,
                     species: data.state.state.depender.species,
                     profileImage: data.state.state.depender.profileImage,
@@ -54,225 +64,158 @@ const Battle = () => {
                     wood: data.state.state.depender.wood
                 },
             };
+
             const stateToken = localStorage.getItem('stateToken');
             const response = await api('/api/v1/battle', 'POST', requestBody, {
                 headers: {
                     Authorization: `Bearer ${stateToken}`,
                 },
             });
+
             const logEntries = response.data;
+            let count = 0;
+
             if (logEntries) {
-                setBattleLog(logEntries);
+                const intervalId = setInterval(() => {
+                    try {
+                        if (count < logEntries.length-1) {
+                            setBattleLog((prevState) => [...prevState, logEntries[count]]);
+                            count += 1;
+                            if (logEntries[count].includes("공격자 현재체력")){
+                                setAttackerLife(parseInt(logEntries[count].match(/-?\d+/)[0]));
+                            }
+                            if (logEntries[count].includes("수비자 현재체력")){
+                                setDefenderLife(parseInt(logEntries[count].match(/-?\d+/)[0]));
+                            }
+                            if (logEntries[count].includes("공격자 상성확인되었습니다")){
+                                const upAttackPower = attackerAtkPower
+                                const upDefendPower = attackerDefPower
+                                setAttackerAtkPower(Number((upAttackPower * 1.1).toFixed(0)));
+                                setAttackerDefPower(Number((upDefendPower * 1.1).toFixed(0)));
+                            }
+                            if (logEntries[count].includes("수비자 상성확인되었습니다")){
+                                const upAttackPower = defenderAtkPower
+                                const upDefendPower = defenderDefPower
+                                // setDefenderAtkPower(upAttackPower * 1.1);
+                                // setDefenderDefPower(upDefendPower * 1.1);
+                                setDefenderAtkPower(Number((upAttackPower * 1.1).toFixed(0)));
+                                setDefenderDefPower(Number((upDefendPower * 1.1).toFixed(0)));
+                            }
+
+                            if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
+                                if (data.state.state.attacker.maxLife * 0.2 >= data.state.state.attacker.life) {
+                                    setAttackerAtkPower(attackerAtkPower * 3);
+                                }
+                            }
+                            if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
+                                if (data.state.state.depender.maxLife * 0.2 >= data.state.state.depender.life) {
+                                    setDefenderDefPower(defenderDefPower * 3);
+                                }
+                            }
+                            //
+                            // if (logEntries[count].includes("공수교대")){
+                            //     const attackerAttackPower = attackerAtkPower
+                            //     const attackerDefenderPower = attackerDefPower
+                            //     setAttackerAtkPower(attackerDefenderPower);
+                            //     setAttackerDefPower(attackerAttackPower)
+                            //     const defenderAttackerPower = defenderAtkPower;
+                            //     const defenderDependerPower = defenderDefPower;
+                            //     setDefenderDefPower(defenderAttackerPower);
+                            //     setDefenderAtkPower(defenderDependerPower)
+                            // }
+                            // if (logEntries[count].includes(attackerNickName + "의 유틸형 스킬 "+ "강약약강")){
+                            //     setAttackerAtkPower(attackerAtkPower * 1.1);
+                            //     setAttackerAtkPower(attackerAtkPower * 0.9);
+                            // }
+                            // if (logEntries[count].includes(defenderNickName + "의 유틸형 스킬 "+ "강약약강")){
+                            //     defenderAttackerPower(attackerAtkPower * 1.1);
+                            //     defenderDependerPower(attackerAtkPower * 0.9);
+                            // }
+                            // 로그 상자의 맨 아래로 스크롤
+                            const logBox = document.getElementById('battleLogBox');
+                            logBox.scrollTop = logBox.scrollHeight;
+
+                            if (logEntries[count].includes("패배")) {
+                                setTimeout(() => {
+                                    time.push('/loser' , { state: data });
+                                    } ,4000)
+                            } else if (logEntries[count].includes("승리")) {
+                                setTimeout(() => {
+                                    time.push('/winner', { state: data });
+                                }, 4000)
+                            }
+                        } else {
+                            clearInterval(intervalId);
+                        }
+                    }catch (e){
+                        clearInterval(intervalId);
+                    }
+
+                }, 400);
+
             }
         } catch (error) {
-            console.error('Error sending battle data:', error);
+            console.error('전투 데이터 전송 오류:', error);
         }
     };
 
     useEffect(() => {
-        let app = new PIXI.Application({
-            width: 960,
-            height: 640,
-            transparent: true,
-        });
-        pixiContainer.current.appendChild(app.view);
 
-        const background = PIXI.Sprite.from(backgroundImage);
-        background.width = app.screen.width;
-        background.height = app.screen.height;
-        app.stage.addChild(background);
+        // 전투 로그 업데이트를 시뮬레이션
+        setBattleLog(prevLogs => [...prevLogs]);
+        //
+        // // 서버로 전투 데이터 전송
+        sendBattleDataToServer();
 
-        const stateContainer = new PIXI.Container();
-        app.stage.addChild(stateContainer);
+        console.log("Battle Log Data:", battleLog);
 
-        const logContainer = new PIXI.Container();
-        app.stage.addChild(logContainer);
+    }, []);
+    return (
+        <div className="battleLogBackGround">
+            <div className="battleLogBackGroundInner">
+                <div className="battleLogBoxOut">
+                    {/* 스킵 버튼 및 전투 로그 상자 */}
+                    <div id="battleLogBox" className="fixed-width-log-box">
+                        {battleLog.map((item, idx) => (
+                            <p key={idx}>{item}</p>
+                        ))}
+                    </div>
+                </div>
 
-        const smallAttackerBox = new PIXI.Graphics();
-        smallAttackerBox.beginFill(0xffffff, 0.4);
-        const smallAttackerBoxWidth = 365;
-        const smallAttackerBoxHeight = 154;
-        const smallAttackerBoxCornerRadius = 10;
-        smallAttackerBox.drawRoundedRect(
-            70,
-            70,
-            smallAttackerBoxWidth,
-            smallAttackerBoxHeight,
-            smallAttackerBoxCornerRadius
-        );
-        smallAttackerBox.endFill();
-        stateContainer.addChild(smallAttackerBox);
+                <div className = "stateBox1" style={{display : "flex"}}>
+                    <div style = {{paddingLeft: '10px', paddingTop: '20px'}}>
+                        <div style = {{display : 'flex', alignItems : 'center', gap : '15px'}}>
+                            <p><img src = {attackerImg} alt="Attacker" style={{ width: '70px', height: '70px' }} /></p>
+                            <AttackerHealth currentHealth={attackerLife} maxHealth={data.state.state.attacker.maxLife} barColor="#FC5740" />
+                        </div>
+                        <div style = {{paddingLeft: '13px'}}>
+                            <p>{attackerNickName} 님</p>
+                        </div>
+                        <div style = {{paddingLeft: '100px', fontSize: '15px'}}>
+                            <h3>종족: {speciesAtk} /공격력: {attackerAtkPower}</h3>
+                        </div>
 
-        const smallDefenderBox = new PIXI.Graphics();
-        smallDefenderBox.beginFill(0xffffff, 0.4);
-        const smallDefenderBoxWidth = 365;
-        const smallDefenderBoxHeight = 154;
-        const smallDefenderBoxCornerRadius = 10;
-        smallDefenderBox.drawRoundedRect(
-            515,
-            70,
-            smallDefenderBoxWidth,
-            smallDefenderBoxHeight,
-            smallDefenderBoxCornerRadius
-        );
-        smallDefenderBox.endFill();
-        stateContainer.addChild(smallDefenderBox);
-
-        const battleLogBox = new PIXI.Graphics();
-        battleLogBox.beginFill(0xffffff, 0.4);
-        const battleLogBoxBoxWidth = 810;
-        const battleLogBoxBoxHeight = 320;
-        const battleLogBoxCornerRadius = 10;
-        battleLogBox.drawRoundedRect(
-            70,
-            250,
-            battleLogBoxBoxWidth,
-            battleLogBoxBoxHeight,
-            battleLogBoxCornerRadius
-        );
-        battleLogBox.endFill();
-        logContainer.addChild(battleLogBox);
-
-        const displayBattleLogs = () => {
-            const logContainer = new PIXI.Container();
-            logContainer.y = 250;
-
-            for (let i = 0; i < battleLog.length; i++) {
-                setTimeout(() => {
-                    const logText = new PIXI.Text(battleLog[i], {
-                        fontSize: 15,
-                        fill: 0x0f1828,
-                        align: 'justify',
-                        fontWeight: 'bolder',
-                        fontFamily: 'Arial',
-                    });
-                    logText.x = 80;
-                    logText.y = i * 20;
-                    logContainer.addChild(logText);
-                }, 1000 * i);
-            }
-            logContainer.x = (810 - logContainer.width) / 2;
-            logContainer.interactive = true;
-            battleLogBox.addChild(logContainer);
-        };
-
-        const addStateBox = (
-            x,
-            y,
-            profileBoxPath,
-            nickName,
-            currentHealth,
-            maxHealth,
-            attackPower,
-            defensePower,
-            healthBarColor
-        ) => {
-            const createHealthBar = (x, y, currentHealth, maxHealth, healthBarColor) => {
-                const healthBar = new PIXI.Graphics();
-                healthBar.beginFill(healthBarColor);
-                const healthBarWidth = (currentHealth / maxHealth) * 228;
-                const healthBarHeight = 40;
-                const healthBarRadius = 10;
-                healthBar.drawRoundedRect(x, y, healthBarWidth, healthBarHeight, healthBarRadius);
-                healthBar.endFill();
-                return healthBar;
-            };
-
-            const healthBar = createHealthBar(
-                x + 80,
-                y + 50,
-                currentHealth,
-                maxHealth,
-                healthBarColor
-            );
-            stateContainer.addChild(healthBar);
-
-            if (profileBoxPath) {
-                const profile = PIXI.Sprite.from(profileBoxPath);
-                profile.width = 70;
-                profile.height = 70;
-                profile.x = x + 20;
-                profile.y = y + 20;
-                stateContainer.addChild(profile);
-            }
-
-            const nicknameText = new PIXI.Text(nickName, {
-                fontSize: 15,
-                fill: 0x0f1828,
-                align: 'justify',
-                fontWeight: 'bolder',
-                fontFamily: 'Arial',
-            });
-            nicknameText.x = x + 80;
-            nicknameText.y = y + 20;
-            stateContainer.addChild(nicknameText);
-
-            const useState = new PIXI.Text(
-                `공격력: ${attackPower} | 방어력: ${defensePower} `,
-                {
-                    fontSize: 15,
-                    fill: 0x0f1828,
-                    align: 'justify',
-                    fontWeight: 'bolder',
-                    fontFamily: 'Arial',
-                }
-            );
-            useState.x = x + 80;
-            useState.y = y + 85;
-            stateContainer.addChild(useState);
-
-            const hpState = new PIXI.Text(`HP: [${currentHealth} / ${maxHealth}]`, {
-                fontSize: 15,
-                fill: 0x0f1828,
-                align: 'justify',
-                fontWeight: 'bolder',
-                fontFamily: 'Arial',
-            });
-            hpState.x = x + 80;
-            hpState.y = y + 65;
-            stateContainer.addChild(hpState);
-        };
-
-        addStateBox(
-            50,
-            50,
-            Swap,
-            '공격자',
-            10000,
-            10000,
-            attackerAtkPower,
-            attackerDefPower,
-            '#FC5740'
-        );
-        addStateBox(
-            500,
-            50,
-            Swap,
-            '수비자',
-            10000,
-            10000,
-            defenderAtkPower,
-            defenderDefPower,
-            '#5B7FFF'
-        );
-
-        // Ticker 설정
-        const ticker = PIXI.Ticker.shared;
-        ticker.autoStart = false;
-        ticker.stop();
-        ticker.add(() => {
-            app.renderer.render(app.stage);
-        });
-
-        setTimeout(() => {
-            displayBattleLogs();
-            sendBattleDataToServer();
-            ticker.stop();
-        }, 2000);
-
-    }, [battleLog]);
-
-    return <div ref={pixiContainer} className="outlet-container"></div>;
+                    </div>
+                    
+                </div>
+                <div className ="stateBox2">
+                    <div style ={{paddingLeft: '10px', paddingTop: '20px'}}>
+                        <div style = {{display : 'flex', alignItems : 'center', gap : '15px'}}>
+                            <p><img src = {defenderImg} alt="Defender" style={{ width: '70px', height: '70px' }} /></p>
+                            <DefenderHealth currentHealth={defenderLife} maxHealth={data.state.state.attacker.maxLife} barColor="#5B7FFF"/>
+                        </div>
+                        <div style = {{paddingLeft: '13px'}}>
+                            <p>{defenderNickName} 님</p>
+                        </div>
+                        <div style = {{paddingLeft: '100px', fontSize: '15px'}}>
+                            <h3>종족: {speciesDef} /수비력: {defenderDefPower}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Battle;
+
