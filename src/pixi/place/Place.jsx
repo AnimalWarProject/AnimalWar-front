@@ -184,26 +184,6 @@ const Place = ({ userUUID }) => {
         }
     }, [isEditMode, prevIsEditMode, placeButtonTexture, saveButtonTexture, updatePlace, removeButtonClicked]);
 
-    const cancelPlacement = useCallback(() => {
-        const restoredInventory = { ...inventory };
-        restoredInventory.animals = restoredInventory.animals.map((animal) => ({
-            ...animal,
-            placeableQuantity:
-                animal.placeableQuantity +
-                placedItems.filter((item) => item.id === animal.id && item.type === 'ANIMAL').length,
-        }));
-        restoredInventory.buildings = restoredInventory.buildings.map((building) => ({
-            ...building,
-            placeableQuantity:
-                building.placeableQuantity +
-                placedItems.filter((item) => item.id === building.id && item.type === 'BUILDING').length,
-        }));
-        setInventory(restoredInventory);
-
-        setPlacedItems([]);
-        setRemoveList([]);
-    }, [inventory, placedItems]);
-
     const handleGradeButtonClick = (grade) => {
         let englishGrade;
         switch (grade) {
