@@ -56,22 +56,33 @@
     align-items: center;
     gap: 1em;
 }
-
-.profile-img {
-    width: 10%;
-    height: 3rem;
-    align-items: center;
+.myMessage {
+    align-self: flex-end;
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+    text-align: right/* 아이템들을 오른쪽에서부터 시작하도록 설정 */
 }
 
-.profile-nickname {
-    width: 10%;
-    align-items: center;
+
+
+.profileImg  {
+    width: 50px; /* 고정된 너비 */
+    height: 50px; /* 고정된 높이 */
+    object-fit: cover;
+    flex-shrink: 0; /* 줄어들지 않도록 고정 */
 }
 
-.message-record {
-    width: 80%;
-    height: 3rem;
-    align-items: center;
+.profileNickname {
+    flex-shrink: 0; /* 줄어들지 않도록 고정 */
+    max-width: 100px; /* 최대 10%까지만 사용 */
+    overflow: hidden;
+    text-overflow: ellipsis; /* 넘치는 부분을 생략 부호(...)로 표시 */
+    white-space: nowrap; /* 줄 바꿈 방지 */
+}
+
+.messageRecord {
+    flex-grow: 1; /* 남은 공간을 모두 차지 */
+    flex-shrink: 1; /* 닉네임이 길어지면 여백을 줄이도록 설정 */
     white-space: pre-wrap; /* 공백 및 줄 바꿈 유지 */
 }
 
