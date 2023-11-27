@@ -27,6 +27,7 @@ const Draw = () => {
             fontWeight: 'bold',
         });
 
+
         const app = new PIXI.Application({
             backgroundColor: 0x1099bb,
             width: canvasWidth,

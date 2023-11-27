@@ -13,6 +13,7 @@ const UpGrade = () => {
     const [selectedItemIndex, setSelectedItemIndex] = useState(null);
     const [selectedItem, setSelectedItem] = useState(null);
     const nav = useNavigate();
+    const [sendUserInfo, setSendUserInfo] = useState();
     // Feat : 등급 탭
     const gradeHandler = (e) => {
         let grade;
@@ -36,10 +37,19 @@ const UpGrade = () => {
                 grade = 'NORMAL';
                 break;
         }
-        console.log('선택된 등급:', grade);
         setEnglishGrade(grade);
     };
 
+
+    const getInfo = async () => {
+        try {
+            const { data: response } = await api(`/api/v1/user`, 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            setSendUserInfo(response.uuid)
+        } catch (error) {
+        }
+    };
     useEffect(() => {
         const filteredData = allData.filter((item) => {
             switch (englishGrade) {
@@ -57,7 +67,6 @@ const UpGrade = () => {
                     return true;
             }
         });
-        console.log('필터링된 데이터:', filteredData);
         setData(filteredData);
     }, [englishGrade, allData]);
 
@@ -74,6 +83,7 @@ const UpGrade = () => {
 
     useEffect(() => {
         getData();
+        getInfo();
     }, []);
 
     const handleItemClick = (item, idx) => {
@@ -103,15 +113,16 @@ const UpGrade = () => {
 
     const onClickUpgrade = () => {
         if (selectedItem.upgrade < 9) {
-            nav('/upgrade/loading', { state: selectedItem });
+            nav('/upgrade/loading', { state: { selectedItem, sendUserInfo } });
         } else {
             alert('강화 최고치.');
         }
     };
 
     const rows = [];
-    for (let i = 0; i < data.length; i++) {
-        rows.push(data.slice(i * itemsPerRow, 3 + i * itemsPerRow));
+    const filteredData = data.filter((item) => item.animal.grade === englishGrade);
+    for (let i = 0; i < filteredData.length; i++) {
+        rows.push(filteredData.slice(i * itemsPerRow, itemsPerRow + i * itemsPerRow));
     }
 
     return (

@@ -5,79 +5,76 @@
     background-repeat: no-repeat;
     border-radius: 0.5rem;
     box-sizing: border-box;
-    padding: 60px;
+    padding: 3.75rem;
 }
 .outlet-container-innerBox{
     width: 100%;
     height: 100%;
-    border-radius: 40px;
+    border-radius: 2.5rem;
     background: rgba(255, 255, 255, 0.5);
     position: relative;
-    padding: 0 20px;
+    padding: 0 1.25rem;
     box-sizing: border-box;
 }
 .outlet-container-activeTap{
-    width: 160px;
-    height: 45px;
+    width: 10rem;
+    height: 2.82rem;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     background-color: #61dafb;
     position: absolute;
-    top: -52px;
+    top: -3.25rem;
     left: 0;
     display: flex;
-    gap: 10px;
+    gap: 0.625rem;
 }
 .btn{
     background-color: #ffa500;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: bold;
-    border-radius: 10px;
-    width: 250px;
-    height: 45px;
+    border-radius: 0.625rem;
+    width: 15.625rem;
+    height: 2.8125rem;
     position: absolute;
-    bottom: -52px;
+    bottom: -3.25rem;
     right: 0;
 }
-/*.outlet-container-activeTap > div:last-child {*/
-/*    background: #B6E4EA;*/
-/*}*/
 .gradeTap {
-    padding: 10px 20px 0 20px;
+    padding: 0.625rem 1.25rem 0 1.25rem;
     display: flex;
-    gap: 8px;
+    gap: 0.5rem;
 }
 .gradeTap > div {
-    width: 147px;
-    height: 48px;
-    border-radius: 40px;
+    width: 9.1875rem;
+    height: 3rem;
+    border-radius: 2.5rem;
     background: rgba(255, 255, 255, 0.60);
     cursor: pointer;
-    font-size: 18px;
+    font-size: 1.125rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .upgrade_invBox{
-    width: 377px;
-    height: 425px;
-    border-radius: 40px;
+    width: 23.563rem;
+    height: 26.563rem;
+    border-radius: 2.5rem;
     background-color: rgba(255, 255, 255, 0.35);
     box-sizing: border-box;
-    padding-top: 10px;
-    margin: 15px 0 0 35px;
+    padding-top: 0.625rem;
+    margin: 0.9375rem 0 0 2.1875rem;
 }
 .mainBoxWrap {
-    margin-left: 20px;
+    margin-left: 1.25rem;
     display: flex;
     flex-direction: column;
-    padding: 15px;
+    padding: 0.9375rem;
     overflow-y: scroll;
-    width: 280px;
-    height: 380px;
+    width: 17.5rem;
+    height: 23.75rem;
 }
 .mainBoxWrap::-webkit-scrollbar {
     width: 0px;
@@ -88,16 +85,16 @@
 }
 .mainBoxWrap-invItem p {
     position: absolute;
-    top: 10px;
+    top: 0.625rem;
     left: 50%;
     transform: translateX(-50%);
     height: 80%;
-    font-weight: 600;
-    font-size: 18px;
+    font-weight: bold;
+    font-size: 1.125rem;
 }
 .upgrade-inven-content{
     background-color: #ffffff;
-    border-radius: 30px;
+    border-radius: 1.875rem;
     border: solid black 0.06rem;
     width: 4.2rem;
     height: 4rem;
@@ -105,34 +102,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 0.1875rem;
 }
 .upgrade-inven-content.selected {
     background-color: #dccd33;
     border: solid white 0.06rem;
 }
 .upgrade-inven-content-image{
-    width: 60px;
-    height: 58px;
+    width: 3.75rem;
+    height: 3.625rem;
 }
 .potBox {
     display: flex;
-    margin: 30px 20px 10px 20px;
-    width: 490px;
-    height: 380px;
+    margin: 1.875rem 1.25rem 0.625rem 1.25rem;
+    width: 30.625rem;
+    height: 23.75rem;
     background-image: url("../image/ANVIL 1.png");
     position: relative;
 }
 .potBoxItemWrap {
     position: absolute;
-    bottom: 124px;
+    bottom: 7.75rem;
     width: 75%;
-    height: 77px;
-    left: 67px;
+    height: 4.8125rem;
+    left: 4.1875rem;
     display: flex;
 }
 .potBoxItem {
-    width: 65px;
+    width: 4.063rem;
     height: 100%;
     cursor: pointer;
     display: flex;
@@ -141,7 +138,7 @@
 }
 .potBox-image{
     background-color: #FFFFFF;
-    width: 90px;
-    height: 80px;
-    margin: 90px 10px 0 293px ;
+    width: 5.625rem;
+    height: 5rem;
+    margin: 5.625rem 0.625rem 0 18.3125rem ;
 }

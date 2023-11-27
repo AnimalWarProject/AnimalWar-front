@@ -57,6 +57,13 @@ const DrawResult = () => {
                     fontWeight: 'bold',
                 });
 
+                const manyTextStyle = new PIXI.TextStyle({
+                    fill: 0x0f1828,
+                    fontSize: 12,
+                    fontFamily: 'Arial',
+                    fontWeight: 'bold',
+                });
+
                 let imagePath = `${INVImg}/animals/${item.type}/${item.imagePath}`;
                 if (item.type === 1) {
                     imagePath = `${INVImg}/buildings/${item.imagePath}`;
@@ -69,7 +76,7 @@ const DrawResult = () => {
                 imageSprite.width = 140; // 이미지 너비
                 imageSprite.height = 120; // 이미지 높이
 
-                const text = new PIXI.Text(item.name, textStyle);
+                const text = new PIXI.Text(item.name, manyTextStyle);
                 text.anchor.set(0.5);
                 text.x = x + itemWidth / 2;
                 text.y = y + itemHeight * 0.9;
