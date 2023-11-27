@@ -33,12 +33,6 @@ const UpGradeLoading = () => {
         getData();
         const canvasWidth = 960;
         const canvasHeight = 640;
-        const textStyle = new PIXI.TextStyle({
-            fill: 0x0f1828,
-            fontSize: 18,
-            fontFamily: 'Arial',
-            fontWeight: "bold",
-        });
         const app = new PIXI.Application({
             backgroundColor: 0x1099bb,
             width: canvasWidth,

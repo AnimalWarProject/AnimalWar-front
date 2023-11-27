@@ -65,6 +65,10 @@ const UpGradeResult = () => {
             result.y = background.height / 2;
             
             let images;
+            console.log(response)
+            console.log(selectedData)
+            console.log(response.upgrade + " > ")
+            console.log(selectedData.upgrade)
             if (response.upgrade > selectedData.upgrade) { // 조회한 데이터의 강화수 > location에서 받은 강화수ㅇ
                 images = [success1, success2, success3, success4, success5]; // 강화 성공
                 alert("강화성공")

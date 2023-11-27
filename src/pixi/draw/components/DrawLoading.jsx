@@ -173,7 +173,7 @@ const DrawLoading = () => {
                 app.destroy();
             };
         }
-    }, [profile, qty, nav]);
+    }, [profile]); // , qty, nav 제거
 
     return <div ref={canvasRef} className="outlet-container"></div>;
 };

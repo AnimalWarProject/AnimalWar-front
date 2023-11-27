@@ -81,8 +81,8 @@ const DrawResult = () => {
                 outResultBtn.drawRoundedRect(700, 595, outResultBtnWidth, outResultBtnHeight, 10);
                 const outResultText = new PIXI.Text('돌아가기', textStyle);
                 outResultBtn.addChild(outResultText);
-                outResultText.x = 730;
-                outResultText.y = 605;
+                outResultText.x = 715;
+                outResultText.y = 600;
                 const outResultContainer = new PIXI.Container();
                 outResultContainer.interactive = true;
                 outResultContainer.buttonMode = true;
@@ -126,10 +126,6 @@ const DrawResult = () => {
             if (item.type === 1) {
                 imagePath = `${INVImg}/buildings/${item.imagePath}`;
             }
-
-            console.log("item : " + JSON.stringify(item))
-            console.log("이름 : " + item.name + ", " + "species : " + item.type + ", " + item.name )
-            // 이미지 경로 : /public/objectImgs/animals/type(bird, dog...)/imagePath.wepp
             const texture = PIXI.Texture.from(imagePath);
             const imageSprite = new PIXI.Sprite(texture);
             imageSprite.anchor.set(0.5)
