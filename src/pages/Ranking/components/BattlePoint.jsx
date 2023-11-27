@@ -11,7 +11,7 @@ const BattlePoint = () => {
     const [data, setData] = useState([]);
     const getData = () =>
 
-        axios.get("http://localhost:8000/api/v1/rank/byBattlePoint").then((response) => {
+        axios.get("http://192.168.0.44:8000/api/v1/rank/byBattlePoint").then((response) => {
             console.log(response.data);
             setData(response.data);
         });
@@ -31,7 +31,7 @@ const BattlePoint = () => {
 
             <div className="userList">
                 {data.map((el, index) => (
-                    <p className="power__title">{index + 1}. {el.nickName}</p>
+                    <p className="battlePoint__user">{index + 1}. {el.nickName}</p>
                 ))}
             </div>
 

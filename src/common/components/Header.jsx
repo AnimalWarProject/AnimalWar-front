@@ -101,7 +101,7 @@ function Header() {
                     <NavLink to="/board" activeClassName="active">
                         게시판
                     </NavLink>
-                    <NavLink to="/board" activeClassName="active">
+                    <NavLink to="/" activeClassName="active">
                         게임소개
                     </NavLink>
                 </div>
@@ -117,13 +117,6 @@ function Header() {
                         <img className="search-icon" src={searchImage} alt="Search" />
                     </button>
                 </div>
-
-                {searchedUser && (
-                    <div className="searched-user-info">
-                        <img src={searchedUser.profileImage || 'default-user-profile-path'} alt="Searched User" />
-                        <span>{searchedUser.nickName || 'Unknown'}</span>
-                    </div>
-                )}
             </div>
             <div className="profile-section">
                 <img

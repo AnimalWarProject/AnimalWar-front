@@ -11,6 +11,12 @@
     color: #fff;
     align-items: center;
     border-radius: 0.5rem;
+
+    -ms-user-select: none;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .profile-item,

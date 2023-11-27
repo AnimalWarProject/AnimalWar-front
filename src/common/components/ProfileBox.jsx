@@ -61,7 +61,7 @@ const ProfileBox = () => {
             default:
                 return { icon: 'Default', text: '알 수 없음' };
         }
-    }
+    };
 
     const getLandFormIcon = (landForm) => {
         switch (landForm) {
@@ -105,7 +105,6 @@ const ProfileBox = () => {
                     <img src={icons.Life} alt="Life" />
                     <span>{profile.life}</span>
                 </div>
-
             </div>
             <div className="rate-item">
                 <img src={icons.Rate} alt="ratePerHour" />

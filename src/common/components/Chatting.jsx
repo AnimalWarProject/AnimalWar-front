@@ -7,6 +7,7 @@ import axios from 'axios';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import randomColor from 'random-color';
+import {colors} from "@mui/material";
 
 const Chatting = () => {
     const [inputText, setInputText] = useState('');
@@ -15,63 +16,28 @@ const Chatting = () => {
     const wrapRef = useRef();
     const [nickName, setNickName] = useState('GUEST');
     const [profileImage, setProfileImage] = useState('');
-    const [showMessage, setShowMessage] = useState('');
     const [stompClient, setStompClient] = useState(null);
     const [greetings, setGreetings] = useState([]);
-    const [userColor, serUserColor] = useState('yellow');
+    const [UUID, setUUID] = useState('')
     const scrollRef = useRef();
+    const [uuidColors, setUuidColors] = useState({});
 
-    useEffect(() => {
-        const accessToken = localStorage.getItem('accessToken');
 
-        axios
-            .get('http://localhost:8000/api/v1/user', {
-                headers: {
-                    ContentType: 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            })
-            .then((res) => {
-                setNickName(res.data.nickName);
-                setProfileImage(res.data.profileImage);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-
-        const socket = new SockJS('http://localhost:8082/stomp-endpoint'); // #1 socket열기(server와 연결) // npm install stompjs
-        const stomp = Stomp.over(socket); // STOMP 클라이언트를 통해 STOMP 프로토콜을 사용하여 메시지를 전송 및 수신
-
-        stomp.connect({}, (frame) => {
-            setStompClient(stomp);
-            console.log('Connected: ' + frame); // STOMP 클라이언트를 서버와 연결하고, 연결에 성공하면 콜백 함수를 실행.. {}는 헤더(연결에 대한 추가 설정)
-
-            // #2'/topic/greetings'을 구독
-            stomp.subscribe('/topic/greetings', (greeting) => {
-                // 메시지를 파싱하고 표시
-                const parseMessage = JSON.parse(greeting.body);
-                setGreetings((prevState) => [...prevState, parseMessage]);
-            });
-        });
-
-        // 컴포넌트가 언마운트될 때 WebSocket 연결 해제
-        return () => {
-            if (stompClient !== null) {
-                stompClient.disconnect();
-            }
-        };
-    }, []);
 
     // Feat : 채팅에 유저마다 닉네임 색깔 지정
-    function getRandomColor(nickName) {
-        // nickName을 기반으로 고유한 색상 생성
-        const seed = parseInt(nickName, 36); // userId를 36진수로 파싱
-        return randomColor(seed).hexString(); // 색상을 반환
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 
     // Feat : 메시지 보내기
     const sendName = () => {
         const obj = {
+            uuid: UUID,
             nickname: nickName,
             content: inputText,
         };
@@ -120,6 +86,58 @@ const Chatting = () => {
         }
     };
 
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken');
+
+        axios
+            .get('http://localhost:8000/api/v1/user', {
+                headers: {
+                    ContentType: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            })
+            .then((res) => {
+                setUUID(res.data.uuid);
+                setNickName(res.data.nickName);
+                setProfileImage(res.data.profileImage);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        const socket = new SockJS('http://localhost:8082/stomp-endpoint'); // #1 socket열기(server와 연결) // npm install stompjs
+        const stomp = Stomp.over(socket); // STOMP 클라이언트를 통해 STOMP 프로토콜을 사용하여 메시지를 전송 및 수신
+
+        stomp.connect({}, (frame) => {
+            setStompClient(stomp);
+            console.log('Connected: ' + frame); // STOMP 클라이언트를 서버와 연결하고, 연결에 성공하면 콜백 함수를 실행.. {}는 헤더(연결에 대한 추가 설정)
+
+            // #2'/topic/greetings'을 구독
+            stomp.subscribe('/topic/greetings', (greeting) => {
+                // 메시지를 파싱하고 표시
+                const parseMessage = JSON.parse(greeting.body);
+                // uuid별 랜덤 색상 부여
+                setUuidColors((prevColors) => ({
+                    ...prevColors,
+                    [parseMessage.uuid]: prevColors[parseMessage.uuid] || getRandomColor(), // 현재 도착한 채팅 메시지의 UUID에 이미 부여된 색이 있다면 그 값을 사용하고, 없다면 새로운 색상 부여..
+                }));
+                setGreetings((prevState) => [...prevState, parseMessage]);
+            });
+        });
+
+        // 컴포넌트가 언마운트될 때 WebSocket 연결 해제
+        return () => {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+        };
+    }, []);
+
+
+
+
+
     return (
         <section className={classes.Wrap} ref={wrapRef}>
             <div className={classes.box}>
@@ -128,13 +146,12 @@ const Chatting = () => {
                     <div className={classes.message_title}>GOOD CHATTING PLZ!</div>
 
                     {greetings.map((item, idx) => (
-                        <div key={idx} className={classes.message_container}>
-                            <img
-                                style={{  width: '50px', height: '50px', objectFit: 'cover'}}
-                                className={classes.profileImg}
+                        <div key={idx} className={`${classes.message_container} ${item.uuid === UUID ? classes.myMessage : ''}`}>
+                            <img className={classes.profileImg}
+                                // style={{  width: '50px', height: '50px', objectFit: 'cover'}}
                                 src={profileImage}
                             />
-                            <div className={classes.profileNickname}>{item.nickname}</div>
+                            <div className={classes.profileNickname} style={{color: uuidColors[item.uuid]} }>{item.nickname}</div>
                             <div className={classes.messageRecord}>{item.message}</div>
                         </div>
                     ))}

@@ -12,6 +12,7 @@ import { Spine } from 'pixi-spine';
 import '@pixi-spine/loader-3.8';
 
 const Terrain = () => {
+    const appRef = useRef(null);
     const canvasRef = useRef(null);
     const magicianRef = useRef(null);
     const [resources, setResources] = useState({
@@ -42,19 +43,52 @@ const Terrain = () => {
         fetchUserData();
     }, []);
 
+    // 마법사 애니메이션
+
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
 
-        const app = new PIXI.Application({
-            background: '#1099bb',
-            width: canvasWidth,
-            height: canvasHeight,
-        });
+        if (!appRef.current) {
+            const app = new PIXI.Application({
+                background: '#1099bb',
+                width: canvasWidth,
+                height: canvasHeight,
+            });
 
-        if (canvasRef.current) {
-            canvasRef.current.appendChild(app.view);
+            if (canvasRef.current) {
+                canvasRef.current.appendChild(app.view);
+            }
+            appRef.current = app;
+
+            return () => {
+                // 자산 언로드
+                Assets.unload('magician');
+                Assets.unload('magicianAtlas');
+
+                // 마법사 객체가 존재하면 파괴
+                if (magicianRef.current) {
+                    try {
+                        magicianRef.current.destroy();
+                        magicianRef.current = null; // 참조 초기화
+                    } catch (error) {
+                        console.error('마법사 객체 파괴 중 오류 발생:', error);
+                    }
+                }
+
+                // PIXI 애플리케이션 파괴
+                app.destroy(true, {
+                    children: true, // 자식 파괴
+                    texture: true, // 텍스처 파괴
+                    baseTexture: true, // 베이스 텍스처 파괴
+                });
+            };
         }
+    }, []);
+
+    useEffect(() => {
+        const canvasWidth = 960;
+        const canvasHeight = 640;
 
         function explodePow(x, y) {
             const texture = PIXI.Texture.from(powImage);
@@ -64,7 +98,7 @@ const Terrain = () => {
             pow.y = 300;
             pow.scale.set(0.1);
             pow.alpha = 1;
-            app.stage.addChild(pow);
+            appRef.current.stage.addChild(pow);
 
             const explodeAnimation = () => {
                 if (pow.alpha > 0) {
@@ -72,19 +106,19 @@ const Terrain = () => {
                     pow.scale.y += 0.1;
                     pow.alpha -= 0.05;
                 } else {
-                    app.stage.removeChild(pow);
-                    app.ticker.remove(explodeAnimation);
+                    appRef.current.stage.removeChild(pow);
+                    appRef.current.ticker.remove(explodeAnimation);
                 }
             };
 
-            app.ticker.add(explodeAnimation);
+            appRef.current.ticker.add(explodeAnimation);
         }
 
         //배경이미지
         const background = PIXI.Sprite.from(terrainBackground);
-        background.width = app.screen.width;
-        background.height = app.screen.height;
-        app.stage.addChild(background);
+        background.width = appRef.current.screen.width;
+        background.height = appRef.current.screen.height;
+        appRef.current.stage.addChild(background);
 
         //배경안 회색틀
         const largeBox = new PIXI.Graphics();
@@ -92,41 +126,13 @@ const Terrain = () => {
         const largeBoxWidth = canvasWidth * 0.85;
         const largeBoxHeight = canvasHeight * 0.85;
         largeBox.drawRoundedRect(62, 40, largeBoxWidth, largeBoxHeight, 40);
-        app.stage.addChild(largeBox);
-
-        // 마법사 애니메이션
-
-        async function loadSpineAnimation() {
-            try {
-                Assets.add({ alias: 'magician', src: '../terrainAni/Magician.json' });
-
-                Assets.add({ alias: 'magicianAtlas', src: '../terrainAni/Magician.atlas' });
-
-                const resources = await Assets.load('magician');
-
-                const magician = new Spine(resources.spineData);
-
-                magician.x = 135;
-                magician.y = 150;
-                magician.scale.x = 0.5;
-                magician.scale.y = 0.5;
-                magician.state.setAnimation(0, 'Normal', true);
-                magician.state.timeScale = 0.5;
-                magician.autoUpdate = true;
-                app.stage.addChild(magician);
-                magicianRef.current = magician;
-            } catch (error) {
-                console.error('Spine 애니메이션 로드 중 오류 발생:', error);
-            }
-        }
-
-        loadSpineAnimation();
+        appRef.current.stage.addChild(largeBox);
 
         // 우측 ui박스
         const uiContainer = new PIXI.Container();
-        uiContainer.x = app.screen.width - 500; // UI 컨테이너의 x 위치
+        uiContainer.x = appRef.current.screen.width - 500; // UI 컨테이너의 x 위치
         uiContainer.y = 120; // UI 컨테이너의 y 위치
-        app.stage.addChild(uiContainer);
+        appRef.current.stage.addChild(uiContainer);
 
         // UI 배경
         const uiBackground = new PIXI.Graphics();
@@ -137,9 +143,9 @@ const Terrain = () => {
 
         // 골드 박스
         const goldContainer = new PIXI.Container();
-        goldContainer.x = app.screen.width - 500; // UI 컨테이너의 x 위치
+        goldContainer.x = appRef.current.screen.width - 500; // UI 컨테이너의 x 위치
         goldContainer.y = 60; // UI 컨테이너의 y 위치
-        app.stage.addChild(goldContainer);
+        appRef.current.stage.addChild(goldContainer);
 
         // 골드박스 배경
         const goldBackground = new PIXI.Graphics();
@@ -156,18 +162,6 @@ const Terrain = () => {
         gold.scale.x = 0.25;
         gold.scale.y = 0.25;
         goldContainer.addChild(gold);
-
-        // 골드 텍스트
-        const style = new PIXI.TextStyle({
-            fontFamily: 'Arial',
-            fontSize: 20,
-            fill: 'black',
-        });
-
-        const goldText = new PIXI.Text(`${resources.gold}`, style);
-        goldText.x = 100;
-        goldText.y = 15;
-        goldContainer.addChild(goldText);
 
         //육지 박스
         const landPillBox = new PIXI.Graphics();
@@ -275,26 +269,40 @@ const Terrain = () => {
         uiContainer.addChild(mountainBorderBox);
         mountainBorderBox.addChild(mountainText);
 
-        // 수량 텍스트 설정
-        const QuantityTextStyle = { fontFamily: 'Arial', fontSize: 20, fill: 'black' };
+        async function loadSpineAnimation() {
+            try {
+                if (!Assets.resolver.hasKey('magician')) {
+                    Assets.add({ alias: 'magician', src: '../terrainAni/Magician.json' });
+                }
 
-        // 육지 수량 텍스트
-        const landQtyText = new PIXI.Text(`${resources.land} 칸`, QuantityTextStyle);
-        landQtyText.x = 277;
-        landQtyText.y = 72;
-        uiContainer.addChild(landQtyText);
+                if (!Assets.resolver.hasKey('magicianAtlas')) {
+                    Assets.add({ alias: 'magicianAtlas', src: '../terrainAni/Magician.atlas' });
+                }
 
-        // 바다 수량 텍스트
-        const seaQtyText = new PIXI.Text(`${resources.sea} 칸`, QuantityTextStyle);
-        seaQtyText.x = 277;
-        seaQtyText.y = 182;
-        uiContainer.addChild(seaQtyText);
+                const resources = await Assets.load('magician');
 
-        // 산 수량 텍스트
-        const mountainQtyText = new PIXI.Text(`${resources.mountain} 칸`, QuantityTextStyle);
-        mountainQtyText.x = 277;
-        mountainQtyText.y = 292;
-        uiContainer.addChild(mountainQtyText);
+                if (!resources || !resources.spineData) {
+                    console.error('Resources or spineData is null');
+                    return;
+                }
+
+                const magician = new Spine(resources.spineData);
+
+                magician.x = 135;
+                magician.y = 150;
+                magician.scale.x = 0.5;
+                magician.scale.y = 0.5;
+                magician.state.setAnimation(0, 'Normal', true);
+                magician.state.timeScale = 0.5;
+                magician.autoUpdate = true;
+                appRef.current.stage.addChild(magician);
+                magicianRef.current = magician;
+            } catch (error) {
+                console.error('Spine 애니메이션 로드 중 오류 발생:', error);
+            }
+        }
+
+        loadSpineAnimation();
 
         // 재분배하기 버튼
         const terrainButton = new PIXI.Graphics();
@@ -303,6 +311,22 @@ const Terrain = () => {
         terrainButton.endFill();
         terrainButton.interactive = true;
         terrainButton.buttonMode = true;
+
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 20,
+            fill: 'black',
+        });
+
+        // 재분배하기 버튼 텍스트
+        const buttonText = new PIXI.Text('재분배하기', style);
+        buttonText.anchor.set(0.5); // 텍스트의 앵커를 중앙으로 설정
+        buttonText.x = terrainButton.width / 2 + 73; // 버튼의 중앙에 위치시키기
+        buttonText.y = terrainButton.height / 2 + 372;
+
+        // 컨테이너에 버튼과 텍스트 추가
+        uiContainer.addChild(terrainButton);
+        uiContainer.addChild(buttonText);
         terrainButton.on('pointerdown', async () => {
             try {
                 const accessToken = localStorage.getItem('accessToken');
@@ -319,35 +343,83 @@ const Terrain = () => {
                 }));
                 console.log(response);
 
-                // magicianRef.current가 null인지 확인 후 호출
-                if (magicianRef.current) {
-                    magicianRef.current.state.setAnimation(0, 'Terrain', false);
-                    magicianRef.current.state.addAnimation(0, 'Terrain', false, 0);
-                    explodePow(terrainButton.x + terrainButton.width / 2, terrainButton.y - terrainButton.height / 2);
-                    magicianRef.current.state.addAnimation(0, 'Normal', true, 0);
-                }
+                magicianRef.current.state.setAnimation(0, 'Terrain', false);
+                explodePow(terrainButton.x + terrainButton.width / 2, terrainButton.y - terrainButton.height / 2);
+                magicianRef.current.state.addAnimation(0, 'Normal', true, 0);
             } catch (error) {
-                // magicianRef.current가 null인지 확인 후 호출
-                if (magicianRef.current) {
-                    magicianRef.current.state.setAnimation(0, 'Terrain', false);
-                    magicianRef.current.state.addAnimation(0, 'Terrain', false, 0);
-                    explodePow(terrainButton.x + terrainButton.width / 2, terrainButton.y - terrainButton.height / 2);
-                    magicianRef.current.state.addAnimation(0, 'Normal', true, 0);
-                }
                 console.error('Failed to redistribute:', error);
             }
         });
-
-        uiContainer.addChild(terrainButton);
-        // 재분배하기 버튼 텍스트
-        const buttonText = new PIXI.Text('재분배하기', style);
-        buttonText.x = terrainButton.width / 2 - buttonText.width / 2 + 72;
-        buttonText.y = terrainButton.height / 2 - buttonText.height / 2 + 373;
-        uiContainer.addChild(buttonText);
+        Assets.unload('magician');
+        Assets.unload('magicianAtlas');
 
         return () => {
-            app.destroy(true, true);
+            // 자산 언로드
+            Assets.unload('magician');
+            Assets.unload('magicianAtlas');
+
+            // 마법사 객체가 존재하면 파괴
+            if (magicianRef.current) {
+                try {
+                    magicianRef.current.destroy();
+                    magicianRef.current = null; // 참조 초기화
+                } catch (error) {
+                    console.error('마법사 객체 파괴 중 오류 발생:', error);
+                }
+            }
         };
+    }, [resources]);
+
+    useEffect(() => {
+        const QuantityTextStyle = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 20,
+            fill: 'black',
+        });
+
+        //골드양 텍스트
+        const existingGoldText = appRef.current.stage.getChildByName('goldText');
+        if (existingGoldText) {
+            appRef.current.stage.removeChild(existingGoldText);
+        }
+        const goldText = new PIXI.Text(`${resources.gold}`, QuantityTextStyle);
+        goldText.name = 'goldText';
+        goldText.x = 550;
+        goldText.y = 75;
+        appRef.current.stage.addChild(goldText);
+
+        // 육지 수량 텍스트
+        const existingLandText = appRef.current.stage.getChildByName('landQtyText');
+        if (existingLandText) {
+            appRef.current.stage.removeChild(existingLandText);
+        }
+        const landQtyText = new PIXI.Text(`${resources.land} 칸`, QuantityTextStyle);
+        landQtyText.name = 'landQtyText';
+        landQtyText.x = 725;
+        landQtyText.y = 193;
+        appRef.current.stage.addChild(landQtyText);
+
+        // 바다 수량 텍스트
+        const existingSeaText = appRef.current.stage.getChildByName('seaQtyText');
+        if (existingSeaText) {
+            appRef.current.stage.removeChild(existingSeaText);
+        }
+        const seaQtyText = new PIXI.Text(`${resources.sea} 칸`, QuantityTextStyle);
+        seaQtyText.name = 'seaQtyText';
+        seaQtyText.x = 725;
+        seaQtyText.y = 303;
+        appRef.current.stage.addChild(seaQtyText);
+
+        // 산 수량 텍스트
+        const existingMountainText = appRef.current.stage.getChildByName('mountainQtyText');
+        if (existingMountainText) {
+            appRef.current.stage.removeChild(existingMountainText);
+        }
+        const mountainQtyText = new PIXI.Text(`${resources.mountain} 칸`, QuantityTextStyle);
+        mountainQtyText.name = 'mountainQtyText';
+        mountainQtyText.x = 725;
+        mountainQtyText.y = 413;
+        appRef.current.stage.addChild(mountainQtyText);
     }, [resources]);
 
     return <div ref={canvasRef} className="outlet-container"></div>;

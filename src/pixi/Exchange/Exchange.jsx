@@ -17,10 +17,10 @@ const Exchange = () => {
     const canvasRef = useRef(null);
     const canvasWidth = 960;
     const canvasHeight = 640;
-    const [wood, setWood] = useState();
-    const [iron, setIron] = useState();
-    const [food, setFood] = useState();
-    const [gold, setGold] = useState();
+    const [wood, setWood] = useState("");
+    const [iron, setIron] = useState("");
+    const [food, setFood] = useState("");
+    const [gold, setGold] = useState("");
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const token = 'Bearer ' + localStorage.getItem('accessToken');
@@ -31,7 +31,7 @@ const Exchange = () => {
             const { data: user } = await api('/api/v1/user', 'GET', null, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
-
+            console.log(user);
             setWood(user.wood);
             setIron(user.iron);
             setFood(user.food);
@@ -61,8 +61,9 @@ const Exchange = () => {
     useEffect(() => {
         if (!isDataLoaded) { //  지속적으로 호출해서 수정
             getTokenData();
-            setIsDataLoaded(true)
         }
+
+
         if (isDataLoaded) {
             const app = new PIXI.Application({
                 width: canvasWidth,
