@@ -9,7 +9,7 @@ const Power = () => {
     const [data, setData] = useState([]);
     const getData = () =>
 
-        axios.get("http://localhost:8000/api/v1/rank/byPower").then((response) => {
+        axios.get("http://192.168.0.44:8000/api/v1/rank/byPower").then((response) => {
             console.log(response.data);
             setData(response.data);
         });

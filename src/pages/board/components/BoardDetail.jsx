@@ -72,7 +72,7 @@ const BoardDetail = () => {
         const accessToken = localStorage.getItem('accessToken');
 
 
-        axios.post(`http://localhost:8000/api/v1/post/search/${id}`, {
+        axios.post(`http://192.168.0.44:8000/api/v1/post/search/${id}`, {
             content: review,
             profileImage: profile.profileImage
         }, {
@@ -94,7 +94,7 @@ const BoardDetail = () => {
         const accessToken = localStorage.getItem('accessToken');
 
         console.log(reviewId)
-        axios.post(`http://localhost:8000/api/v1/post/reply/${reviewId}`, {
+        axios.post(`http://192.168.0.44:8000/api/v1/post/reply/${reviewId}`, {
             content: reply,
             profileImage: profile.profileImage
         }, {

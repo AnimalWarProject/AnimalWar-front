@@ -25,7 +25,7 @@ const Board = () => {
         //     console.log(res)
         // });
 
-        axios.get('http://localhost:8000/api/v1/post', {
+        axios.get('http://192.168.0.44:8000/api/v1/post', {
             params: { page: page, content: keyward }
         }).then((resp) => {
             console.log(resp)
@@ -93,7 +93,7 @@ const Board = () => {
                     {postData.map((el, index) => (
 
                         <tr
-                            onClick={() => window.location.href = 'http://localhost:3000/boardDetail?id=' + `${el.postId}`}
+                            onClick={() => window.location.href = 'http://192.168.0.44:3000/boardDetail?id=' + `${el.postId}`}
                             key={index}
                             style={{ cursor: "pointer" }}>
                             <td className="tg-j61v">{el.postId}</td>
