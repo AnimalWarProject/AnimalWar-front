@@ -17,7 +17,7 @@ function UserInfo() {
             setUser(userFromSearch);
             sessionStorage.setItem('userInfo', JSON.stringify(userFromSearch));
         }
-    }, [location.state]);
+    }, [location.state, user]);
 
     console.log(location);
 

@@ -45,6 +45,16 @@ const Place = ({ userUUID }) => {
     const saveButtonTexture = PIXI.Texture.from(SaveButtonImage);
     const itemsPerPage = 4;
 
+    const font = new FontFace('DNFForgedBlade', "url('//cdn.df.nexon.com/img/common/font/DNFForgedBlade-Light.otf')");
+
+    font.load()
+        .then(function (loadedFont) {
+            document.fonts.add(loadedFont);
+        })
+        .catch(function (error) {
+            console.error('폰트 로딩에 실패했습니다.');
+        });
+
     const calculateMinIsoValues = (tileData, tileSize) => {
         return tileData.reduce(
             (minVals, data) => {
@@ -618,6 +628,7 @@ const Place = ({ userUUID }) => {
                 const nameText = new PIXI.Text(nameTextContent, {
                     fill: 0x000000,
                     fontSize: 18,
+                    fontFamily: 'DNFForgedBlade',
                 });
                 nameText.x = initialX + 100;
                 nameText.y = initialY + (index - startIndex) * yOffset + 15;
@@ -626,6 +637,7 @@ const Place = ({ userUUID }) => {
                 const quantityText = new PIXI.Text(quantityTextContent, {
                     fill: 0x000000,
                     fontSize: 16,
+                    fontFamily: 'DNFForgedBlade',
                 });
                 quantityText.x = initialX + 100;
                 quantityText.y = initialY + (index - startIndex) * yOffset + 45;
@@ -878,9 +890,13 @@ const Place = ({ userUUID }) => {
                 animalTabBox.current.interactive = true;
                 animalTabBox.current.visible = isEditMode;
                 animalTabBox.current.buttonMode = true;
-                const animalText = new PIXI.Text('동물', { fill: 0x000000, fontSize: 24 });
+                const animalText = new PIXI.Text('동물', {
+                    fill: 0x000000,
+                    fontSize: 24,
+                    fontFamily: 'DNFForgedBlade',
+                });
                 animalText.x = 710;
-                animalText.y = 35;
+                animalText.y = 33;
                 animalText.visible = isEditMode;
                 animalTabBox.current.addChild(animalText);
                 animalTabBox.current.on('pointerdown', (event) => {
@@ -896,9 +912,13 @@ const Place = ({ userUUID }) => {
                 buildingTabBox.current.interactive = true;
                 buildingTabBox.current.buttonMode = true;
                 buildingTabBox.current.visible = isEditMode;
-                const buildingText = new PIXI.Text('건물', { fill: 0x000000, fontSize: 24 });
+                const buildingText = new PIXI.Text('건물', {
+                    fill: 0x000000,
+                    fontSize: 24,
+                    fontFamily: 'DNFForgedBlade',
+                });
                 buildingText.x = 860;
-                buildingText.y = 35;
+                buildingText.y = 33;
                 buildingText.visible = isEditMode;
                 buildingTabBox.current.addChild(buildingText);
                 buildingTabBox.current.on('pointerdown', (event) => {
