@@ -81,7 +81,7 @@
     border-radius: 0.75rem;
     position: relative;
     z-index: 1;
-    background-size: 1024px 1024px;
+    background-size: 1360px 1360px;
     background-repeat: no-repeat;
     animation: slideImage 10s infinite alternate;
 }

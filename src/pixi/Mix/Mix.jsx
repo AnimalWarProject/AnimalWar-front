@@ -4,40 +4,105 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import { DebugUtils } from 'pixi-spine';
+import { tab } from '@testing-library/user-event/dist/tab';
 
 const Mix = () => {
-    const [data, setData] = useState([]);
-    const [initialOwnedQuantity, setInitialOwnedQuantity] = useState([]); // ownedQuantity을 초기화 해주기 위해서
-    const [selectedAnimal, setSelectedAnimal] = useState([]);
+    const [allData, setAllData] = useState({ animals: [], buildings: [] });
+    const [displayedData, setDisplayedData] = useState([]);
+    const [selectedType, setSelectedType] = useState(null);
+    const [selectedItems, setSelectedItems] = useState([]);
     const [englishGrade, setEnglishGrade] = useState('NORMAL');
     const [entityType, setEntityType] = useState('animals');
     const [gradeTap, setGradeTap] = useState(['노말', '레어', '슈퍼레어', '유니크', '레전드']);
     const navigate = useNavigate();
 
-    const getData = async () => {
+    // 데이터를 한 번에 불러오고 필터링하는 함수
+    const loadData = async () => {
         try {
             const accessToken = localStorage.getItem('accessToken');
-            const { data: INVdata } = await api(
-                `/api/v1/inventory/${entityType}/grade?grade=${englishGrade}`,
-                'GET',
-                null,
-                {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                }
-            );
-            setData(INVdata);
-            setInitialOwnedQuantity(INVdata.map((item) => item.ownedQuantity)); // 초기값 : 가지고 있는 동물 수
+
+            const animalsResponse = await api('/api/v1/inventory/animals', 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+
+            const buildingsResponse = await api('/api/v1/inventory/buildings', 'GET', null, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            // 동물 데이터에 mixableQuantity 추가
+            const updatedAnimals = animalsResponse.data.map((item) => ({
+                ...item,
+                mixableQuantity: Math.max(item.ownedQuantity - 1 - item.placedQuantity, 0),
+            }));
+            // 건물 데이터에 mixableQuantity 추가
+            const updatedBuildings = buildingsResponse.data.map((item) => ({
+                ...item,
+                mixableQuantity: Math.max(item.ownedQuantity - 1 - item.placedQuantity, 0),
+            }));
+
+            setAllData({
+                animals: updatedAnimals,
+                buildings: updatedBuildings,
+            });
+
+            filterData('animals', 'NORMAL');
         } catch (error) {
-            console.error('Failed to fetch user profile:', error);
+            console.error('Failed to fetch data:', error);
         }
     };
 
+    // 필터링 로직
+    const filterData = (entityType, grade) => {
+        const newData = allData[entityType].filter((item) => {
+            const itemGrade = item.animal ? item.animal.grade : item.building ? item.building.grade : null;
+            return item.mixableQuantity > 0 && itemGrade && itemGrade.toUpperCase() === grade.toUpperCase();
+        });
+        setDisplayedData(newData);
+    };
+
+    const mapGradeToEnglish = (grade) => {
+        const gradeMapping = {
+            노말: 'NORMAL',
+            레어: 'RARE',
+            슈퍼레어: 'SUPERRARE',
+            유니크: 'UNIQUE',
+            레전드: 'LEGEND',
+        };
+        return gradeMapping[grade] || 'NORMAL';
+    };
+
+    // 탭 변경 핸들러
+    const entityTypeHandler = (type) => {
+        setEntityType(type);
+        filterData(type, englishGrade);
+    };
+
+    const gradeHandler = (grade) => {
+        const englishGrade = mapGradeToEnglish(grade);
+        setEnglishGrade(englishGrade);
+        filterData(entityType, englishGrade);
+    };
+
+    // Feat : imgUrl 저장
+    const getImgUrl = (item) => {
+        if (entityType === 'animals' && item.animal) {
+            // 동물 이미지 URL 생성
+            return `${process.env.PUBLIC_URL}/objectImgs/${entityType}/${item.animal.species}/${item.animal.imagePath}`;
+        } else if (entityType === 'buildings' && item.building) {
+            // 건물 이미지 URL 생성
+            return `${process.env.PUBLIC_URL}/objectImgs/buildings/${item.building.imagePath}`;
+        } else {
+            return 'defaultImagePathOrLoadingIndicator';
+        }
+    };
+
+    // 합성 시작 핸들러
     const goToMixStartHandler = () => {
         const accessToken = localStorage.getItem('accessToken');
         const modifiedEntityType = entityType.slice(0, -1).toUpperCase(); // 맨 마지막 -s를 빼고 대문자로 변환
 
-        const selectedArr = selectedAnimal.map((selectedData) =>
-            modifiedEntityType == 'ANIMAL' ? selectedData.data.animal.animalId : selectedData.data.building.buildingId
+        // selectedItems 배열에서 필요한 ID 추출
+        const selectedArr = selectedItems.map((selectedData) =>
+            modifiedEntityType === 'ANIMAL' ? selectedData.animal.animalId : selectedData.building.buildingId
         );
 
         api(
@@ -67,117 +132,98 @@ const Mix = () => {
                 console.log(err);
             });
     };
-
-    // Feat : 동물/건물 탭
-    const goToEntityType = (entityType) => {
-        setEntityType(entityType);
-    };
-
-    // Feat : 등급 탭
-    const gradeHandler = (e) => {
-        switch (e) {
-            case '노말':
-                setEnglishGrade('NORMAL');
-                // 항아리 리셋
-                break;
-            case '레어':
-                setEnglishGrade('RARE');
-                break;
-            case '슈퍼레어':
-                setEnglishGrade('SUPERRARE');
-                break;
-            case '유니크':
-                setEnglishGrade('UNIQUE');
-                break;
-            case '레전드':
-                setEnglishGrade('LEGEND');
-                break;
-            default:
-                setEnglishGrade('NORMAL');
-                break;
-        }
-    };
-
-    // Feat : imgUrl 저장
-    const getImgUrl = (item) => {
-        return entityType === 'animals'
-            ? `${process.env.PUBLIC_URL}/objectImgs/${entityType}/${item.animal.species}/${item.animal.imagePath}`
-            : `${process.env.PUBLIC_URL}/objectImgs/${entityType}/${item.building.imagePath}`;
-    };
-
-    // Feat : 선택한 동물 항아리에 넣기
+    // 항아리에 아이템 넣기 핸들러
     const getPotHandler = (idx, imgUrl) => {
-        if (data[idx].ownedQuantity !== 0 && selectedAnimal.length < 4) {
-            // TODO 클릭하면 count -1하고 그 값을 저장
-            data[idx].ownedQuantity = data[idx].ownedQuantity - 1;
-            // 선택한 동물 전체 데이터 저장
-            setSelectedAnimal((prevAnimal) => {
-                const updatedAnimal = [...prevAnimal, { data: data[idx], imgUrl }]; // 클릭한 동물을 바로 업데이트하기 위해서 updatedAnimal에 배열을 로깅해서 사용
-                return updatedAnimal;
-            });
+        if (selectedItems.length >= 4) {
+            alert('항아리에는 최대 4개의 아이템만 넣을 수 있습니다.');
+            return;
+        }
+
+        const item = displayedData[idx];
+        const itemType = item.animal ? 'ANIMAL' : 'BUILDING';
+
+        // 첫 번째 아이템 선택 또는 동일한 유형의 아이템 선택인 경우
+        if (!selectedType || selectedType === itemType) {
+            if (item.mixableQuantity > 0) {
+                setSelectedItems((prevItems) => [...prevItems, { ...item, imgUrl }]);
+                setSelectedType(itemType);
+
+                // allData 업데이트
+                const updatedAllData = { ...allData };
+                updatedAllData[entityType] = updatedAllData[entityType].map((dataItem, dataIdx) => {
+                    if (dataItem === item) {
+                        return { ...dataItem, mixableQuantity: dataItem.mixableQuantity - 1 };
+                    }
+                    return dataItem;
+                });
+                setAllData(updatedAllData);
+            } else {
+                alert('이 아이템은 항아리에 넣을 수 없습니다.');
+            }
+        } else {
+            alert(`이미 ${selectedType === 'ANIMAL' ? '동물' : '건물'}이 선택되었습니다.`);
         }
     };
 
+    // 항아리 초기화 핸들러
     const deletePotHandler = () => {
-        setSelectedAnimal([]); // 선택된 동물 초기화
-        const updatedData = data.map((item, idx) => ({
-            // ownedQuantity 초기화
-            ...item,
-            ownedQuantity: initialOwnedQuantity[idx],
-        }));
-        setData(updatedData);
+        setSelectedItems([]);
+        setSelectedType(null);
+        loadData();
     };
 
     useEffect(() => {
-        getData();
-    }, [entityType, englishGrade]);
+        loadData();
+    }, []);
+
+    useEffect(() => {
+        filterData(entityType, englishGrade);
+    }, [allData, entityType, englishGrade]);
 
     return (
         <div className="outlet-container" style={{ width: '960px', height: '640px', borderRadius: '0.5rem' }}>
             <div className={classes.warpBox}>
                 <div className={classes.innerBox}>
                     <div className={classes.activeTap}>
-                        <div onClick={() => goToEntityType('animals')}>
+                        <div onClick={() => entityTypeHandler('animals')}>
                             <p>동물</p>
                         </div>
-                        <div onClick={() => goToEntityType('buildings')}>
+                        <div onClick={() => entityTypeHandler('buildings')}>
                             <p>건물</p>
                         </div>
                     </div>
                     <div
                         className={classes.btn}
-                        onClick={selectedAnimal.length === 4 ? () => goToMixStartHandler() : null}
+                        onClick={selectedItems.length === 4 ? () => goToMixStartHandler() : null}
                     >
                         <div>
                             <p>합성하기</p>
                         </div>
                     </div>
-                    <div className={classes.gradeTap} onClick={() => deletePotHandler()}>
-                        {/* Feat : 등급별 조회*/}
+                    <div className={classes.gradeTap}>
                         {gradeTap.map((item, idx) => (
-                            <div key={idx}>
-                                <div onClick={() => gradeHandler(item)}>{item}</div>
+                            <div key={idx} onClick={() => gradeHandler(item)}>
+                                <p>{item}</p>
                             </div>
                         ))}
                     </div>
                     <div className={classes.mainBoxWrap}>
                         <div className={classes.invBox}>
-                            {data.map((item, idx) => (
-                                // Feat : 인벤토리 보여주기
+                            {displayedData.map((item, idx) => (
                                 <div
                                     key={idx}
                                     className={classes.invItem}
                                     onClick={() => getPotHandler(idx, getImgUrl(item))}
                                 >
-                                    <p>{item.ownedQuantity}</p>
-                                    <img src={getImgUrl(item)} />
+                                    <p>{item.mixableQuantity}</p>
+                                    <img src={getImgUrl(item)} alt={`item-${idx}`} />
                                 </div>
                             ))}
                         </div>
 
                         <div className={classes.potBox} onClick={() => deletePotHandler()}>
                             <div className={classes.potBoxItemWrap}>
-                                {selectedAnimal.map((item, idx) => (
+                                {selectedItems.map((item, idx) => (
                                     <div key={idx} className={classes.potBoxItem}>
                                         <img src={item.imgUrl} alt={`pot-item-${idx}`} />
                                     </div>
