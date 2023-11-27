@@ -1,6 +1,9 @@
 import "../css/Main.css" ;
 import {useEffect, useRef, useState} from "react";
 import {api} from "../../../network/api";
+import buyIcon from '../marketImages/dollar.webp';
+import takeIcon from '../marketImages/save-money.webp';
+import cancelIcon from '../marketImages/cancel.webp';
 
 
 const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) => {
@@ -162,13 +165,19 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
                                     <div>
                                         {showBuyBtn && !showButtons &&
                                             <div style={{ display: "flex", justifyContent: "center" }}>
-                                                <button onClick={() => onClickBuy(item)}>구매</button>
+                                                <button className="main-list-Btn" onClick={() => onClickBuy(item)}>
+                                                    <img className="btn-icon" src={buyIcon} alt="구매"/>
+                                                </button>
                                             </div>
                                         }
                                         {showButtons && (
                                             <div style={{ display: "flex", justifyContent: "center" }}>
-                                                <button onClick={() => onClickCancel(item)}>취소</button>
-                                                <button onClick={() => onClickTake(item)}>수령</button>
+                                                <button className="main-list-Btn" onClick={() => onClickCancel(item)}>
+                                                    <img className="btn-icon" src={cancelIcon} alt="취소"/>
+                                                </button>
+                                                <button className="main-list-Btn" onClick={() => onClickTake(item)}>
+                                                    <img className="btn-icon" src={takeIcon} alt="수령"/>
+                                                </button>
                                             </div>
                                         )}
                                     </div>
