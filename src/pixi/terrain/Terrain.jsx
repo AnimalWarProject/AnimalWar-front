@@ -163,18 +163,6 @@ const Terrain = () => {
         gold.scale.y = 0.25;
         goldContainer.addChild(gold);
 
-        // 골드 텍스트
-        const style = new PIXI.TextStyle({
-            fontFamily: 'Arial',
-            fontSize: 20,
-            fill: 'black',
-        });
-
-        const goldText = new PIXI.Text(`${resources.gold}`, style);
-        goldText.x = 100;
-        goldText.y = 15;
-        goldContainer.addChild(goldText);
-
         //육지 박스
         const landPillBox = new PIXI.Graphics();
         const pillWidth = 316;
@@ -281,27 +269,6 @@ const Terrain = () => {
         uiContainer.addChild(mountainBorderBox);
         mountainBorderBox.addChild(mountainText);
 
-        // 수량 텍스트 설정
-        const QuantityTextStyle = { fontFamily: 'Arial', fontSize: 20, fill: 'black' };
-
-        // 육지 수량 텍스트
-        const landQtyText = new PIXI.Text(`${resources.land} 칸`, QuantityTextStyle);
-        landQtyText.x = 277;
-        landQtyText.y = 72;
-        uiContainer.addChild(landQtyText);
-
-        // 바다 수량 텍스트
-        const seaQtyText = new PIXI.Text(`${resources.sea} 칸`, QuantityTextStyle);
-        seaQtyText.x = 277;
-        seaQtyText.y = 182;
-        uiContainer.addChild(seaQtyText);
-
-        // 산 수량 텍스트
-        const mountainQtyText = new PIXI.Text(`${resources.mountain} 칸`, QuantityTextStyle);
-        mountainQtyText.x = 277;
-        mountainQtyText.y = 292;
-        uiContainer.addChild(mountainQtyText);
-
         async function loadSpineAnimation() {
             try {
                 if (!Assets.resolver.hasKey('magician')) {
@@ -344,6 +311,12 @@ const Terrain = () => {
         terrainButton.endFill();
         terrainButton.interactive = true;
         terrainButton.buttonMode = true;
+
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 20,
+            fill: 'black',
+        });
 
         // 재분배하기 버튼 텍스트
         const buttonText = new PIXI.Text('재분배하기', style);
@@ -395,6 +368,58 @@ const Terrain = () => {
                 }
             }
         };
+    }, [resources]);
+
+    useEffect(() => {
+        const QuantityTextStyle = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 20,
+            fill: 'black',
+        });
+
+        //골드양 텍스트
+        const existingGoldText = appRef.current.stage.getChildByName('goldText');
+        if (existingGoldText) {
+            appRef.current.stage.removeChild(existingGoldText);
+        }
+        const goldText = new PIXI.Text(`${resources.gold}`, QuantityTextStyle);
+        goldText.name = 'goldText';
+        goldText.x = 550;
+        goldText.y = 75;
+        appRef.current.stage.addChild(goldText);
+
+        // 육지 수량 텍스트
+        const existingLandText = appRef.current.stage.getChildByName('landQtyText');
+        if (existingLandText) {
+            appRef.current.stage.removeChild(existingLandText);
+        }
+        const landQtyText = new PIXI.Text(`${resources.land} 칸`, QuantityTextStyle);
+        landQtyText.name = 'landQtyText';
+        landQtyText.x = 725;
+        landQtyText.y = 193;
+        appRef.current.stage.addChild(landQtyText);
+
+        // 바다 수량 텍스트
+        const existingSeaText = appRef.current.stage.getChildByName('seaQtyText');
+        if (existingSeaText) {
+            appRef.current.stage.removeChild(existingSeaText);
+        }
+        const seaQtyText = new PIXI.Text(`${resources.sea} 칸`, QuantityTextStyle);
+        seaQtyText.name = 'seaQtyText';
+        seaQtyText.x = 725;
+        seaQtyText.y = 303;
+        appRef.current.stage.addChild(seaQtyText);
+
+        // 산 수량 텍스트
+        const existingMountainText = appRef.current.stage.getChildByName('mountainQtyText');
+        if (existingMountainText) {
+            appRef.current.stage.removeChild(existingMountainText);
+        }
+        const mountainQtyText = new PIXI.Text(`${resources.mountain} 칸`, QuantityTextStyle);
+        mountainQtyText.name = 'mountainQtyText';
+        mountainQtyText.x = 725;
+        mountainQtyText.y = 413;
+        appRef.current.stage.addChild(mountainQtyText);
     }, [resources]);
 
     return <div ref={canvasRef} className="outlet-container"></div>;

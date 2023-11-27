@@ -69,10 +69,6 @@ const Place = ({ userUUID }) => {
         });
     }, []);
 
-    useEffect(() => {
-        console.log('Current removeList:', removeList);
-    }, [removeList]);
-
     const updateInventory = useCallback(async (updateRequest) => {
         try {
             const response = await api('/api/v1/inventory/updatePlace', 'POST', updateRequest, {});
@@ -84,7 +80,6 @@ const Place = ({ userUUID }) => {
 
     const calculateFinalStateForItem = useCallback(
         (item) => {
-            console.log('Received item:', item);
             const placedCount = placedItems.filter(
                 (placedItem) => placedItem.id === item.id && placedItem.type === item.type
             ).length;
@@ -106,8 +101,6 @@ const Place = ({ userUUID }) => {
         } else if (itemType === 'buildings') {
             itemId = item.building?.buildingId;
         }
-
-        console.log('Received item in createUpdateInventoryRequest:', item);
 
         const updateItem = {
             itemId: itemId,
@@ -399,19 +392,30 @@ const Place = ({ userUUID }) => {
                 }
 
                 const itemId = draggingItemRef.current.item.id;
-                const tileObjectImagePath = getTileObjectImagePath(itemType, itemId);
-
                 const currentItem = draggingItemRef.current.item;
 
+                const tileObjectImagePath = getTileObjectImagePath(itemType, itemId);
+
                 if (currentItem.placeableQuantity > 0) {
-                    setInventory((prevInventory) => ({
-                        ...prevInventory,
-                        [activeTab]: prevInventory[activeTab].map((invItem) =>
-                            invItem.id === currentItem.id
-                                ? { ...invItem, placeableQuantity: invItem.placeableQuantity - 1 }
-                                : invItem
-                        ),
-                    }));
+                    setInventory((prevInventory) => {
+                        // currentItem의 타입에 따라 처리
+                        const inventoryType = currentItem.type; // 'animals' 또는 'buildings'
+                        const updatedItems = prevInventory[inventoryType].map((invItem) => {
+                            if (invItem.id === currentItem.id) {
+                                const updatedItem = {
+                                    ...invItem,
+                                    placeableQuantity: invItem.placeableQuantity - 1,
+                                };
+                                return updatedItem;
+                            }
+                            return invItem;
+                        });
+
+                        return {
+                            ...prevInventory,
+                            [inventoryType]: updatedItems,
+                        };
+                    });
                 }
 
                 const objectSprite = new PIXI.Sprite(PIXI.Texture.from(tileObjectImagePath));
@@ -455,7 +459,7 @@ const Place = ({ userUUID }) => {
             appRef.current.stage.removeChild(draggingItemRef.current.image);
             draggingItemRef.current.dragging = false;
         }
-    }, [setPlacedItems, currentDraggingTileRef, textures, getTileObjectImagePath, tileData, activeTab]);
+    }, [setPlacedItems, currentDraggingTileRef, textures, getTileObjectImagePath, tileData]);
 
     const createTile = useCallback(
         (tileData, container, textures, tileSize) => {
@@ -510,12 +514,14 @@ const Place = ({ userUUID }) => {
         if (appRef.current && activeTab) {
             clearInventoryDisplay();
 
-            const handlePrevButtonClick = () => {
+            const handlePrevButtonClick = (event) => {
+                event.stopPropagation();
                 const newStartIndex = Math.max(startIndex - itemsPerPage, 0);
                 setStartIndex(newStartIndex);
             };
 
-            const handleNextButtonClick = () => {
+            const handleNextButtonClick = (event) => {
+                event.stopPropagation();
                 const selectedInventory = inventory[activeTab];
                 if (startIndex + itemsPerPage < selectedInventory.length) {
                     const newStartIndex = startIndex + itemsPerPage;
@@ -578,7 +584,13 @@ const Place = ({ userUUID }) => {
                 if (selectedGrade === 'ALL') {
                     return true;
                 } else {
-                    return item.animal.grade === selectedGrade;
+                    // activeTab에 따라 등급 필터링 조건을 적용
+                    if (activeTab === 'animals' && item.animal) {
+                        return item.animal.grade === selectedGrade;
+                    } else if (activeTab === 'buildings' && item.building) {
+                        return item.building.grade === selectedGrade;
+                    }
+                    return false;
                 }
             });
 
@@ -950,7 +962,7 @@ const Place = ({ userUUID }) => {
     ]);
 
     useEffect(() => {
-        if (isEditMode) {
+        if (appRef.current) {
             let removeModeButton = appRef.current.stage.getChildByName('removeModeButton');
             if (!removeModeButton) {
                 const removeModeTexture = PIXI.Texture.from(RemoveButtonImage);
@@ -958,33 +970,44 @@ const Place = ({ userUUID }) => {
                 removeModeButton.name = 'removeModeButton';
                 removeModeButton.interactive = true;
                 removeModeButton.buttonMode = true;
-                removeModeButton.visible = isEditMode;
+
                 removeModeButton.x = 690;
                 removeModeButton.y = 575;
                 removeModeButton.scale.set(0.13);
                 appRef.current.stage.addChild(removeModeButton);
             }
-            removeModeButton.visible = true;
 
+            removeModeButton.visible = isEditMode;
             // RemoveButton 클릭 이벤트 핸들러
             removeModeButton.on('pointerdown', async () => {
                 try {
+                    // 제거 횟수를 계산
+                    const removalCounts = removeList.reduce((acc, tile) => {
+                        acc[tile.objectId] = (acc[tile.objectId] || 0) + 1;
+                        return acc;
+                    }, {});
+
+                    // 새로운 인벤토리 생성
+                    const newInventory = {
+                        animals: [...inventory.animals],
+                        buildings: [...inventory.buildings],
+                    };
+
                     // 제거된 아이템의 placeableQuantity 업데이트
-                    const newInventory = { ...inventory };
-
-                    removeList.forEach((tile) => {
-                        const inventoryType = tile.type === 'ANIMAL' ? 'animals' : 'buildings'; // 올바른 배열 이름 얻기
-
-                        const inventoryItems = newInventory[inventoryType];
-                        if (inventoryItems) {
-                            const index = inventoryItems.findIndex((item) => item.id === tile.objectId); // item.id와 tile.objectId 비교
-
-                            if (index >= 0) {
-                                // placeableQuantity 업데이트
-                                newInventory[inventoryType][index].placeableQuantity += 1;
-                            }
+                    Object.entries(removalCounts).forEach(([objectId, count]) => {
+                        const inventoryType = inventory.animals.some((item) => item.id === objectId)
+                            ? 'animals'
+                            : 'buildings';
+                        const index = newInventory[inventoryType].findIndex((item) => item.id === objectId);
+                        if (index >= 0) {
+                            newInventory[inventoryType][index] = {
+                                ...newInventory[inventoryType][index],
+                                placeableQuantity: newInventory[inventoryType][index].placeableQuantity + count,
+                            };
                         }
                     });
+
+                    // 인벤토리 상태 업데이트
                     setInventory(newInventory);
 
                     // TerrainService 업데이트를 위한 타일 ID 목록 생성
@@ -1029,6 +1052,8 @@ const Place = ({ userUUID }) => {
 
                     setRemoveList([]);
                     setRemoveButtonClicked(true);
+                    fetchInventory('animals');
+                    fetchInventory('buildings');
                 } catch (error) {
                     console.error('정보 수정에 실패하였습니다', error);
                 }
