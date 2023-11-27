@@ -4,7 +4,8 @@ import { gsap } from 'gsap';
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import lose from '../imgs/Lose.png';
 import {useLocation} from "react-router";
-import {api} from "../../../network/api";
+import { api, URL } from '../../../network/api';
+
 
 const GameResult = () => {
     const pixiContainer = useRef(null);
@@ -32,10 +33,6 @@ const GameResult = () => {
             },
         });
     }
-
-
-
-
 
     useEffect(() => {
         const app = new PIXI.Application({
@@ -193,58 +190,6 @@ const GameResult = () => {
             app.stage.addChild(container);
         };
 
-
-        // // 랭크 박스  크기 및 위치 조정
-        // const addRankText = (text, x, y, width, height, cornerRadius, fontSize, fontWeight,
-        //                      isRankText, currentRank, changeRank) => {
-        //     const container = new PIXI.Container();
-        //     const important = new PIXI.Graphics();
-        //     important.lineStyle(0);
-        //     important.beginFill('#FFC000');
-        //     important.drawRoundedRect(x, y, width, height, cornerRadius);
-        //     important.endFill();
-        //     container.addChild(important);
-        //
-        //     // 글꼴
-        //     const message = new PIXI.Text(text, {
-        //         fontSize: fontSize || 27,
-        //         fontWeight: fontWeight || 'normal',
-        //         fill: 0x0f1828,
-        //         align: 'center',
-        //         fontFamily: 'Arial'
-        //     });
-        //     message.anchor.set(0.5);
-        //     message.x = x + width / 2;
-        //     message.y = y + height / 2;
-        //     container.addChild(message);
-        //
-        //     if (isRankText) {
-        //         let rankChangeText;
-        //         if (changeRank > 0) {
-        //             rankChangeText = `${changeRank} 상승 ➔ ${currentRank + changeRank}위`;
-        //         } else if (changeRank < 0) {
-        //             rankChangeText = `${Math.abs(changeRank)} 하락 ➔ ${currentRank + changeRank}위`;
-        //         } else {
-        //             rankChangeText = `유지 ${currentRank}위`;
-        //         }
-        //
-        //         const rankText = new PIXI.Text(rankChangeText, {
-        //             fontSize: 18,
-        //             fill: 0x0f1828,
-        //             align: 'justify',
-        //             fontWeight: 'bolder',
-        //             fontFamily: 'Arial'
-        //         });
-        //         rankText.anchor.set(0, 0.5);
-        //         rankText.x = x + 170;
-        //         rankText.y = y + 23;
-        //         container.addChild(rankText);
-        //     }
-        //     app.stage.addChild(container);
-        // };
-
-
-
         // 골드 박스  크기 및 위치 조정
         const addMatch = (text, x, y, width, height, cornerRadius, fontSize, fontWeight) => {
             const container = new PIXI.Container();
@@ -286,7 +231,7 @@ const GameResult = () => {
                 if (text === '추가 매칭') {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(container, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/battle';
+                            window.location = URL + '/battle';
                         } });
                 }
             };

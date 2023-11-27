@@ -4,6 +4,9 @@ import Transparency from '../imgs/Transparency.png';
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import { CustomScrollBox } from './CustomScollBox';
 import { gsap } from 'gsap';
+import { api, URL } from '../../../network/api';
+
+
 
 // 공격형 스킬 이미지
 import berserkerImage from '../imgs/Berserker.png';
@@ -28,7 +31,6 @@ import DoItAgain from '../imgs/DoItAgain.webp';
 import OffenseDefenseShift from '../imgs/OffenseDefenseShift.webp';
 import StrongAndWeak from '../imgs/StrongAndWeak.webp';
 import Swap from '../imgs/Swap.webp';
-import { api } from '../../../network/api';
 
 const DefenderSkill = ({ setFlag }) => {
     const pixiContainer = useRef(null);
@@ -130,8 +132,7 @@ const DefenderSkill = ({ setFlag }) => {
                         alpha: 0.5,
                         duration: 0.5,
                         onComplete: () => {
-                            // window.location.href = 'http://localhost:3000/home';
-                            window.location = 'http://localhost:3000/battle';
+                            window.location = URL + '/battle';
                         },
                     });
                 }

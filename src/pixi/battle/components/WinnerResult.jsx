@@ -4,7 +4,8 @@ import { gsap } from 'gsap';
 import backgroundImage from '../imgs/Rectangle 12290.png';
 import victory from '../imgs/Victory.png';
 import {useLocation} from "react-router";
-import {api} from "../../../network/api";
+import { api, URL } from '../../../network/api';
+
 
 const WinnerResult = () => {
     const pixiContainer = useRef(null);
@@ -290,7 +291,7 @@ const WinnerResult = () => {
                 if (text === '추가 매칭') {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(container, { alpha: 0.5, duration: 0.5, onComplete: () => {
-                            window.location = 'http://localhost:3000/battle';
+                            window.location = URL + '/battle';
                         } });
                 }
             };

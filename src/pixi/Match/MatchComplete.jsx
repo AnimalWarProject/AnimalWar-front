@@ -14,7 +14,7 @@ const MatchComplete = () => {
     useEffect(() => {
         // setTimeout(() => history.push("/match3"), 3000)
 
-            setTimeout(() => history.push("/battle2", { state: data }), 5000)
+        setTimeout(() => history.push("/battle2", { state: data }), 5000)
  }, [])
 
     const canvasRef = useRef(null);
@@ -61,7 +61,7 @@ const MatchComplete = () => {
 
         //내 테스트 이미지 프로필 
 
-        const profileImage = PIXI.Texture.from(test);
+        const profileImage = PIXI.Texture.from(data.state.attacker.profileImage);
         const profileSprite = new PIXI.Sprite(profileImage);
         profileSprite.width = 100;
         profileSprite.height = 80;
@@ -129,7 +129,7 @@ const MatchComplete = () => {
 
         //적 테스트 이미지 프로필 
 
-        const profileImage2 = PIXI.Texture.from(test);
+        const profileImage2 = PIXI.Texture.from(data.state.depender.profileImage);
         const profileSprite2 = new PIXI.Sprite(profileImage2);
         profileSprite2.width = 100;
         profileSprite2.height = 80;
