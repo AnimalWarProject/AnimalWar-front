@@ -147,7 +147,6 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
                         const showButtons = userInfo.uuid === item.userId; // 유저id와 아이템에 등록된유저 id가 같으면 표시됨.
                         const showBuyBtn = item.btnState;
                         const isAnimalType = ['DOG', 'CAT', 'BIRD', 'FISH', 'GLIRES', 'COMMON'].includes(item.type.toUpperCase());
-                        console.log(item)
                         const imagePath = isAnimalType
                             ? `${INVImg}/animals/${item.type}/${item.imagePath}`
                             : `${INVImg}/buildings/${item.imagePath}`;

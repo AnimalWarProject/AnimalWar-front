@@ -12,25 +12,36 @@ const UpGradeLoading = () => {
     const canvasRef = useRef(null);
     const nav = useNavigate();
     const [cycleCount, setCycleCount] = useState(0);
+    const [upgradeResult, setUpgradeResult] = useState();
     const location = useLocation();
-    const selectedData = location.state;
+    const { selectedItem, sendUserInfo } = location.state || {};
     const upgradeInfo = {
-        userUUID: "",
-        itemId : selectedData.animal.animalId,
-        buff : selectedData.upgrade
+        userUUID: sendUserInfo,
+        itemId : selectedItem.animal.animalId,
+        buff : selectedItem.upgrade
     }
     const getData = async () => {
+        try {
+            const { data: response } = await api(`/api/v1/upgrade/animal`, 'POST', upgradeInfo);
+            setUpgradeResult(response)
+        } catch (error) {
+            console.log(error + "강화 서비스 에러발생");
+        }
+    };
+    const setGold = async () => {
         try {
             const { data: response } = await api(`/api/v1/user/upgrade`, 'POST', upgradeInfo, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
         } catch (error) {
-            console.log(error + "에러발생");
         }
     };
 
+
     useEffect(() => {
+        setGold();
         getData();
+        // setGold();
         const canvasWidth = 960;
         const canvasHeight = 640;
         const app = new PIXI.Application({
@@ -77,7 +88,7 @@ const UpGradeLoading = () => {
 
     useEffect(() => {
         if (cycleCount >= 3) {
-            nav("/upgrade/result", {state : selectedData});
+            nav("/upgrade/result", { state: { selectedItem, upgradeResult } });
         }
     }, [cycleCount, nav]);
 
