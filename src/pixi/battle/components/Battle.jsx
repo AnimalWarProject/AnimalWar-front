@@ -108,15 +108,15 @@ const Battle = () => {
                             const logBox = document.getElementById('battleLogBox');
                             logBox.scrollTop = logBox.scrollHeight;
 
-                            // if (logEntries[count].includes("패배")) {
-                            //     setTimeout(() => {
-                            //         time.push('/loser' , { state: data });
-                            //         } ,4000)
-                            // } else if (logEntries[count].includes("승리")) {
-                            //     setTimeout(() => {
-                            //         time.push('/winner', { state: data });
-                            //     }, 4000)
-                            // }
+                            if (logEntries[count].includes("패배")) {
+                                setTimeout(() => {
+                                    time.push('/loser' , { state: data });
+                                    } ,4000)
+                            } else if (logEntries[count].includes("승리")) {
+                                setTimeout(() => {
+                                    time.push('/winner', { state: data });
+                                }, 4000)
+                            }
                         } else {
                             clearInterval(intervalId);
                         }
@@ -124,7 +124,7 @@ const Battle = () => {
                         clearInterval(intervalId);
                     }
 
-                }, 10);
+                }, 400);
 
             }
         } catch (error) {
