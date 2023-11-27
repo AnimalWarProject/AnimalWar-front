@@ -70,8 +70,11 @@ const Battle = () => {
                 headers: {
                     Authorization: `Bearer ${stateToken}`,
                 },
+
+
             });
 
+            console.log(response);
             const logEntries = response.data;
             let count = 0;
 
@@ -96,54 +99,24 @@ const Battle = () => {
                             if (logEntries[count].includes("수비자 상성확인되었습니다")){
                                 const upAttackPower = defenderAtkPower
                                 const upDefendPower = defenderDefPower
-                                // setDefenderAtkPower(upAttackPower * 1.1);
-                                // setDefenderDefPower(upDefendPower * 1.1);
                                 setDefenderAtkPower(Number((upAttackPower * 1.1).toFixed(0)));
                                 setDefenderDefPower(Number((upDefendPower * 1.1).toFixed(0)));
                             }
 
-                            if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
-                                if (data.state.state.attacker.maxLife * 0.2 >= data.state.state.attacker.life) {
-                                    setAttackerAtkPower(attackerAtkPower * 3);
-                                }
-                            }
-                            if (logEntries[count].includes(data.state.state.attacker.nickName + "의 공격형 스킬 버서커")){
-                                if (data.state.state.depender.maxLife * 0.2 >= data.state.state.depender.life) {
-                                    setDefenderDefPower(defenderDefPower * 3);
-                                }
-                            }
-                            //
-                            // if (logEntries[count].includes("공수교대")){
-                            //     const attackerAttackPower = attackerAtkPower
-                            //     const attackerDefenderPower = attackerDefPower
-                            //     setAttackerAtkPower(attackerDefenderPower);
-                            //     setAttackerDefPower(attackerAttackPower)
-                            //     const defenderAttackerPower = defenderAtkPower;
-                            //     const defenderDependerPower = defenderDefPower;
-                            //     setDefenderDefPower(defenderAttackerPower);
-                            //     setDefenderAtkPower(defenderDependerPower)
-                            // }
-                            // if (logEntries[count].includes(attackerNickName + "의 유틸형 스킬 "+ "강약약강")){
-                            //     setAttackerAtkPower(attackerAtkPower * 1.1);
-                            //     setAttackerAtkPower(attackerAtkPower * 0.9);
-                            // }
-                            // if (logEntries[count].includes(defenderNickName + "의 유틸형 스킬 "+ "강약약강")){
-                            //     defenderAttackerPower(attackerAtkPower * 1.1);
-                            //     defenderDependerPower(attackerAtkPower * 0.9);
-                            // }
+
                             // 로그 상자의 맨 아래로 스크롤
                             const logBox = document.getElementById('battleLogBox');
                             logBox.scrollTop = logBox.scrollHeight;
 
-                            if (logEntries[count].includes("패배")) {
-                                setTimeout(() => {
-                                    time.push('/loser' , { state: data });
-                                    } ,4000)
-                            } else if (logEntries[count].includes("승리")) {
-                                setTimeout(() => {
-                                    time.push('/winner', { state: data });
-                                }, 4000)
-                            }
+                            // if (logEntries[count].includes("패배")) {
+                            //     setTimeout(() => {
+                            //         time.push('/loser' , { state: data });
+                            //         } ,4000)
+                            // } else if (logEntries[count].includes("승리")) {
+                            //     setTimeout(() => {
+                            //         time.push('/winner', { state: data });
+                            //     }, 4000)
+                            // }
                         } else {
                             clearInterval(intervalId);
                         }
@@ -151,7 +124,7 @@ const Battle = () => {
                         clearInterval(intervalId);
                     }
 
-                }, 400);
+                }, 10);
 
             }
         } catch (error) {
