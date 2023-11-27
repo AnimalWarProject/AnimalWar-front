@@ -1,0 +1,79 @@
+.battleLogBackGround {
+    width: 960px;
+    height: 640px;
+    padding: 0.4rem;
+    margin: 0.2rem 0.1rem 0 0.3rem;
+}
+
+.battleLogBackGroundInner {
+    width: 100%;
+    height: 100%;
+    background-image: url('../imgs/Rectangle 12290.png');
+    background-size: cover;
+    position: relative;
+}
+.battleLogBoxOut {
+    position: absolute;
+    width: 850px;
+    height: 520px;
+    top: 60px;
+    left: 50px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#battleLogBox {
+    width: 780px;
+    height: 320px;
+    overflow-y: auto;
+    border: 0px solid black;
+    position: relative;
+    top: 90px;
+    left: 0px;
+    background-color: rgba(255, 255, 255, 0.35);
+    scrollbar-width: thin;
+    scrollbar-color: darkgray lightgray;
+}
+
+#battleLogBox::-webkit-scrollbar {
+    width: 0px;
+}
+
+
+.fixed-width-log-box {
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 20px;
+    padding: 0 20px;
+    /*border: 50px solid black;*/
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    border-radius: 30px;
+    position: absolute;
+    line-height: 1.7;
+}
+
+.stateBox1 {
+    position: absolute;
+    width: 365px;
+    height: 170px;
+    top: 70px;
+    left: 70px;
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+.stateBox2 {
+    position: absolute;
+    width: 365px;
+    height: 170px;
+    top: 70px;
+    left: 515px;
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.35);
+
+}
+

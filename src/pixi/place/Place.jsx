@@ -15,11 +15,14 @@ import UniqueButtonImage from './imgs/UniqueButton.webp';
 import LegendButtonImage from './imgs/LegendButton.webp';
 import PlaceButtonImage from './imgs/PlaceButton.webp';
 import SaveButtonImage from './imgs/SaveButton.webp';
+import RemoveButtonImage from './imgs/RemoveButton.webp';
 
 const Place = ({ userUUID }) => {
     const pixiContainer = useRef(null);
     const draggingItemRef = useRef(null);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [removeButtonClicked, setRemoveButtonClicked] = useState(false);
+
     const [removeList, setRemoveList] = useState([]);
     const [placedItems, setPlacedItems] = useState([]);
     const [activeTab, setActiveTab] = useState('animals');
@@ -31,7 +34,6 @@ const Place = ({ userUUID }) => {
     const [selectedGrade, setSelectedGrade] = useState('ALL');
     const [startIndex, setStartIndex] = useState(0);
     const inventorySpritesRef = useRef([]);
-
     const currentDraggingTileRef = useRef(null);
     const appRef = useRef(null);
     const animalTabBox = useRef(null);
@@ -57,116 +59,95 @@ const Place = ({ userUUID }) => {
         );
     };
 
-    const addToRemoveList = useCallback((tileId) => {
+    const addToRemoveList = useCallback((tile) => {
         setRemoveList((prevList) => {
-            const updatedList = [...prevList, tileId];
-            return updatedList;
-        });
-    }, []);
+            if (prevList.some((existingTile) => existingTile.tileId === tile.tileId)) {
+                return prevList;
+            }
 
-    // 아이템 제거 함수
-    const removeInventoryObject = useCallback((inventoryObjectSprite) => {
-        containerRef.current.removeChild(inventoryObjectSprite);
-
-        const objectId = inventoryObjectSprite.objectId;
-        const objectType = inventoryObjectSprite.objectType;
-
-        setInventory((prevInventory) => {
-            const updatedInventory = { ...prevInventory };
-            const inventoryKey = objectType === 'ANIMAL' ? 'animals' : 'buildings';
-
-            updatedInventory[inventoryKey] = updatedInventory[inventoryKey].map((invItem) => {
-                if (invItem.id === objectId) {
-                    return { ...invItem, placeableQuantity: invItem.placeableQuantity + 1 };
-                }
-                return invItem;
-            });
-
-            return updatedInventory;
+            return [...prevList, tile];
         });
     }, []);
 
     const updateInventory = useCallback(async (updateRequest) => {
         try {
-            const response = await api('/api/v1/inventory/updateInventory', 'POST', updateRequest, {});
+            const response = await api('/api/v1/inventory/updatePlace', 'POST', updateRequest, {});
             return response;
         } catch (error) {
             console.error('Failed to update inventory:', error);
         }
     }, []);
 
-    const createUpdateInventoryRequest = useCallback(
+    const calculateFinalStateForItem = useCallback(
         (item) => {
             const placedCount = placedItems.filter(
                 (placedItem) => placedItem.id === item.id && placedItem.type === item.type
             ).length;
-            setTimeout(5000);
-            const removedCount = removeList.filter((tileId) => {
-                const tile = tileData.find((t) => t.id === tileId);
-                return tile && tile.objectId === item.id && tile.objectType === item.type;
-            }).length;
-
-            console.log(tileData);
-
-            const itemId = item.type === 'animals' ? item.animal.animalId : item.building.buildingId;
-
-            const updateItem = {
-                itemId: itemId,
-                placedQuantity: item.placedQuantity + placedCount - removedCount,
-                entityType: item.type === 'animals' ? 'ANIMAL' : 'BUILDING',
-            };
 
             return {
-                animalItems: item.type === 'animals' ? [updateItem] : [],
-                buildingItems: item.type === 'buildings' ? [updateItem] : [],
+                ...item,
+                placedQuantity: item.placedQuantity + placedCount,
             };
         },
-        [placedItems, removeList, tileData]
+        [placedItems]
     );
 
-    const updatePlace = useCallback(async () => {
-        try {
-            //배치가됨
-            const updateRequests = placedItems.map((item) => createUpdateInventoryRequest(item));
-            //삭제가됨
-            // const updateRequests = removeList.map((item) => createUpdateInventoryRequest(item));
+    const createUpdateInventoryRequest = useCallback((item) => {
+        let itemId;
+        const itemType = item.type.toLowerCase();
 
-            setTimeout(1000);
-            console.log('테라인에 보낼때', removeList);
-            const payload = {
-                placeItems: placedItems.map((item) => ({
-                    tileId: item.tileId,
-                    objectId: item.id,
-                    objectType: item.objectType,
-                })),
-                removeItems: removeList,
-            };
-
-            //테라인한테 쏘기
-            await api(`/api/v1/terrain/place`, 'POST', payload, {});
-            console.log('테라인에 보낸 이후', removeList);
-
-            //유저한테 쏘기
-            for (const request of updateRequests) {
-                await updateInventory(request);
-            }
-
-            placedItems.forEach((placedItem) => {
-                const matchingSprite = inventorySpritesRef.current.find(
-                    (sprite) => sprite.objectId === placedItem.id && sprite.tileId === placedItem.tileId
-                );
-                if (matchingSprite) {
-                    matchingSprite.tint = 0xffffff;
-                }
-            });
-
-            setPlacedItems([]);
-            // setRemoveList([]);
-            console.log('업뎃완료');
-        } catch (error) {
-            console.error('Failed to update terrain:', error);
+        if (itemType === 'animals') {
+            itemId = item.animal.animalId;
+        } else if (itemType === 'buildings') {
+            itemId = item.building?.buildingId;
         }
-    }, [placedItems, removeList, updateInventory, createUpdateInventoryRequest]);
+
+        const updateItem = {
+            itemId: itemId,
+            placedQuantity: item.placedQuantity,
+            entityType: itemType === 'animals' ? 'ANIMAL' : 'BUILDING',
+        };
+
+        return {
+            animalItems: itemType === 'animals' ? [updateItem] : [],
+            buildingItems: itemType === 'buildings' ? [updateItem] : [],
+        };
+    }, []);
+
+    const updatePlace = useCallback(async () => {
+        // removeButton이 클릭되지 않았을 때만 추가 처리를 진행
+        if (!removeButtonClicked) {
+            try {
+                const payload = {
+                    placeItems: placedItems.map((item) => ({
+                        tileId: item.tileId,
+                        objectId: item.id,
+                        objectType: item.objectType,
+                    })),
+                };
+                await api(`/api/v1/terrain/place`, 'POST', payload, {});
+
+                for (const item of placedItems) {
+                    const finalState = calculateFinalStateForItem(item);
+                    const request = createUpdateInventoryRequest(finalState);
+                    await updateInventory(request);
+                }
+
+                placedItems.forEach((placedItem) => {
+                    const matchingSprite = inventorySpritesRef.current.find(
+                        (sprite) => sprite.objectId === placedItem.id && sprite.tileId === placedItem.tileId
+                    );
+                    if (matchingSprite) {
+                        matchingSprite.tint = 0xffffff;
+                    }
+                });
+            } catch (error) {
+                console.error('Failed to update terrain:', error);
+            }
+        }
+        setPlacedItems([]);
+        setRemoveList([]);
+    }, [placedItems, updateInventory, createUpdateInventoryRequest, calculateFinalStateForItem, removeButtonClicked]);
 
     function usePrevious(value) {
         const ref = useRef();
@@ -190,28 +171,11 @@ const Place = ({ userUUID }) => {
 
         if (prevIsEditMode && !isEditMode) {
             updatePlace();
+            setRemoveButtonClicked(false);
+            setPlacedItems([]);
+            setRemoveList([]);
         }
-    }, [isEditMode, prevIsEditMode, placeButtonTexture, saveButtonTexture, updatePlace]);
-
-    const cancelPlacement = useCallback(() => {
-        const restoredInventory = { ...inventory };
-        restoredInventory.animals = restoredInventory.animals.map((animal) => ({
-            ...animal,
-            placeableQuantity:
-                animal.placeableQuantity +
-                placedItems.filter((item) => item.id === animal.id && item.type === 'ANIMAL').length,
-        }));
-        restoredInventory.buildings = restoredInventory.buildings.map((building) => ({
-            ...building,
-            placeableQuantity:
-                building.placeableQuantity +
-                placedItems.filter((item) => item.id === building.id && item.type === 'BUILDING').length,
-        }));
-        setInventory(restoredInventory);
-
-        setPlacedItems([]);
-        setRemoveList([]);
-    }, [inventory, placedItems]);
+    }, [isEditMode, prevIsEditMode, placeButtonTexture, saveButtonTexture, updatePlace, removeButtonClicked]);
 
     const handleGradeButtonClick = (grade) => {
         let englishGrade;
@@ -428,19 +392,30 @@ const Place = ({ userUUID }) => {
                 }
 
                 const itemId = draggingItemRef.current.item.id;
-                const tileObjectImagePath = getTileObjectImagePath(itemType, itemId);
-
                 const currentItem = draggingItemRef.current.item;
 
+                const tileObjectImagePath = getTileObjectImagePath(itemType, itemId);
+
                 if (currentItem.placeableQuantity > 0) {
-                    setInventory((prevInventory) => ({
-                        ...prevInventory,
-                        [activeTab]: prevInventory[activeTab].map((invItem) =>
-                            invItem.id === currentItem.id
-                                ? { ...invItem, placeableQuantity: invItem.placeableQuantity - 1 }
-                                : invItem
-                        ),
-                    }));
+                    setInventory((prevInventory) => {
+                        // currentItem의 타입에 따라 처리
+                        const inventoryType = currentItem.type; // 'animals' 또는 'buildings'
+                        const updatedItems = prevInventory[inventoryType].map((invItem) => {
+                            if (invItem.id === currentItem.id) {
+                                const updatedItem = {
+                                    ...invItem,
+                                    placeableQuantity: invItem.placeableQuantity - 1,
+                                };
+                                return updatedItem;
+                            }
+                            return invItem;
+                        });
+
+                        return {
+                            ...prevInventory,
+                            [inventoryType]: updatedItems,
+                        };
+                    });
                 }
 
                 const objectSprite = new PIXI.Sprite(PIXI.Texture.from(tileObjectImagePath));
@@ -460,15 +435,10 @@ const Place = ({ userUUID }) => {
                 objectSprite.tileId = lastTile.id;
                 objectSprite.interactive = true;
                 objectSprite.buttonMode = true;
-                objectSprite.on('pointerdown', (event) => {
-                    event.stopPropagation();
+                objectSprite.objectId = itemId;
+                objectSprite.tileId = lastTile.id;
+                objectSprite.type = itemType;
 
-                    if (isEditMode && objectSprite.tint !== 0x808080) {
-                        addToRemoveList(objectSprite.tileId);
-                        console.log('objectSprite 클릭시', removeList);
-                        removeInventoryObject(objectSprite);
-                    }
-                });
                 containerRef.current.addChild(objectSprite);
 
                 inventorySpritesRef.current.push(objectSprite);
@@ -489,18 +459,7 @@ const Place = ({ userUUID }) => {
             appRef.current.stage.removeChild(draggingItemRef.current.image);
             draggingItemRef.current.dragging = false;
         }
-    }, [
-        setPlacedItems,
-        currentDraggingTileRef,
-        textures,
-        getTileObjectImagePath,
-        tileData,
-        activeTab,
-        isEditMode,
-        removeInventoryObject,
-        addToRemoveList,
-        removeList,
-    ]);
+    }, [setPlacedItems, currentDraggingTileRef, textures, getTileObjectImagePath, tileData]);
 
     const createTile = useCallback(
         (tileData, container, textures, tileSize) => {
@@ -546,6 +505,7 @@ const Place = ({ userUUID }) => {
 
     useEffect(() => {
         fetchInventory('animals');
+        fetchInventory('buildings');
         loadTextures();
         fetchTileData();
     }, [loadTextures]);
@@ -554,12 +514,14 @@ const Place = ({ userUUID }) => {
         if (appRef.current && activeTab) {
             clearInventoryDisplay();
 
-            const handlePrevButtonClick = () => {
+            const handlePrevButtonClick = (event) => {
+                event.stopPropagation();
                 const newStartIndex = Math.max(startIndex - itemsPerPage, 0);
                 setStartIndex(newStartIndex);
             };
 
-            const handleNextButtonClick = () => {
+            const handleNextButtonClick = (event) => {
+                event.stopPropagation();
                 const selectedInventory = inventory[activeTab];
                 if (startIndex + itemsPerPage < selectedInventory.length) {
                     const newStartIndex = startIndex + itemsPerPage;
@@ -622,7 +584,13 @@ const Place = ({ userUUID }) => {
                 if (selectedGrade === 'ALL') {
                     return true;
                 } else {
-                    return item.animal.grade === selectedGrade;
+                    // activeTab에 따라 등급 필터링 조건을 적용
+                    if (activeTab === 'animals' && item.animal) {
+                        return item.animal.grade === selectedGrade;
+                    } else if (activeTab === 'buildings' && item.building) {
+                        return item.building.grade === selectedGrade;
+                    }
+                    return false;
                 }
             });
 
@@ -868,6 +836,7 @@ const Place = ({ userUUID }) => {
                                 inventoryObjectSprite.buttonMode = true;
                                 inventoryObjectSprite.objectId = data.objectId;
                                 inventoryObjectSprite.tileId = data.id;
+                                inventoryObjectSprite.type = data.objectType;
 
                                 containerRef.current.addChild(inventoryObjectSprite);
                                 newSprites.push(inventoryObjectSprite);
@@ -993,18 +962,121 @@ const Place = ({ userUUID }) => {
     ]);
 
     useEffect(() => {
-        inventorySpritesRef.current.forEach((sprite) => {
-            sprite.removeAllListeners('pointerdown');
-            sprite.on('pointerdown', (event) => {
-                event.stopPropagation();
-                if (isEditMode) {
-                    addToRemoveList(sprite.tileId);
-                    console.log('inventorySprite클릭시', removeList);
-                    removeInventoryObject(sprite);
+        if (appRef.current) {
+            let removeModeButton = appRef.current.stage.getChildByName('removeModeButton');
+            if (!removeModeButton) {
+                const removeModeTexture = PIXI.Texture.from(RemoveButtonImage);
+                removeModeButton = new PIXI.Sprite(removeModeTexture);
+                removeModeButton.name = 'removeModeButton';
+                removeModeButton.interactive = true;
+                removeModeButton.buttonMode = true;
+
+                removeModeButton.x = 690;
+                removeModeButton.y = 575;
+                removeModeButton.scale.set(0.13);
+                appRef.current.stage.addChild(removeModeButton);
+            }
+
+            removeModeButton.visible = isEditMode;
+            // RemoveButton 클릭 이벤트 핸들러
+            removeModeButton.on('pointerdown', async () => {
+                try {
+                    // 제거 횟수를 계산
+                    const removalCounts = removeList.reduce((acc, tile) => {
+                        acc[tile.objectId] = (acc[tile.objectId] || 0) + 1;
+                        return acc;
+                    }, {});
+
+                    // 새로운 인벤토리 생성
+                    const newInventory = {
+                        animals: [...inventory.animals],
+                        buildings: [...inventory.buildings],
+                    };
+
+                    // 제거된 아이템의 placeableQuantity 업데이트
+                    Object.entries(removalCounts).forEach(([objectId, count]) => {
+                        const inventoryType = inventory.animals.some((item) => item.id === objectId)
+                            ? 'animals'
+                            : 'buildings';
+                        const index = newInventory[inventoryType].findIndex((item) => item.id === objectId);
+                        if (index >= 0) {
+                            newInventory[inventoryType][index] = {
+                                ...newInventory[inventoryType][index],
+                                placeableQuantity: newInventory[inventoryType][index].placeableQuantity + count,
+                            };
+                        }
+                    });
+
+                    // 인벤토리 상태 업데이트
+                    setInventory(newInventory);
+
+                    // TerrainService 업데이트를 위한 타일 ID 목록 생성
+                    const tileIds = removeList.map((tile) => tile.tileId);
+
+                    // TerrainService 업데이트
+                    await api('/api/v1/terrain/remove', 'POST', tileIds, {});
+                    // 이미지 제거 로직
+                    removeList.forEach((tile) => {
+                        const sprite = inventorySpritesRef.current.find((s) => s.tileId === tile.tileId);
+                        if (sprite) {
+                            containerRef.current.removeChild(sprite);
+                        }
+                    });
+
+                    // InventoryService 업데이트를 위한 요청 생성
+                    let animalItems = [];
+                    let buildingItems = [];
+                    removeList.forEach((tile) => {
+                        const item = inventory[tile.type === 'ANIMAL' ? 'animals' : 'buildings'].find(
+                            (i) => i.id === tile.objectId
+                        );
+                        if (!item) return;
+
+                        const removeItem = {
+                            itemId: tile.type === 'ANIMAL' ? item.animal.animalId : item.building.buildingId,
+                            removeQuantity: 1, // 기존에는 Math.abs(item.placedQuantity - 1) 사용
+                            entityType: tile.type,
+                        };
+
+                        tile.type === 'ANIMAL' ? animalItems.push(removeItem) : buildingItems.push(removeItem);
+                    });
+
+                    const inventoryResponse = await api(
+                        '/api/v1/inventory/removePlace',
+                        'POST',
+                        { animalItems, buildingItems },
+                        {}
+                    );
+                    if (inventoryResponse.success) {
+                    }
+
+                    setRemoveList([]);
+                    setRemoveButtonClicked(true);
+                    fetchInventory('animals');
+                    fetchInventory('buildings');
+                } catch (error) {
+                    console.error('정보 수정에 실패하였습니다', error);
                 }
             });
-        });
-    }, [isEditMode, removeInventoryObject, addToRemoveList, removeList]);
+        }
+    }, [isEditMode, removeList, inventory]);
+
+    useEffect(() => {
+        if (isEditMode) {
+            inventorySpritesRef.current.forEach((sprite) => {
+                sprite.removeAllListeners('pointerdown');
+                sprite.on('pointerdown', (event) => {
+                    event.stopPropagation();
+                    addToRemoveList({
+                        tileId: sprite.tileId,
+                        objectId: sprite.objectId,
+                        type: sprite.type,
+                    });
+                    sprite.tint = 0xff0000;
+                });
+            });
+        }
+    }, [isEditMode, addToRemoveList]);
 
     return <div ref={pixiContainer} className="outlet-container"></div>;
 };

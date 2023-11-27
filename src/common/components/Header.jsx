@@ -101,7 +101,7 @@ function Header() {
                     <NavLink to="/board" activeClassName="active">
                         게시판
                     </NavLink>
-                    <NavLink to="/board" activeClassName="active">
+                    <NavLink to="/" activeClassName="active">
                         게임소개
                     </NavLink>
                 </div>

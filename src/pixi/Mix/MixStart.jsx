@@ -113,15 +113,7 @@ const MixStart = () => {
                 history.push("/mix4"); // 합성성공
             }
         });
-    });
-
-
-
-
-
-
-
-
+    }, []);
 
         return <div ref={canvasRef}></div>;
 }

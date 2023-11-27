@@ -22,23 +22,20 @@ import UpGradeResult from '../pixi/upGrade/components/UpGradeResult';
 import UserInfo from '../pages/userInfo/UserInfo';
 import TerrainPage from '../pixi/terrain/TerrainPage';
 import Exchange from '../pixi/Exchange/Exchange';
-import AttackerSkill from "../pixi/battle/components/AttackerSkill";
-import DefenderSkill from "../pixi/battle/components/DefenderSkill";
 import Battle from "../pixi/battle/components/Battle";
-import GameResult from "../pixi/battle/components/GameResult";
+import WinnerResult from "../pixi/battle/components/WinnerResult";
 import Place from '../pixi/place/Place';
 import Board from '../pages/board/components/Board';
 import BoardDetail from '../pages/board/components/BoardDetail';
-
 import NewBoard from '../pages/board/components/NewBoard';
-
 import Mix from "../pixi/Mix/Mix";
 import DrawLoading from "../pixi/draw/components/DrawLoading";
-
 import SkillSelect from "../pixi/battle/components/SkillSelect";
+import LoseResult from "../pixi/battle/components/LoseResult";
 const MyRoutes = () => {
     return (
         <Routes>
+
             <Route element={<GameTemplate />}>
                 <Route path="/match" element={<Match />} />
                 <Route path="/draw" element={<DrawPage />} />
@@ -59,7 +56,8 @@ const MyRoutes = () => {
                 <Route path="/match2" element={<MatchProcess />} />
                 <Route path="/match3" element={<MatchComplete />} />
                 <Route path="/battle2" element={<Battle />}></Route>
-                <Route path="/battle3" element={<GameResult />}></Route>
+                <Route path="/loser" element={<LoseResult />}></Route>
+                <Route path="/winner" element={<WinnerResult />}></Route>
                 <Route path="/exchange" element={<Exchange />}></Route>
                 <Route path="/place" element={<Place />}></Route>
                 <Route path="/battle" element={<SkillSelect />}></Route>

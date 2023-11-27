@@ -103,7 +103,7 @@ const DefenderSkill = ({setFlag}) => {
                         if (!defenderAttackTypeSkill ||
                         !defenderDefensiveTypeSkill ||
                         !defenderUtilityTypeSkill){
-                            alert('모든 스킬 선택 진행시켜');
+                            alert('스킬을 모두 선택해주세요.');
                             return;
                         }
                         const response = await api('/api/v1/skill/changeDefenderSkill', 'PUT', updatedState, {
@@ -133,7 +133,7 @@ const DefenderSkill = ({setFlag}) => {
                     // '전투 시작'이 클릭된 경우 리다이렉션 수행
                     gsap.to(graphics, { alpha: 0.5, duration: 0.5, onComplete: () => {
                             // window.location.href = 'http://localhost:3000/home';
-                            window.location = 'https://www.naver.com/';
+                            window.location = 'http://localhost:3000/battle';
                         } });
                 }
             };
@@ -160,8 +160,6 @@ const DefenderSkill = ({setFlag}) => {
         addRoundedText('유틸형 스킬', 653, 15, 277, 65, 5);
         addRoundedText('저장하기',  800, 590, 126, 39, 20, 18, 'bold');
         addRoundedText('공격스킬 셋팅',  40, 590, 150, 39, 20, 18, 'bold');
-        // addRoundedText('수비스킬 셋팅',  200, 590, 150, 39, 20, 18, 'bold');
-
 
         // 공격형 스킬 큰 박스를 담을 컨테이너
         const bigBoxContainer = new PIXI.Container();
@@ -175,7 +173,6 @@ const DefenderSkill = ({setFlag}) => {
         const bigBoxContainer2 = new PIXI.Container();
         app.stage.addChild(bigBoxContainer2);
 
-
         // 공격형 스킬 큰박스
         const bigBox = new PIXI.Graphics();
         bigBox.beginFill(0xffffff, 0.5);
@@ -185,7 +182,6 @@ const DefenderSkill = ({setFlag}) => {
         bigBox.drawRoundedRect(34, 90, bigBoxWidth, bigBoxHeight, cornerRadius);
         bigBox.endFill();
         bigBoxContainer.addChild(bigBox);
-
 
         // 수비형 스킬 큰박스
         const bigBox1 = new PIXI.Graphics();
@@ -197,7 +193,6 @@ const DefenderSkill = ({setFlag}) => {
         bigBox1.endFill();
         bigBoxContainer1.addChild(bigBox1);
 
-
         // 유틸형 스킬 큰박스
         const bigBox2 = new PIXI.Graphics();
         bigBox2.beginFill(0xffffff, 0.5);
@@ -207,7 +202,6 @@ const DefenderSkill = ({setFlag}) => {
         bigBox2.drawRoundedRect(653, 90, bigBoxWidth2, bigBoxHeight2, cornerRadius2);
         bigBox2.endFill();
         bigBoxContainer2.addChild(bigBox2);
-
 
         // 공격형 스킬들 설정
         const addAttackSkillBox = (imageUrl, skillName, skillDescription, boxColor, alpha) => {
@@ -283,7 +277,7 @@ const DefenderSkill = ({setFlag}) => {
 
             // 공격형 스킬 이름 크기 및 폰트
             const nameText = new PIXI.Text(skillName, {
-                fontSize: 21,
+                fontSize: 20,
                 fill: 0x0f1828,
                 align: 'justify',
                 fontWeight: 'bolder',
@@ -399,7 +393,7 @@ const DefenderSkill = ({setFlag}) => {
 
             // 수비형 스킬 이름 크기 및 폰트
             const nameText1 = new PIXI.Text(skillName, {
-                fontSize: 21,
+                fontSize: 20,
                 fill: 0x0f1828,
                 align: 'justify',
                 fontWeight: 'bolder',
@@ -505,7 +499,7 @@ const DefenderSkill = ({setFlag}) => {
 
             // 유틸형 스킬 이름 크기 및 폰트
             const nameText2 = new PIXI.Text(skillName, {
-                fontSize: 21,
+                fontSize: 20,
                 fill: 0x0f1828,
                 align: 'justify',
                 fontWeight: 'bolder',
@@ -540,37 +534,37 @@ const DefenderSkill = ({setFlag}) => {
         // 공격형 박스
         addAttackSkillBox(
             berserkerImage,
-            '버서커',
+            '버서커 [35%]',
             '자신의 체력이 20% 이하, 기본공격 3.5배 데미지 변경',
             '#FFFFFF'
         );
         addAttackSkillBox(
             bombDropImage,
-            '폭탄 투하',
+            '폭탄 투하 [45%]',
             '상대방 현재 체력의 20%에 해당하는 데미지',
             '#FFFFFF'
         );
         addAttackSkillBox(
             ExecutionImage,
-            '처형',
+            '처형 [55%]',
             '5회의 공격이내 상대방,       체력 10%이하라면 처형',
             '#FFFFFF'
         );
         addAttackSkillBox(
             hiddenAceImage,
-            '비장의 한발',
+            '비장의 한발 [65%]',
             '상대방보다 체력이 적다면 기본공격 5배의 피해',
             '#FFFFFF'
         );
         addAttackSkillBox(
             poisonImage,
-            '독약',
+            '독약 [65%]',
             '상대방 최대 체력의 5%에 해당하는 데미지를 가함',
             '#FFFFFF'
         );
         addAttackSkillBox(
             speedRunImage,
-            '빨리감기',
+            '빨리감기 [85%]',
             '상대방과 나의 현재 체력을 각각 25% 감소',
             '#FFFFFF'
         );
@@ -585,37 +579,37 @@ const DefenderSkill = ({setFlag}) => {
         // 수비형 박스
         addDefenseSkillBox(
             EmergencyFood,
-            '비상식량',
+            '비상식량 [50%]',
             '최대 체력의 20%에             해당하는 양을 회복',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             Heal,
-            '회복',
+            '회복 [35%]',
             '잃은 체력의 30%에            해당하는 양을 회복',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             IronCladDefense,
-            '철통방어',
+            '철통방어 [35%]',
             '상대방의 기본공격을             3회 동안 무효화',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             LuckySeven,
-            '럭키 7',
+            '럭키 7 [17%]',
             '현재 체력이 77% 이상일 때, 상대 기본공격을 7회 무효화',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             RustedSword,
-            '녹슨 방패',
+            '녹슨 방패 [50%]',
             '상대방의 모든 유형의        데미지를 10%만큼 감소',
             '#FFFFFF'
         );
         addDefenseSkillBox(
             Bandaging,
-            '붕대 감기',
+            '붕대 감기 [75%]',
             '3턴 동안, 받은 데미지의         7% 만큼의 체력을 회복',
             '#FFFFFF'
         );
@@ -630,38 +624,38 @@ const DefenderSkill = ({setFlag}) => {
         // 유틸형 스킬
         addUtilitySkillBox(
             BrokenSpear,
-            '부러진 창',
+            '부러진 창 [10%]',
             '상대방 공격형 스킬 금지',
             '#FFFFFF'
         );
         addUtilitySkillBox(
             BrokenShield,
-            '부러진 방패',
+            '부러진 방패 [10%]',
             '상대방 방어형 스킬 금지',
             '#FFFFFF'
         );
         addUtilitySkillBox(
             DoItAgain,
-            '다시하기',
+            '다시하기 [10%]',
             '상대방과 자신의 체력을       100% 회복',
             '#FFFFFF'
         );
         addUtilitySkillBox(
             OffenseDefenseShift,
-            '공수교대',
+            '공수교대 [10%]',
             '공격자는 방어력으로,     수비자는 공격력으로 전투',
             '#FFFFFF'
         );
         addUtilitySkillBox(
             StrongAndWeak,
-            '강약약강',
+            '강약약강 [10%]',
             '나체력>상대체력: 공방 10%↑\n' +
             '나체력<상대체력: 공방 10%↓',
             '#FFFFFF'
         );
         addUtilitySkillBox(
             Swap,
-            '바꿔치기',
+            '바꿔치기 [10%]',
             '상대방과 나의 체력 교체,     나의 현재 체력의 10% 감소',
             '#FFFFFF'
         );

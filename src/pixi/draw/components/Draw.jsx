@@ -1,12 +1,12 @@
-import {useEffect, useRef, useState} from "react";
-import * as PIXI from "pixi.js";
-import back from "../imgs/AnyConv.com__Rectangle 12299.webp";
-import oneEgg from "../imgs/AnyConv.com__ONEEGG 1.webp";
-import manyEgg from "../imgs/AnyConv.com__MANYEGG 1.webp";
-import oneBuilding from "../imgs/AnyConv.com__ONEBUILDING 1.webp";
-import manyBuilding from "../imgs/AnyConv.com__MANYBUILDING 1.webp";
-import { useNavigate } from "react-router-dom";
-import {api} from "../../../network/api";
+import { useEffect, useRef } from 'react';
+import * as PIXI from 'pixi.js';
+import back from '../imgs/AnyConv.com__Rectangle 12299.webp';
+import oneEgg from '../imgs/AnyConv.com__ONEEGG 1.webp';
+import manyEgg from '../imgs/AnyConv.com__MANYEGG 1.webp';
+import oneBuilding from '../imgs/AnyConv.com__ONEBUILDING 1.webp';
+import manyBuilding from '../imgs/AnyConv.com__MANYBUILDING 1.webp';
+import { useNavigate } from 'react-router-dom';
+import { api } from '../../../network/api';
 
 const Draw = () => {
     const canvasRef = useRef(null);
@@ -14,16 +14,17 @@ const Draw = () => {
     useEffect(() => {
         const canvasWidth = 960;
         const canvasHeight = 640;
-        const drawData = { // 건물 or 동물 , 1 or 10
-            type: "animal",
-            qty: 1
+        const drawData = {
+            // 건물 or 동물 , 1 or 10
+            type: 'animal',
+            qty: 1,
         };
 
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
             fontSize: 18,
             fontFamily: 'Arial',
-            fontWeight: "bold",
+            fontWeight: 'bold',
         });
 
         const app = new PIXI.Application({
@@ -66,17 +67,17 @@ const Draw = () => {
         const changeToAnimal = () => {
             imageSprite.texture = PIXI.Texture.from(oneEgg); // 1개 뽑기 이미지로 변경
             imageSprite1.texture = PIXI.Texture.from(manyEgg); // 10개 뽑기 이미지로 변경
-            drawData.type = "animal";
+            drawData.type = 'animal';
         };
 
         const changeToBuilding = () => {
             imageSprite.texture = PIXI.Texture.from(oneBuilding); // 건물 이미지로 변경
             imageSprite1.texture = PIXI.Texture.from(manyBuilding); // 10개 뽑기 이미지로 변경
-            drawData.type = "building";
+            drawData.type = 'building';
         };
 
         const drawOneBtn = new PIXI.Graphics();
-        drawOneBtn.beginFill(0x6AFFF6, 0.7);
+        drawOneBtn.beginFill(0x6afff6, 0.7);
         const drawOneBtnWidth = 170;
         const drawOneBtnHeight = 40;
         drawOneBtn.drawRoundedRect(190, 480, drawOneBtnWidth, drawOneBtnHeight, 40);
@@ -96,9 +97,9 @@ const Draw = () => {
                 if (updatedGold >= price) {
                     // 수행할 작업
                     drawData.qty = 1;
-                    nav('/draw/loading', {state : drawData});
+                    nav('/draw/loading', { state: drawData });
                 } else {
-                    alert("잔액 부족");
+                    alert('잔액 부족');
                 }
             } catch (error) {
                 console.error('Failed to fetch user data:', error);
@@ -110,7 +111,7 @@ const Draw = () => {
         oneDrawText.y = 490;
 
         const drawManyBtn = new PIXI.Graphics();
-        drawManyBtn.beginFill(0x6AFFF6, 0.7);
+        drawManyBtn.beginFill(0x6afff6, 0.7);
         const drawManyBtnWidth = 170;
         const drawManyBtnHeight = 40;
         drawManyBtn.drawRoundedRect(580, 480, drawManyBtnWidth, drawManyBtnHeight, 40);
@@ -130,9 +131,9 @@ const Draw = () => {
                 if (updatedGold >= price * 10) {
                     // 수행할 작업
                     drawData.qty = 10;
-                    nav('/draw/loading', {state : drawData});
+                    nav('/draw/loading', { state: drawData });
                 } else {
-                    alert("잔액 부족");
+                    alert('잔액 부족');
                 }
             } catch (error) {
                 console.error('Failed to fetch user data:', error);
@@ -144,7 +145,7 @@ const Draw = () => {
         manyDrawText.y = 490;
 
         const drawAnimalBtn = new PIXI.Graphics();
-        drawAnimalBtn.beginFill(0x6AFFF6, 0.7);
+        drawAnimalBtn.beginFill(0x6afff6, 0.7);
         const drawAnimalBtnWidth = 100;
         const drawAnimalBtnHeight = 36;
         drawAnimalBtn.drawRoundedRect(100, 2, drawAnimalBtnWidth, drawAnimalBtnHeight, 10);
@@ -161,7 +162,7 @@ const Draw = () => {
         animalButtonContainer.on('pointertap', changeToAnimal);
 
         const drawBuildingBtn = new PIXI.Graphics();
-        drawBuildingBtn.beginFill(0xB6C1EA, 0.7);
+        drawBuildingBtn.beginFill(0xb6c1ea, 0.7);
         const drawBuildingBtnWidth = 100;
         const drawBuildingBtnHeight = 36;
         drawBuildingBtn.drawRoundedRect(210, 2, drawBuildingBtnWidth, drawBuildingBtnHeight, 10);
@@ -177,15 +178,14 @@ const Draw = () => {
         buildingButtonContainer.addChild(drawBuildingBtn);
         buildingButtonContainer.on('pointertap', changeToBuilding);
 
-
         app.stage.addChild(profileBox);
         app.stage.addChild(oneButtonContainer);
         app.stage.addChild(manyButtonContainer);
         app.stage.addChild(animalButtonContainer);
         app.stage.addChild(buildingButtonContainer);
-    }, []);
+    }, [nav]);
 
-        return <div ref={canvasRef} className="outlet-container"></div>
+    return <div ref={canvasRef} className="outlet-container"></div>;
 };
 
 export default Draw;
