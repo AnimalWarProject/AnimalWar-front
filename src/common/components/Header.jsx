@@ -47,17 +47,14 @@ function Header() {
             });
 
             localStorage.removeItem('accessToken');
-            // 사용자 상태 초기화
             setProfile({});
             setSearchedUser(null);
-            // 로그아웃 후 로그인 페이지로 이동
             navigate('/');
         } catch (error) {
             console.error('Logout failed:', error);
         }
     };
 
-    // 마이페이지로 이동하는 함수
     const goToMyPage = () => {
         navigate('/my');
     };

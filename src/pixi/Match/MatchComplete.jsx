@@ -12,7 +12,6 @@ const MatchComplete = () => {
 
     const history = useHistory();
     useEffect(() => {
-        // setTimeout(() => history.push("/match3"), 3000)
 
         setTimeout(() => history.push("/battle2", { state: data }), 5000)
  }, [])
@@ -34,7 +33,6 @@ const MatchComplete = () => {
             height: canvasHeight,
         });
 
-        // Use ref to append the PIXI application view to the DOM.
         if (canvasRef.current) {
             canvasRef.current.appendChild(app.view);
 
@@ -90,11 +88,11 @@ const MatchComplete = () => {
             column.drawRoundedRect(120, 162 + i * 70, columnWidth, columnHeight, 10);
             profileBox.addChild(column);
 
-            // 텍스트 스프라이트를 생성합니다.
+
             const textStyle = new PIXI.TextStyle({
                 fill: 0x0F1828,
-                fontSize: 24, // 폰트 크기
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontSize: 24,
+                fontFamily: 'Arial',
             });
 
             const text = new PIXI.Text(array[i], textStyle);
@@ -102,12 +100,12 @@ const MatchComplete = () => {
             text.x = 127;
             text.y = 172 + i * 70;
 
-            // 컨텐츠 텍스트 스프라이트
+
 
             const textStyle2 = new PIXI.TextStyle({
                 fill: 0x0F1828,
-                fontSize: 24, // 폰트 크기
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontSize: 24,
+                fontFamily: 'Arial',
             });
             const text2 = new PIXI.Text(content[i], textStyle2);
 
@@ -128,7 +126,6 @@ const MatchComplete = () => {
 
 
         //적 테스트 이미지 프로필 
-
         const profileImage2 = PIXI.Texture.from(data.state.depender.profileImage);
         const profileSprite2 = new PIXI.Sprite(profileImage2);
         profileSprite2.width = 100;
@@ -156,11 +153,11 @@ const MatchComplete = () => {
             column.drawRoundedRect(530, 162 + i * 70, columnWidth, columnHeight, 10);
             profileBox.addChild(column);
 
-            // 텍스트 스프라이트를 생성합니다.
+
             const textStyle = new PIXI.TextStyle({
                 fill: 0x0F1828,
-                fontSize: 24, // 폰트 크기
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontSize: 24, 
+                fontFamily: 'Arial',
             });
 
             const text = new PIXI.Text(array[i], textStyle);
@@ -169,11 +166,10 @@ const MatchComplete = () => {
             text.y = 172 + i * 70;
 
             // 컨텐츠 텍스트 스프라이트
-
             const textStyle2 = new PIXI.TextStyle({
                 fill: 0x0F1828,
-                fontSize: 24, // 폰트 크기
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontSize: 24,
+                fontFamily: 'Arial', 
             });
             const text2 = new PIXI.Text(content2[i], textStyle2);
 

@@ -147,7 +147,6 @@ const Battle = () => {
         <div className="battleLogBackGround">
             <div className="battleLogBackGroundInner">
                 <div className="battleLogBoxOut">
-                    {/* 스킵 버튼 및 전투 로그 상자 */}
                     <div id="battleLogBox" className="fixed-width-log-box">
                         {battleLog.map((item, idx) => (
                             <p key={idx}>{item}</p>

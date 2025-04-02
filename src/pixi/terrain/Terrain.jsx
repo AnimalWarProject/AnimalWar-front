@@ -62,25 +62,25 @@ const Terrain = () => {
             appRef.current = app;
 
             return () => {
-                // 자산 언로드
+
                 Assets.unload('magician');
                 Assets.unload('magicianAtlas');
 
-                // 마법사 객체가 존재하면 파괴
+
                 if (magicianRef.current) {
                     try {
                         magicianRef.current.destroy();
-                        magicianRef.current = null; // 참조 초기화
+                        magicianRef.current = null; 
                     } catch (error) {
                         console.error('마법사 객체 파괴 중 오류 발생:', error);
                     }
                 }
 
-                // PIXI 애플리케이션 파괴
+
                 app.destroy(true, {
-                    children: true, // 자식 파괴
-                    texture: true, // 텍스처 파괴
-                    baseTexture: true, // 베이스 텍스처 파괴
+                    children: true, 
+                    texture: true, 
+                    baseTexture: true,
                 });
             };
         }
@@ -130,8 +130,8 @@ const Terrain = () => {
 
         // 우측 ui박스
         const uiContainer = new PIXI.Container();
-        uiContainer.x = appRef.current.screen.width - 500; // UI 컨테이너의 x 위치
-        uiContainer.y = 120; // UI 컨테이너의 y 위치
+        uiContainer.x = appRef.current.screen.width - 500;
+        uiContainer.y = 120;
         appRef.current.stage.addChild(uiContainer);
 
         // UI 배경
@@ -320,8 +320,8 @@ const Terrain = () => {
 
         // 재분배하기 버튼 텍스트
         const buttonText = new PIXI.Text('재분배하기', style);
-        buttonText.anchor.set(0.5); // 텍스트의 앵커를 중앙으로 설정
-        buttonText.x = terrainButton.width / 2 + 73; // 버튼의 중앙에 위치시키기
+        buttonText.anchor.set(0.5); 
+        buttonText.x = terrainButton.width / 2 + 73; 
         buttonText.y = terrainButton.height / 2 + 372;
 
         // 컨테이너에 버튼과 텍스트 추가

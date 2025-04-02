@@ -12,7 +12,7 @@ const MarketPage = () => {
     const [searchWord, setSearchWord] = useState('');
     const [selectedGrade, setSelectedGrade] = useState('');
     const [selectedData, setSelectedData] = useState('');
-    const [showMarketInven, setShowMarketInven] = useState(true); // 추가된 상태 변수
+    const [showMarketInven, setShowMarketInven] = useState(true); 
 
     const handleAnimalTypeSelect = (animalType) => {
         setSelectedAnimalType(animalType);

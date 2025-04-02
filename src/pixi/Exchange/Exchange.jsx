@@ -54,12 +54,9 @@ const Exchange = () => {
     }
 
 
-    // useEffect(() => { // 유즈이펙트는 무조건 1개
-
-    // }, [isDataLoaded]);
 
     useEffect(() => {
-        if (!isDataLoaded) { //  지속적으로 호출해서 수정
+        if (!isDataLoaded) { 
             getTokenData();
         }
 
@@ -70,20 +67,20 @@ const Exchange = () => {
                 height: canvasHeight,
             });
 
-            // Use ref to append the PIXI application view to the DOM.
+
             if (canvasRef.current) {
                 canvasRef.current.appendChild(app.view);
             }
 
-            // 백그라운드 사진
+
             const background = PIXI.Sprite.from(back);
             background.width = app.screen.width;
             background.height = app.screen.height;
 
             app.stage.addChild(background);
 
-            // 엄청 큰 모서리가 둥근 하얀틀
 
+            // 엄청 큰 모서리가 둥근 하얀틀
             const whiteBox = new PIXI.Graphics();
             whiteBox.beginFill(0xffffff, 0.5);
             const boxWidth = canvasWidth * 0.87;
@@ -93,7 +90,6 @@ const Exchange = () => {
             app.stage.addChild(whiteBox);
 
             //왼쪽 하얀틀
-
             const leftBox = new PIXI.Graphics();
             leftBox.beginFill(0xffffff, 0.5);
             const leftBoxWidth = canvasWidth * 0.4;
@@ -103,7 +99,6 @@ const Exchange = () => {
             app.stage.addChild(leftBox);
 
             //나무 철 식량 틀
-
             const imgs = [woodImg, ironImg, foodImg];
 
             const remain = {
@@ -133,7 +128,6 @@ const Exchange = () => {
                 app.stage.addChild(img);
 
                 //교환 비율 양
-
                 const amountBox = new PIXI.Graphics();
                 amountBox.beginFill(0xd4f1fe);
                 amountBox.lineStyle(2, 0x000);
@@ -145,13 +139,13 @@ const Exchange = () => {
 
                 const textStyle = new PIXI.TextStyle({
                     fill: 0x0f1828,
-                    fontSize: 20, // 폰트 크기
-                    fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                    fontSize: 20,
+                    fontFamily: 'Arial', 
                 });
 
                 const text = new PIXI.Text('2000', textStyle);
 
-                //Object.keys(remain)[i]
+
 
                 text.x = 270;
                 text.y = 142 + i * (matBoxHeight + 20);
@@ -161,9 +155,9 @@ const Exchange = () => {
 
             const text2Style = new PIXI.TextStyle({
                 fill: 0x0f1828,
-                fontSize: 15, // 폰트 크기
+                fontSize: 15, 
                 fontWeight: 'bold',
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontFamily: 'Arial', 
             });
 
             const woodText = new PIXI.Text(Object.keys(remain)[0] + ' :' + Object.values(remain)[0], text2Style);
@@ -208,9 +202,9 @@ const Exchange = () => {
 
             const textStyle = new PIXI.TextStyle({
                 fill: 0x0f1828,
-                fontSize: 40, // 폰트 크기
+                fontSize: 40, 
                 fontWeight: 'bold',
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontFamily: 'Arial', 
             });
 
             const text = new PIXI.Text('1000', textStyle);
@@ -244,7 +238,6 @@ const Exchange = () => {
             app.stage.addChild(arrow);
 
             //교환 시작 버튼
-
             const button = new ButtonContainer(
                 new PIXI.Graphics()
                     .beginFill(0x1eb563)
@@ -258,10 +251,8 @@ const Exchange = () => {
             //버튼 액션
             button.onPress.connect(async () => {
                 try {
-                    // postExchange 함수를 비동기로 호출하고 요청이 끝날 때까지 기다립니다.
                     await postExchange();
 
-                    // postExchange 요청이 성공적으로 완료된 후에 실행할 로직을 여기에 추가합니다.
                     console.log('postExchange 요청이 완료되었습니다.');
 
 
@@ -288,26 +279,26 @@ const Exchange = () => {
 
 
 
-                    const starTexture = PIXI.Texture.from(goldImg); // 별 이미지의 경로를 넣어주세요
+                    const starTexture = PIXI.Texture.from(goldImg); 
                     const numberOfStars = 10;
 
                     for (let i = 0; i < numberOfStars; i++) {
                         const star = new PIXI.Sprite(starTexture);
-                        star.anchor.set(0.5); // 이미지의 중심을 기준으로 회전하도록 설정
+                        star.anchor.set(0.5); 
                         star.x = Math.random() * app.screen.width;
                         star.y = Math.random() * app.screen.height;
-                        star.rotation = Math.random() * Math.PI * 2; // 랜덤한 각도로 초기 회전값 설정
-                        star.scale.set(0.5 + Math.random() * 0.5); // 랜덤한 크기로 초기화
+                        star.rotation = Math.random() * Math.PI * 2;
+                        star.scale.set(0.5 + Math.random() * 0.5);
 
                         background.addChild(star);
 
                         // 별이 아래로 떨어지는 애니메이션 설정
-                        const speed = 3 + Math.random() * 2; // 떨어지는 속도를 랜덤하게 설정
+                        const speed = 3 + Math.random() * 2;
                         app.ticker.add(() => {
                             star.y += speed;
                             star.rotation += 0.1;
                             if (star.y > app.screen.height) {
-                                // 화면 아래로 벗어난 경우 다시 위로 올리기
+
                                 app.stage.removeChild(star);
                             }
                         });
@@ -329,8 +320,8 @@ const Exchange = () => {
             //교환 시작 텍스트 스프라이트
             const textStyle2 = new PIXI.TextStyle({
                 fill: 0x0f1828,
-                fontSize: 24, // 폰트 크기
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontSize: 24,
+                fontFamily: 'Arial',
             });
             const text2 = new PIXI.Text('교환하기', textStyle2);
 
@@ -341,8 +332,8 @@ const Exchange = () => {
             //교환 안내문 텍스트 스프라이트
             const textStyle3 = new PIXI.TextStyle({
                 fill: 0x0f1828,
-                fontSize: 24, // 폰트 크기
-                fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+                fontSize: 24, 
+                fontFamily: 'Arial',
             });
             const text3 = new PIXI.Text('각 자원 2000개 = 1000골드', textStyle3);
 

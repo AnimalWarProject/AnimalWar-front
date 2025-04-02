@@ -3,7 +3,7 @@ import '../css/SideBar.css';
 
 const SideBar = ({ onSortSelect, onGradeSelect }) => {
     const handleAnimalTypeClick = (isSort) => {
-        onSortSelect(isSort); // 이 부분이 수정되었습니다.
+        onSortSelect(isSort);
     };
 
     // 각 버튼의 클릭 상태를 별도로 관리

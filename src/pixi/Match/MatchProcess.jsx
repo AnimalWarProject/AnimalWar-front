@@ -53,7 +53,6 @@ const MatchProcess = () => {
     }, [isDataLoaded]);
 
     useEffect(() => {
-        // setTimeout(() => history.push("/match3"), 3000)
         if (isDataLoaded) {
             setTimeout(() => history.push('/match3', { state: userData }), 3000);
         }
@@ -68,7 +67,6 @@ const MatchProcess = () => {
             height: canvasHeight,
         });
 
-        // Use ref to append the PIXI application view to the DOM.
         if (canvasRef.current) {
             canvasRef.current.appendChild(app.view);
         }
@@ -98,7 +96,7 @@ const MatchProcess = () => {
         // c.pivot.x = c.width * 0.5 // 중심점을 가로 중앙으로 이동
         // c.pivot.y = c.height * 0.5; // 중심점을 세로 중앙으로 이동
 
-        c.anchor.set(0.5); // 중심점을 스프라이트 중앙으로 설정
+        c.anchor.set(0.5); 
 
         c.x = app.renderer.width * 0.5;
         c.y = app.renderer.height * 0.5;
@@ -107,11 +105,11 @@ const MatchProcess = () => {
             c.rotation += 0.01;
         });
 
-        // 매칭 대기중이라는 텍스트 스프라이트
+
         const textStyle = new PIXI.TextStyle({
             fill: 0x0f1828,
-            fontSize: 24, // 폰트 크기
-            fontFamily: 'Arial', // 폰트 패밀리 (원하는 폰트로 설정)
+            fontSize: 24,
+            fontFamily: 'Arial',
         });
 
         const text = new PIXI.Text('상대방을 찾고있습니다.', textStyle);

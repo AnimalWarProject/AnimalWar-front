@@ -6,15 +6,15 @@ const UpGrade = () => {
     const [allData, setAllData] = useState([]);
     const accessToken = localStorage.getItem('accessToken');
     const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
-    const [data, setData] = useState([]); // 동물 데이터
-    const itemsPerRow = 3; // 한 행당 표시할 항목 수
+    const [data, setData] = useState([]);
+    const itemsPerRow = 3;
     const [englishGrade, setEnglishGrade] = useState('NORMAL');
     const gradeTap = ['노말', '레어', '슈퍼레어', '유니크', '레전드'];
     const [selectedItemIndex, setSelectedItemIndex] = useState(null);
     const [selectedItem, setSelectedItem] = useState(null);
     const nav = useNavigate();
     const [sendUserInfo, setSendUserInfo] = useState();
-    // Feat : 등급 탭
+
     const gradeHandler = (e) => {
         let grade;
         switch (e) {

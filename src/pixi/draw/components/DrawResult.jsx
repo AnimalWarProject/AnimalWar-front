@@ -34,7 +34,7 @@ const DrawResult = () => {
             const itemHeight = 210;
 
 
-            const profileBox = new PIXI.Graphics(); // 큰 틀
+            const profileBox = new PIXI.Graphics();
             profileBox.beginFill(0xffffff, 0.5);
             const profileWidth = canvasWidth * 0.85;
             const profileHeight = canvasHeight * 0.85;
@@ -71,10 +71,10 @@ const DrawResult = () => {
                 const texture = PIXI.Texture.from(imagePath);
                 const imageSprite = new PIXI.Sprite(texture);
                 // imageSprite.anchor.set(0.5)
-                imageSprite.x = 80 + colIndex * (itemWidth + 10); // 이미지 x 좌표
-                imageSprite.y = 110 + rowIndex * (itemHeight + 10); // 이미지 y 좌표
-                imageSprite.width = 140; // 이미지 너비
-                imageSprite.height = 120; // 이미지 높이
+                imageSprite.x = 80 + colIndex * (itemWidth + 10); 
+                imageSprite.y = 110 + rowIndex * (itemHeight + 10); 
+                imageSprite.width = 140; 
+                imageSprite.height = 120; 
 
                 const text = new PIXI.Text(item.name, manyTextStyle);
                 text.anchor.set(0.5);
@@ -107,14 +107,14 @@ const DrawResult = () => {
 
             app.stage.addChild(profileBox);
         } else if (resultData.length === 1) {
-            // 1개의 데이터 출력
-            const profileBox = new PIXI.Graphics(); // 큰 틀
+
+            const profileBox = new PIXI.Graphics();
             profileBox.beginFill(0xffffff, 0.5);
             const profileWidth = canvasWidth * 0.85;
             const profileHeight = canvasHeight * 0.85;
             profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
 
-            const profileInnerBox = new PIXI.Graphics(); // 작은 틀
+            const profileInnerBox = new PIXI.Graphics();
             profileInnerBox.beginFill(0xffffff, 0.5);
             const InnerBoxWidth = profileWidth / 2;
             const InnerBoxHeight = 480;
@@ -136,10 +136,10 @@ const DrawResult = () => {
             const texture = PIXI.Texture.from(imagePath);
             const imageSprite = new PIXI.Sprite(texture);
             imageSprite.anchor.set(0.5)
-            imageSprite.x = 450; // 이미지 x 좌표
-            imageSprite.y = 270; // 이미지 y 좌표
-            imageSprite.width = 380; // 이미지 너비
-            imageSprite.height = 350; // 이미지 높이
+            imageSprite.x = 450;
+            imageSprite.y = 270;
+            imageSprite.width = 380;
+            imageSprite.height = 350;
 
             const text = new PIXI.Text(item.name, textStyle);
             text.anchor.set(0.5);

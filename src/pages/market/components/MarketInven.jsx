@@ -4,8 +4,8 @@ import {api} from "../../../network/api";
 const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 
 const MarketInven = ({onEventInMarketInven}) => {
-    const [data, setData] = useState([]); // 건물, 동물 데이터
-    const itemsPerRow = 3; // 한 행당 표시할 항목 수
+    const [data, setData] = useState([]); 
+    const itemsPerRow = 3;
     const containerRef = useRef();
     const accessToken = localStorage.getItem('accessToken');
     const [selectedItem, setSelectedItem] = useState(null);

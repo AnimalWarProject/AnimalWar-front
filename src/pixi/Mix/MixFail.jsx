@@ -53,16 +53,14 @@ const MixFail = () => {
         app.stage.addChild(container);
 
 
-        // add a bunch of sprites
         const ash = PIXI.Sprite.from(failMix);
         ash.anchor.set(0.5);
-        ash.x = canvasWidth / 2 - container.width; // 스프라이트를 수평 중앙에 배치
-        ash.y = canvasHeight / 2 - 100; // 스프라이트를 수직 중앙에 배치
+        ash.x = canvasWidth / 2 - container.width;
+        ash.y = canvasHeight / 2 - 100;
         container.addChild(ash);
         profileBox.addChild(ash)
 
 
-        //
         const failText =  new PIXI.Text('합성에 성공하지 못했습니다. \n\n       재만 남아버렸네요.', textStyle);
         failText.anchor.set(0.5);
         failText.x = ash.x - 20;
@@ -70,8 +68,6 @@ const MixFail = () => {
         profileBox.addChild(failText);
 
 
-
-        // Feat 또 합성하기 버튼
         const mixStartBtn = new ButtonContainer(
             new PIXI.Graphics()
                 .beginFill(0x00ffff, 0.8)
@@ -80,7 +76,6 @@ const MixFail = () => {
         const mixStartText = new PIXI.Text('또 합성하기', textStyle);
         mixStartBtn.addChild(mixStartText);
 
-        // 가운데 정렬을 위해 텍스트의 x, y 좌표를 조정
         mixStartText.x = 750
         mixStartText.y = 600
 

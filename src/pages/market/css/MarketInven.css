@@ -79,11 +79,11 @@
     height: 25rem;
 }
 .marketinven-section::-webkit-scrollbar {
-    width: 1.3rem; /* 스크롤바의 너비 */
+    width: 1.3rem;
 }
 .marketinven-section::-webkit-scrollbar-thumb {
-    background-color: #888; /* 스크롤바 색상 */
-    border-radius: 0.375rem; /* 스크롤바의 모서리를 둥글게 만듭니다. */
+    background-color: #888;
+    border-radius: 0.375rem;
 }
 .marketinven-wrap{
     display: flex;

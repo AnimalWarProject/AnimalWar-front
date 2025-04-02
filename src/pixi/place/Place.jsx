@@ -125,7 +125,6 @@ const Place = ({ userUUID }) => {
     }, []);
 
     const updatePlace = useCallback(async () => {
-        // removeButton이 클릭되지 않았을 때만 추가 처리를 진행
         if (!removeButtonClicked) {
             try {
                 const payload = {
@@ -473,10 +472,9 @@ const Place = ({ userUUID }) => {
 
     const createTile = useCallback(
         (tileData, container, textures, tileSize) => {
-            // 모든 타일 데이터를 기반으로 최소 x, y 좌표값을 구합니다.
+
             const minIsoValues = calculateMinIsoValues(tileData, tileSize);
 
-            // 모든 타일의 위치를 조정하고 타일 위에 ID를 표시합니다.
             tileData.forEach((data, index) => {
                 // 타일 스프라이트 생성
                 const isoX = ((data.x - data.y) * tileSize.width) / 2 - minIsoValues.x;
@@ -491,7 +489,7 @@ const Place = ({ userUUID }) => {
                 sprite.y = isoY;
 
                 sprite.on('pointerdown', (event) => {
-                    onDragStart(data, event); // data 객체를 이벤트 핸들러로 전달
+                    onDragStart(data, event); 
                 });
 
                 // 타일 위에 마우스가 올라가는 이벤트
@@ -572,7 +570,7 @@ const Place = ({ userUUID }) => {
             } else {
                 prevButton.off('pointerdown').on('pointerdown', handlePrevButtonClick);
             }
-            // 다음 버튼
+
             let nextButton = appRef.current.stage.getChildByName('nextButton');
             if (!nextButton) {
                 nextButton = createNextButton();
@@ -581,7 +579,6 @@ const Place = ({ userUUID }) => {
                 nextButton.off('pointerdown').on('pointerdown', handleNextButtonClick);
             }
 
-            // isEditMode 상태에 따라 버튼 표시 여부 결정
             prevButton.visible = isEditMode;
             nextButton.visible = isEditMode;
 
@@ -929,7 +926,6 @@ const Place = ({ userUUID }) => {
 
                 updateTabStyle(activeTab);
 
-                // container에 대한 이벤트 핸들러 설정
                 containerRef.current
                     .on('pointerdown', (event) => {
                         if (!draggingItemRef.current || !draggingItemRef.current.dragging) {
@@ -948,9 +944,9 @@ const Place = ({ userUUID }) => {
 
                     .on('pointermove', (event) => {
                         if (draggingItemRef.current && draggingItemRef.current.dragging) {
-                            onDragMove(event); // 드래그 중인 객체 이동 처리
+                            onDragMove(event); 
                         } else if (startPosition) {
-                            // 타일맵 이동 처리
+
                             const newPosition = event.data.getLocalPosition(containerRef.current.parent);
                             containerRef.current.x += newPosition.x - startPosition.x;
                             containerRef.current.y += newPosition.y - startPosition.y;
@@ -998,22 +994,20 @@ const Place = ({ userUUID }) => {
             }
 
             removeModeButton.visible = isEditMode;
-            // RemoveButton 클릭 이벤트 핸들러
             removeModeButton.on('pointerdown', async () => {
                 try {
-                    // 제거 횟수를 계산
+          
                     const removalCounts = removeList.reduce((acc, tile) => {
                         acc[tile.objectId] = (acc[tile.objectId] || 0) + 1;
                         return acc;
                     }, {});
 
-                    // 새로운 인벤토리 생성
+        
                     const newInventory = {
                         animals: [...inventory.animals],
                         buildings: [...inventory.buildings],
                     };
 
-                    // 제거된 아이템의 placeableQuantity 업데이트
                     Object.entries(removalCounts).forEach(([objectId, count]) => {
                         const inventoryType = inventory.animals.some((item) => item.id === objectId)
                             ? 'animals'

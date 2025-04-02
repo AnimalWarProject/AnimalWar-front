@@ -9,14 +9,14 @@ import cancelIcon from '../marketImages/cancel.webp';
 const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) => {
     const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
     const [sortedData, setSortedData] = useState([]);
-    const itemsPerRow = 3; // 한 행당 표시할 항목 수
+    const itemsPerRow = 3; 
     const containerRef = useRef();
     const [userInfo, setUserInfo] = useState({})
     const accessToken = localStorage.getItem('accessToken');
 
     const onClickBuy = (item) => {
         if (userInfo.gold >= item.price){
-            const buyInfo = { // request
+            const buyInfo = { 
                 userId: item.userId,
                 itemId: item.itemId,
                 name: item.name,
@@ -65,7 +65,7 @@ const Main = ({ selectedAnimalType, selectedSort, searchWord, selectedGrade }) =
         }
 
     }
-    const onClickTake = (item) => { // 수령버튼
+    const onClickTake = (item) => {
         const takeInfo = {
             itemId:item.itemId,
             price:item.price

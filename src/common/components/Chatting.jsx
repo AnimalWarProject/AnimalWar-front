@@ -11,7 +11,7 @@ import {colors} from "@mui/material";
 
 const Chatting = () => {
     const [inputText, setInputText] = useState('');
-    const maxLength = 100; // 최대 글자 수
+    const maxLength = 100;
     const [isFocused, setIsFocused] = useState(false);
     const wrapRef = useRef();
     const [nickName, setNickName] = useState('GUEST');

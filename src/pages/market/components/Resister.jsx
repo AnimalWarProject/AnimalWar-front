@@ -6,7 +6,7 @@ const INVImg = `${process.env.PUBLIC_URL}/objectImgs`;
 const Resister = ({selectedData, onEventInMarketCancel}) => {
     const accessToken = localStorage.getItem('accessToken');
     const [userInfo, setUserInfo] = useState({})
-    let data; // data 변수를 선언
+    let data; 
     let dataToSend;
     if (selectedData.animal) {
         data = selectedData.animal;
@@ -14,7 +14,7 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         data = selectedData.building;
     }
     const [price, setPrice] = useState('');
-    const [buff, setBuff] = useState(0); // buff 상태를 useState로 초기화
+    const [buff, setBuff] = useState(0); 
 
     useEffect( () => {
         const fetchUserData = async () => {
@@ -75,9 +75,9 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         const inputPrice = e.target.value;
         if (isNaN(inputPrice)) {
             alert("숫자만 입력하시오.");
-            setPrice(''); // 입력값을 비워줌
+            setPrice('');
         } else {
-            setPrice(inputPrice); // 숫자인 경우에만 값을 변경
+            setPrice(inputPrice);
         }
     }
     const onClickCancel = () =>{
@@ -118,10 +118,10 @@ const Resister = ({selectedData, onEventInMarketCancel}) => {
         <div className="register-container">
             <div className="register-wrap">
                 <div className="register-wrap-item">
-                    {selectedData.animal ? ( // 동물인 경우 이미지 렌더링
+                    {selectedData.animal ? ( 
                         <img className="register-wrap-image" src={`${INVImg}/animals/${animalInfo.species}/${data.imagePath}`} alt="" />
                     ) : (
-                        <img className="register-wrap-image" src={`${INVImg}/buildings/${data.imagePath}`} alt="" /> // 건물인 경우 이미지 렌더링
+                        <img className="register-wrap-image" src={`${INVImg}/buildings/${data.imagePath}`} alt="" /> 
                     )}
                 </div>
                 <div>

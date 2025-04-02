@@ -655,8 +655,8 @@ const AttackerSkill = ({ setFlag }) => {
             },
             true
         );
-        scBox2.x = 670; // x 좌표
-        scBox2.y = 100; // y 좌표
+        scBox2.x = 670;
+        scBox2.y = 100; 
         bigBoxContainer2.addChild(scBox2);
     }, []);
 

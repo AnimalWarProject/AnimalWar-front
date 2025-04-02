@@ -27,7 +27,7 @@ const MixStart = () => {
 
         const canvasWidth = 960;
         const canvasHeight = 640;
-        // const history = useHistory();
+
 
         // 글꼴
         const textStyle = new PIXI.TextStyle({
@@ -66,7 +66,7 @@ const MixStart = () => {
         container.width = 615;
         container.height = 507;
 
-        // add a bunch of sprites
+
         const pot = PIXI.Sprite.from(inThePot);
         pot.anchor.set(0.5);
         container.addChild(pot);
@@ -74,7 +74,6 @@ const MixStart = () => {
 
 
 
-        // let's create a moving shape
         const thing = new PIXI.Graphics();
         app.stage.addChild(thing);
         thing.x = app.screen.width / 2;

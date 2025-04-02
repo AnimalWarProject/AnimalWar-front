@@ -13,7 +13,7 @@ const Board = () => {
     const location = useLocation();
     const [postData, setPostData] = useState([]);
     const [totalPages, setTotalPages] = useState();
-    const [page, setPage] = useState(0); // 초기 페이지 설정
+    const [page, setPage] = useState(0); 
 
     const [keyward, setKeyward] = useState("");
 

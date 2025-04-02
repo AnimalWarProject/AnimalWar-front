@@ -53,18 +53,18 @@ const UpGradeLoading = () => {
         if (canvasRef.current) {
             canvasRef.current.appendChild(app.view);
         }
-        const background = PIXI.Sprite.from(back); // 뒷 배경화면
+        const background = PIXI.Sprite.from(back); 
         background.width = app.screen.width;
         background.height = app.screen.height;
         app.stage.addChild(background);
 
-        const profileBox = new PIXI.Graphics(); // 큰 틀
+        const profileBox = new PIXI.Graphics(); 
         profileBox.beginFill(0xffffff, 0.5);
         const profileWidth = canvasWidth * 0.85;
         const profileHeight = canvasHeight * 0.85;
         profileBox.drawRoundedRect(70, 40, profileWidth, profileHeight, 40);
 
-        const images = [upgrade1, upgrade2, upgrade3]; // 강화사진
+        const images = [upgrade1, upgrade2, upgrade3];
         const textureArray = [];
         for (let i = 0; i < images.length; i++) {
             textureArray.push(PIXI.Texture.from(images[i]));

@@ -96,7 +96,6 @@ const Draw = () => {
                 const price = 1000; // 뽑기 가격
 
                 if (updatedGold >= price) {
-                    // 수행할 작업
                     drawData.qty = 1;
                     nav('/draw/loading', { state: drawData });
                 } else {
@@ -130,7 +129,6 @@ const Draw = () => {
                 const price = 1000; // 뽑기 가격
 
                 if (updatedGold >= price * 10) {
-                    // 수행할 작업
                     drawData.qty = 10;
                     nav('/draw/loading', { state: drawData });
                 } else {

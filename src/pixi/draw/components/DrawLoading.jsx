@@ -52,13 +52,13 @@ const DrawLoading = () => {
             background.height = app.screen.height;
             app.stage.addChild(background);
 
-            const profileBox = new PIXI.Graphics(); // 큰 틀
+            const profileBox = new PIXI.Graphics();
             profileBox.beginFill(0xffffff, 0.5);
             const profileWidth = canvasWidth * 0.85;
             const profileHeight = canvasHeight * 0.85;
             profileBox.drawRoundedRect(62, 40, profileWidth, profileHeight, 40);
 
-            const profileInnerBox = new PIXI.Graphics(); // 작은 틀
+            const profileInnerBox = new PIXI.Graphics();
             profileInnerBox.beginFill(0xffffff, 0.5);
             const InnerBoxWidth = 450;
             const InnerBoxHeight = 484;
@@ -77,18 +77,17 @@ const DrawLoading = () => {
             oneDrawText.y = 450;
             app.stage.addChild(profileBox);
 
-            const randomEggTexture = PIXI.Texture.from(randomEgg); // randomEgg 이미지
+            const randomEggTexture = PIXI.Texture.from(randomEgg);
             const randomEggSprite = new PIXI.Sprite(randomEggTexture);
-            // 설정된 중심점을 중앙으로 이동
             randomEggSprite.anchor.set(0.5);
             randomEggSprite.width = 350;
             randomEggSprite.height = 300;
-            randomEggSprite.x = 475; // 초기 x 위치
-            randomEggSprite.y = 300; // 초기 y 위치
+            randomEggSprite.x = 475;
+            randomEggSprite.y = 300;
             randomEggSprite.interactive = true;
             randomEggSprite.buttonMode = true;
             if (type ==='animal'){
-                randomEggSprite.on('pointertap', async () => {// todo : api 교체
+                randomEggSprite.on('pointertap', async () => {
 
                     const fetchUserDraw = async () => {
                         try {
@@ -113,7 +112,7 @@ const DrawLoading = () => {
                     fetchDrawAnimal();
                 });
             }else {
-                randomEggSprite.on('pointertap', async () => {// todo : api 교체
+                randomEggSprite.on('pointertap', async () => {
 
                     const fetchUserDraw = async () => {
                         try {
@@ -148,8 +147,8 @@ const DrawLoading = () => {
 
             profileBox.addChild(randomEggSprite);
 
-            let rotationSpeed = 0.01; // 회전 속도
-            let direction = 1; // 1은 우측, -1은 좌측
+            let rotationSpeed = 0.01;
+            let direction = 1;
 
             app.ticker.add(() => {
                 randomEggSprite.rotation += rotationSpeed * direction;
@@ -159,12 +158,11 @@ const DrawLoading = () => {
                 }
             });
             function animateFirework(firework) {
-                // 확대 애니메이션 및 투명도 효과
+
                 firework.scale.x += 0.01;
                 firework.scale.y += 0.01;
                 firework.alpha -= 0.005;
 
-                // 애니메이션이 끝나면 제거
                 if (firework.alpha <= 0) {
                     app.stage.removeChild(firework);
                 }
@@ -173,7 +171,7 @@ const DrawLoading = () => {
                 app.destroy();
             };
         }
-    }, [profile]); // , qty, nav 제거
+    }, [profile]);
 
     return <div ref={canvasRef} className="outlet-container"></div>;
 };

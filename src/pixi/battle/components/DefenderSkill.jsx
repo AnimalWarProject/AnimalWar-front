@@ -624,8 +624,8 @@ const DefenderSkill = ({ setFlag }) => {
             },
             true
         );
-        scBox.x = 50; // x 좌표
-        scBox.y = 100; // y 좌표
+        scBox.x = 50; 
+        scBox.y = 100;
         bigBoxContainer.addChild(scBox);
 
         // 수비형 스킬 스크롤
@@ -640,8 +640,8 @@ const DefenderSkill = ({ setFlag }) => {
             true
         );
         bigBoxContainer1.addChild(scBox1);
-        scBox1.x = 360; // x 좌표
-        scBox1.y = 100; // y 좌표
+        scBox1.x = 360;
+        scBox1.y = 100;
 
         // 유틸형 스킬 스크롤
         const scBox2 = new CustomScrollBox(
@@ -655,8 +655,8 @@ const DefenderSkill = ({ setFlag }) => {
             },
             true
         );
-        scBox2.x = 670; // x 좌표
-        scBox2.y = 100; // y 좌표
+        scBox2.x = 670;
+        scBox2.y = 100;
         bigBoxContainer2.addChild(scBox2);
     }, []);
 

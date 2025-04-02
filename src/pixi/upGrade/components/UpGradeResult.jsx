@@ -45,7 +45,7 @@ const UpGradeResult = () => {
         background.width = app.screen.width;
         background.height = app.screen.height;
 
-        const profileBox = new PIXI.Graphics(); // 큰 틀
+        const profileBox = new PIXI.Graphics();
         profileBox.beginFill(0xffffff, 0.5);
         const profileWidth = canvasWidth * 0.85;
         const profileHeight = canvasHeight * 0.85;
